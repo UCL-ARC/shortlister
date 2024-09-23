@@ -1,7 +1,22 @@
 #CRUD
 #Pickle
+from typing import List
 import pickle
+from dataclasses import dataclass
 
+#data class
+@dataclass
+class Person:
+    name: str
+    age: int
+    contact: str
+
+@dataclass
+class Candidates():
+    candidates: List[Person]
+
+ 
+'''
 class Candidate:
     
     def __init__(self,name,age,contact):
@@ -10,8 +25,9 @@ class Candidate:
         self.contact = contact
 
     def read_candidate(self):
+        for i in candi
         print(self.name, self.age, self.contact)
-        
+
     def update_candidate():
         pass
 
@@ -20,9 +36,12 @@ class Candidate:
 
     def __reduce__(self):
         return (self.__class__,(self.name, self.age,self.contact))
+'''
 
 #objects
-candidate1 = Candidate("Spongebob",30,"7238479825")
+candidate1 = Person("Spongebob",30,"7238479825")
+print(candidate1)
+
 
 #CRUD
 '''def create_candidate():
