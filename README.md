@@ -1,1 +1,5 @@
 # shortlister
+
+## Learning notes
+
+CRUD
