@@ -15,32 +15,13 @@ class Person:
 class Candidates():
     candidates: List[Person]
 
- 
-'''
-class Candidate:
-    
-    def __init__(self,name,age,contact):
-        self.name = name
-        self.age = age
-        self.contact = contact
+candidates=[]
 
-    def read_candidate(self):
-        for i in candi
-        print(self.name, self.age, self.contact)
+spongebob = Person(name="Spongebob",age=30,contact="7238479825")
+patrick = Person(name="Patrick",age=24,contact="2347929348")
 
-    def update_candidate():
-        pass
-
-    def delete_candidate():
-        pass
-
-    def __reduce__(self):
-        return (self.__class__,(self.name, self.age,self.contact))
-'''
 
 #objects
-candidate1 = Person("Spongebob",30,"7238479825")
-print(candidate1)
 
 
 #CRUD
@@ -48,11 +29,14 @@ print(candidate1)
     candidate = Candidate(name,age,contact)
     return'''
 
-#pickle 
-with open("candidate1.pkl","wb") as file:
-    pickle.dump(candidate1,file)
+#pickle
+with open("candidate.pkl","wb") as file:
+    pickle.dump(spongebob,file)
 
-with open("candidate1.pkl","rb") as file:
+with open("candidate.pkl","rb") as file:
     loaded_candidate = pickle.load(file)
 
 print(loaded_candidate)
+
+
+#
