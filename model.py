@@ -8,13 +8,19 @@ class Person:
     contact: str
 
 @dataclass
-class Candidates:
-    people: List[Person] = field(default_factory=list) #creates an empty list for all the Person classes
-
-@dataclass
 class Role:
-    pass
+    job_title: str
+    job_id: str
+    people: List[Person] = field(default_factory=list)
+
 
 @dataclass 
 class Questions: #library
-    pass
+    score = ["Exceptional","Merit","Satisfactory","Unsatisfactory"]
+
+#want to make it so questions have a property called score, and the options for this property can be choose from a list with score ratings
+
+
+# candidate class, under role
+
+# question class: bunch of question objects
