@@ -6,12 +6,6 @@ from dataclasses import dataclass,field
 
 #data class
 
-@dataclass
-class Person:
-    name: str
-    age: int
-    contact: str
-        
     def  update_person(self):
             choice = input(f"What do you want to update for {self.name} ? (name, age or contact?):")
             if choice.lower() == "name":
@@ -26,10 +20,6 @@ class Person:
             else:
                 pass
 
-@dataclass
-class Candidates:
-    position: str
-    people: List[Person] = field(default_factory=list) #creates an empty list for all the Person classes
 
     #CRUD
     def add_person(self, person:Person):
