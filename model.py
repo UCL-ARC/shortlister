@@ -1,26 +1,26 @@
-from typing import List
-from dataclasses import dataclass,field
+from typing import Dict, List
+from dataclasses import dataclass
+
 
 @dataclass
-class Person:
+class Criterion:
     name: str
-    age: int
-    contact: str
+    description: str
+    scores: List[str]
+
+@dataclass
+class Applicant:
+    name: str
+    cv: str #path to cv
+    scores: Dict[Criterion,str]
 
 @dataclass
 class Role:
     job_title: str
     job_id: str
-    people: List[Person] = field(default_factory=list)
+    criteria: List[Criterion]
 
-
-@dataclass 
-class Questions: #library
-    score = ["Exceptional","Merit","Satisfactory","Unsatisfactory"]
-
-#want to make it so questions have a property called score, and the options for this property can be choose from a list with score ratings
-
-
-# candidate class, under role
-
-# question class: bunch of question objects
+@dataclass
+class Shortlist:
+    role: Role
+    applicants: List[Applicant]
