@@ -17,20 +17,19 @@ def test_read_criteria():
         for row in reader:
             print(row)
 
-def test_create_criterion():
-    csv_file = "test_role/criteria.csv"
+def test_create_criterion(csv_file:str):
     with open(csv_file) as file:
         reader= csv.reader(file)
+        next(reader)
 
         criteria = []
 
         for row in reader:
             criterion = Criterion(row[0],row[1],[])
             criteria.append(criterion)
-        print(criteria)
+        return(criteria)
 
-test_create_criterion()
-
+print(test_create_criterion("test_role/criteria.csv")[0])
 #csv library
 # use csv library to read the criteria.csv and create criterion objects based on the file contents
 #open file and step through each rows
