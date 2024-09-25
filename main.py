@@ -16,7 +16,7 @@ def update():
 #CRUD
 #create
 def create_person(name, age, contact):
-    person = Person(name, age, contact)
+    person = Applicant(name, age, contact)
     with open ("candidate.pkl","wb") as file:
         pickle.dump(person,file)
     return person
@@ -52,7 +52,6 @@ def read_people(self):
 def delete_person(list,person):
     list.remove(person)
 # candidate positions
-crew = Candidates(position="Krabby Patty employee")
 
 """       
 #person objects
@@ -70,7 +69,7 @@ crew.read_people()"""
 
 #questions and scores
 
-questions: Questions = {"question 1":"What is your experience?",
+questions = {"question 1":"What is your experience?",
                         "question 2": "What is your skill repetoire?",
                         "question 3": "aosufoasd",
                         "question 4": "ashdfaljslfjk",
@@ -81,7 +80,7 @@ score = ["Exceptional","Merit","Satisfactory","Unsatisfactory"]
 
 
 #pickle
-shortlist = {"candidates": crew.people,
+shortlist = {"candidates": None,
              "questions": questions}
 pickle.save(shortlist)
 

@@ -29,7 +29,13 @@ def test_create_criterion(csv_file:str):
             criteria.append(criterion)
         return(criteria)
 
+def test_create_applicant():
+    applicant = Applicant()
+
+
+
 print(test_create_criterion("test_role/criteria.csv")[0])
 #csv library
 # use csv library to read the criteria.csv and create criterion objects based on the file contents
 #open file and step through each rows
+#glob,
