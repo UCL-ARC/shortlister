@@ -35,15 +35,16 @@ def test_create_applicant():
     files = glob.glob("test_role/*.pdf")
     applicants = []
     for file in files:
-        rm_extension = file.rsplit(".",1)[0] #splits and leaves only index 0 (removes .pdf)
-        base_name = rm_extension.rsplit("\\")[1] 
+        rm_extension = file.split(".")[0] #splits and leaves only index 0 (removes .pdf) 
+        base_name = rm_extension.split("\\")[1] 
         name_parts = base_name.split("_") #splits the whole string using delimiter "_""
         full_name = name_parts[0] + " " +name_parts[1]
         applicant = Applicant(full_name,file,{})
         applicants.append(applicant)
-    for applicant in applicants:
-        print(applicants,end="\n")
+    return applicants
 
+def test_read():
+    pass
 
 
 
@@ -51,7 +52,7 @@ def test_create_applicant():
     #using delimiter "_" to separate 
 # import a directory, find all pdf files in that directory, split the files names, return the files names, and create applicant objects with file names  
 
-test_create_applicant()
+print(test_create_applicant())
 
 #print(test_create_criterion("test_role/criteria.csv")[0])
 #csv library
