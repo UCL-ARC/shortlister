@@ -35,13 +35,14 @@ def test_create_applicant():
     files = glob.glob("test_role/*.pdf")
     applicants = []
     for file in files:
-        rm_extension = file.rsplit(".")[0] #splits and leaves only index 0 (removes .pdf)
+        rm_extension = file.rsplit(".",1)[0] #splits and leaves only index 0 (removes .pdf)
         base_name = rm_extension.rsplit("\\")[1] 
         name_parts = base_name.split("_") #splits the whole string using delimiter "_""
         full_name = name_parts[0] + " " +name_parts[1]
-        applicant = Applicant(full_name,files,{})
+        applicant = Applicant(full_name,file,{})
         applicants.append(applicant)
-    print(applicants)
+    for applicant in applicants:
+        print(applicants,end="\n")
 
 
 
