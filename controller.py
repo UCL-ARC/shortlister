@@ -21,10 +21,6 @@ class Controller:
     def show_shortlist(self):
         self.view.view_shortlist(self.shortlist)
 
-"""job = Role("employee","18230123",[])
-view = View()"""
 control = Controller("test_role")
 
-#control.show_role_info(view,job)
-#control.show_shortlist()
 control.show_role_info()
