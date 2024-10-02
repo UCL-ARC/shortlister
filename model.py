@@ -67,6 +67,3 @@ def load_criteria(csv_file):
             criterion = Criterion(row[0],row[1],[])
             criteria.append(criterion)
     return criteria
-         
-def get_role_info(self):
-    return self.job_title,self.job_id,self.criteria
