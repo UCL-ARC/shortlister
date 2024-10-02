@@ -31,32 +31,35 @@ class Shortlist:
 
 #functions
 
+# gets the data of related properties and creates a object shortlist consisting of the role and all the applicants
 def load_shortlist(path):
     criteria = load_criteria(path+"/criteria.csv")
     role = load_role(path,criteria)
-    applicants = load_applicants(path)
+    applicants = load_applicants(path) 
     shortlist = Shortlist(role,applicants)
     return shortlist
 
+# gets the path to the role_folder and the criteria.csv file, returns a Role object
 def load_role(path,criteria):
-    role = (path,"0001",criteria)
+    role = Role(path,"0001",criteria)
     return role
     
 
-
+# gets a list of file names from path(path of the role directory), and returns a list of applicants 
 def load_applicants(path):
     p = Path(path)
     files = glob.glob(str(p/"*.pdf"))
     applicants = []
     for file in files:
         file = Path(file)
-        name_parts = file.stem.split("_")#removes .pdf 
+        name_parts = file.stem.split("_")
 
        # type(" ".join(name_parts[0,1]))
         applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
     return applicants
 
+# reads in a csv file containing all the criteria, and returns a list of criterion
 def load_criteria(csv_file):
     criteria = []
     with open(csv_file) as file:
