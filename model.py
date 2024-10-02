@@ -1,6 +1,6 @@
 from typing import Dict, List
 from dataclasses import dataclass
-
+import csv
 
 @dataclass
 class Criterion:
@@ -20,7 +20,20 @@ class Role:
     job_id: str
     criteria: List[Criterion]
 
+    def create_criteria(self,csv_file):
+         with open(csv_file) as file:
+            reader= csv.reader(file)
+            next(reader)
+
+            for row in reader:
+                criterion = Criterion(row[0],row[1],[])
+                self.criteria.append(criterion)
+            return(self.criteria)
+
 @dataclass
 class Shortlist:
     role: Role
     applicants: List[Applicant]
+
+    def creat_role(self,role):
+        pass
