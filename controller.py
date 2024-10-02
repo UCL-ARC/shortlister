@@ -14,6 +14,9 @@ class Controller:
     
     def show_applicants(self):
         self.view.view_applicants(self.applicants)
+
+    def show_criteria(self):
+        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
     
     def show_role_info(self):
         self.view.view_role(self.shortlist.role)
@@ -23,4 +26,6 @@ class Controller:
 
 control = Controller("test_role")
 
-control.show_role_info()
+#control.show_shortlist()
+#control.show_role_info()
+control.show_criteria()
