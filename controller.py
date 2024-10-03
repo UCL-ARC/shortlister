@@ -5,9 +5,13 @@ from model import *
 class Controller:
 
     def __init__(self,path):
+        self.path = path
         self.shortlist = load_shortlist(path)
         self.applicants = load_applicants(path)
         self.view = View()
+
+    def show_boot_message(self):
+        self.view.boot_message(self.path,len(self.shortlist.applicants))
 
     def show_applicant_info(self):
         self.view.view_applicants(self.shortlist.applicants)
@@ -23,5 +27,3 @@ class Controller:
 
     def show_shortlist(self):
         self.view.view_shortlist(self.shortlist)
-
-control = Controller("test_role")

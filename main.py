@@ -13,4 +13,4 @@ args = parser.parse_args()
 # accesses the rolepath from argument parsed
 control = Controller(args.rolepath)
 
-control.show_criteria()
+control.show_boot_message()
