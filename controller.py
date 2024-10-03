@@ -25,7 +25,3 @@ class Controller:
         self.view.view_shortlist(self.shortlist)
 
 control = Controller("test_role")
-
-#control.show_shortlist()
-#control.show_role_info()
-control.show_criteria()
