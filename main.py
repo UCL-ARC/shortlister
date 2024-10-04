@@ -11,6 +11,9 @@ parser.add_argument("rolepath",type=str)
 args = parser.parse_args()
 
 # accesses the rolepath from argument parsed
-control = Controller(args.rolepath)
 
-control.show_boot_message()
+try:
+    control = Controller(args.rolepath)
+    control.show_boot_message()
+except FileNotFoundError:
+    print("Sorry relevant files cannot be found in the directory, exiting the program...")
