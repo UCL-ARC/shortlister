@@ -6,20 +6,16 @@ control = Controller("test_role")
 control.show_boot_message()
 
 while run == True:
+    options = {"a":control.show_applicants,
+               "b":control.show_boot_message,
+               "c":control.show_criteria,
+               "r":control.show_role_info,
+               "s":control.show_shortlist,} 
+    
     k = readchar()
-    if k == "a":
-        print(k)
-        control.show_applicants()
-        print("(`oAo)")
-    if k == "b":
-        control.show_boot_message()
-        print("(=v=)b")
-    if k == "c":
-        control.show_criteria()
-    if k == "r":
-        control.show_role_info()
-    if k == "s":
-        control.show_shortlist()
+     
+    if output := options.get(k): 
+        output()
     if k == "o":
         print("(´⊙ω⊙`)!")
     if k == key.CTRL_U:
@@ -38,4 +34,7 @@ quit()
 #? difference between read char and read key
 
 """code improvement"""
-#could perhaps put all the keypress options in a list or set to avoid using hundreds if statements?
+
+# put keypress and controller functions in key:value pair in a dictionary
+# check if k == any of the keys 
+# if it does, access the function stored in value
