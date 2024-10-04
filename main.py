@@ -16,4 +16,4 @@ try:
     control = Controller(args.rolepath)
     control.show_boot_message()
 except FileNotFoundError:
-    print("Sorry relevant files cannot be found in the directory, exiting the program...")
+    print("Sorry, relevant files cannot be found in the directory, exiting the program...")
