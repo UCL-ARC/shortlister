@@ -1,6 +1,5 @@
 from model import Applicant, Criterion, Role, Shortlist
 import csv
-import glob
 from pathlib import Path
 
 def test_model():
@@ -33,10 +32,9 @@ def test_create_criterion(csv_file:str):
 
 def test_create_applicant(path):
     p = Path(path)
-    files = glob.glob(str(p/"*.pdf"))
+    files = p.glob("*.pdf")
     applicants = []
     for file in files:
-        file = Path(file)
         name_parts = file.stem.split("_")#removes .pdf 
         applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
@@ -44,3 +42,5 @@ def test_create_applicant(path):
 
 def test_read():
     pass
+
+print(test_create_applicant("test_role"))
