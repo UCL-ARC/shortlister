@@ -1,4 +1,4 @@
-from controller import *
+from controller import Controller
 import argparse
 
 #this creates an instance of parser

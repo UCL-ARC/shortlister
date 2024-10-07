@@ -1,6 +1,6 @@
-from view import *
+from view import View
 
-from model import *
+from model import load_shortlist,load_applicants
 
 class Controller:
 

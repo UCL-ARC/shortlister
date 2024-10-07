@@ -1,5 +1,5 @@
 from readchar import readchar,readkey,key
-from controller import *
+from controller import Controller
 
 run = True
 control = Controller("test_role")
