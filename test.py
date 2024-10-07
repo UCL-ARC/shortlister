@@ -44,17 +44,3 @@ def test_create_applicant(path):
 
 def test_read():
     pass
-
-
-
-    
-#using delimiter "_" to separate 
-# import a directory, find all pdf files in that directory, split the files names, return the files names, and create applicant objects with file names  
-
-print(test_create_applicant("test_role"))
-
-#print(test_create_criterion("test_role/criteria.csv")[0])
-#csv library
-# use csv library to read the criteria.csv and create criterion objects based on the file contents
-#open file and step through each rows
-#glob,
