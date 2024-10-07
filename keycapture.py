@@ -12,9 +12,9 @@ while run == True:
                "r":control.show_role_info,
                "s":control.show_shortlist,} 
     
-    k = readchar()
-     
-    if output := options.get(k): 
+    k = readkey()
+    output = options.get(k)
+    if output is not None:
         output()
     if k == "o":
         print("(´⊙ω⊙`)!")
