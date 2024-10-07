@@ -48,13 +48,10 @@ def load_role(path,criteria):
 # gets a list of file names from path(path of the role directory), and returns a list of applicants 
 def load_applicants(path):
     p = Path(path)
-    files = glob.glob(str(p/"*.pdf"))
+    files = p.glob("*.pdf")
     applicants = []
     for file in files:
-        file = Path(file)
         name_parts = file.stem.split("_")
-
-       # type(" ".join(name_parts[0,1]))
         applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
     return applicants
