@@ -1,5 +1,5 @@
 from view import View
-
+from readchar import readkey, key
 from model import load_shortlist,load_applicants
 
 class Controller:
@@ -27,3 +27,25 @@ class Controller:
 
     def show_shortlist(self):
         self.view.view_shortlist(self.shortlist)
+
+    def run(self):
+        self.show_boot_message()
+
+        while True:
+            options = {"a":self.show_applicants,
+                       "b":self.show_boot_message,
+                       "c":self.show_criteria,
+                       "r":self.show_role_info,
+                       "s":self.show_shortlist,} 
+
+            k = readkey()
+            output = options.get(k)
+            if output is not None:
+                output()
+            if k == "o":
+                print("(´⊙ω⊙`)!")
+            if k == key.CTRL_U:
+                print("ctrl u")
+            if k == key.ESC:
+                print("exiting the program...")
+                break
