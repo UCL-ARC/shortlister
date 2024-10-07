@@ -7,7 +7,6 @@ class Controller:
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
-        self.applicants = load_applicants(path)
         self.view = View()
 
     def show_boot_message(self):
@@ -15,9 +14,6 @@ class Controller:
 
     def show_applicant_info(self):
         self.view.view_applicants(self.shortlist.applicants)
-    
-    def show_applicants(self):
-        self.view.view_applicants(self.applicants)
 
     def show_criteria(self):
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
