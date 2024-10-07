@@ -14,6 +14,6 @@ args = parser.parse_args()
 
 try:
     control = Controller(args.rolepath)
-    control.show_boot_message()
+    control.run()
 except FileNotFoundError:
     print("Sorry, relevant files cannot be found in the directory, exiting the program...")
