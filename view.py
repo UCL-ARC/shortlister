@@ -29,8 +29,8 @@ class View:
         print(f"CV Path: {applicant.cv}")
         print(f"Scores: {applicant.scores}")
     
-    def view_shortlist(self,shortlist):
-        print(f"Shortlist for {shortlist.role.job_title}:")
+    def view_applicants_list(self,shortlist):
+        print(f"List of applicants for {shortlist.role.job_title}:")
 
         for applicant in shortlist.applicants:
             i = shortlist.applicants.index(applicant)
