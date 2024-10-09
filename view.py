@@ -12,19 +12,9 @@ class View:
     def view_role(self,role):
         print(f"Role title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
-
-    def view_applicants(self,applicants):
-        print(f"Here are all of the applicants:")
-        print()
-
-        for applicant in applicants:
-          i = applicants.index(applicant)
-          print(f"{i+1}.Name: {applicant.name}")
-          print(f"CV Path: {applicant.cv}")
-          print(f"Scores: {applicant.scores}")
-          print()
-    
+        
     def view_applicant_details(self,applicant):
+
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
         print(f"Scores: {applicant.scores}")
