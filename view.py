@@ -24,6 +24,11 @@ class View:
           print(f"Scores: {applicant.scores}")
           print()
     
+    def view_applicant_details(self,applicant):
+        print(f"Details for {applicant.name}: ")
+        print(f"CV Path: {applicant.cv}")
+        print(f"Scores: {applicant.scores}")
+    
     def view_shortlist(self,shortlist):
         print(f"Shortlist for {shortlist.role.job_title}:")
 
