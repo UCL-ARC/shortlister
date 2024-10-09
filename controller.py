@@ -31,7 +31,8 @@ class Controller:
         self.current_view = "applicants_list"
 
     def show_applicant_details(self):
-        self.view.view_applicant_details(self.shortlist.applicants)
+        i = input("Please enter the applicant number:")
+        self.view.view_applicant_details(self.shortlist.applicants[int(i)-1])
         self.current_view = "applicant_details"
 
     def run(self):
