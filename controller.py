@@ -14,10 +14,10 @@ class Controller:
         self.view.boot_message(self.path,len(self.shortlist.applicants))
         self.current_view = "home"
 
-    def show_applicants(self):
+    """def show_applicants(self):
         self.view.view_applicants(self.shortlist.applicants)
         self.current_view = "applicants"
-
+"""
     def show_criteria(self):
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
         self.current_view = "criteria"
@@ -26,9 +26,13 @@ class Controller:
         self.view.view_role(self.shortlist.role)
         self.current_view = "role"
 
-    def show_shortlist(self):
-        self.view.view_shortlist(self.shortlist)
-        self.current_view = "shortlist"
+    def show_applicants_list(self):
+        self.view.view_applicants_list(self.shortlist)
+        self.current_view = "applicants_list"
+
+    def show_applicant_details(self):
+        self.view.view_applicant_details(self.shortlist.applicants)
+        self.current_view = "applicant_details"
 
     def run(self):
 
@@ -38,9 +42,8 @@ class Controller:
             k = readkey()
 
             if self.current_view == "home":
-                options = {"b":self.show_boot_message,
-                           "r":self.show_role_info,
-                           "s":self.show_shortlist}
+                options = {"r":self.show_role_info,
+                           "a":self.show_applicants_list}
                 
                 output = options.get(k)
                 if output is not None:
@@ -49,13 +52,9 @@ class Controller:
                     print("exiting the program...")
                     break
                 
-            if self.current_view == "shortlist":
-                options = {"a":self.show_applicants,
-                           "b":self.show_boot_message,
-                           "c":self.show_criteria,
-                           "r":self.show_role_info,
-                           "s":self.show_shortlist
-                           }
+            elif self.current_view == "applicants_list":
+                options = {"b":self.show_boot_message,
+                           "d":self.show_applicant_details}
                 
                 output = options.get(k)
                 if output is not None:
@@ -64,8 +63,9 @@ class Controller:
                     print("exiting the program...")
                     break
             
-            if self.current_view == "criteria":
-                options = {"b":self.show_shortlist}
+            elif self.current_view == "applicant_detail":
+                options = {"q":self.show_applicants_list,
+                           "b":self.show_boot_message}
 
                 output = options.get(k)
                 if output is not None:
@@ -75,10 +75,27 @@ class Controller:
                     print("exiting the program...")
                     break
 
+            elif self.current_view == "role":
+                options = {"b":self.show_boot_message}
 
-""" bug """
-# shortcuts for criteria does not limit to only "b"
-# need to recheck current view
+                output = options.get(k)
+                if output is not None:
+                    output()
+
+                if k == key.ESC:
+                    print("exiting the program...")
+                    break
+
+            elif self.current_view == "criteria":
+                options = {"b":self.show_boot_message}
+
+                output = options.get(k)
+                if output is not None:
+                    output()
+
+                if k == key.ESC:
+                    print("exiting the program...")
+                    break
 
 """view"""
 
@@ -86,7 +103,9 @@ class Controller:
 # > "s" to shortlist view
 # > "h" for list of shortcut commands
 
-# shortlist ()
+# applicant_list
+# shows only number and name
+
 # > "a" for list of applicants and their infos
 # > "c" for criteria
 # > "r" for role info and id
