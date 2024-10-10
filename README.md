@@ -31,6 +31,9 @@ crossplatform version of os.startfile
 Shell escaping
 (os.system only works with filenames that don't have any spaces or other shell metacharacters in the pathname)
 
+#### subprocess
+used to do tasks that is done via command line or interacting with external programs
+similar to os.system
 
 ### Design concepts
 
