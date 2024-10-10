@@ -1,12 +1,14 @@
 from view import View
 from readchar import readkey, key
 from model import load_shortlist
+from startfile import startfile
 
 class Controller:
 
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
+        self.current_applicant = None
         self.current_view = "home"
         self.view = View()
 
@@ -29,10 +31,15 @@ class Controller:
     def show_applicant_details(self):
         try:
             i = int(input("Please enter the applicant number:"))
-            self.view.view_applicant_details(self.shortlist.applicants[i-1])
+
+            self.current_applicant = self.shortlist.applicants[i-1]
+            self.view.view_applicant_details(self.current_applicant)
             self.current_view = "applicant_details"
         except (ValueError, IndexError):
             pass
+    def open_applicant_pdf(self):
+        startfile(self.current_applicant.cv)
+        
     
 
     def run(self):
@@ -66,7 +73,8 @@ class Controller:
             
             elif self.current_view == "applicant_details":
                 options = {"q":self.show_applicants_list,
-                           "b":self.show_boot_message}
+                           "b":self.show_boot_message,
+                           "o":self.open_applicant_pdf}
 
                 output = options.get(k)
                 if output is not None:
