@@ -14,10 +14,6 @@ class Controller:
         self.view.boot_message(self.path,len(self.shortlist.applicants))
         self.current_view = "home"
 
-    """def show_applicants(self):
-        self.view.view_applicants(self.shortlist.applicants)
-        self.current_view = "applicants"
-"""
     def show_criteria(self):
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
         self.current_view = "criteria"
@@ -63,7 +59,7 @@ class Controller:
                     print("exiting the program...")
                     break
             
-            elif self.current_view == "applicant_detail":
+            elif self.current_view == "applicant_details":
                 options = {"q":self.show_applicants_list,
                            "b":self.show_boot_message}
 
