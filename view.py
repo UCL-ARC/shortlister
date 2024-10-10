@@ -15,14 +15,13 @@ class View:
         
     def view_applicant_details(self,applicants):
         i = int(input("Please enter the applicant number:"))
-        if i-1 > len(applicants):
-            return
+        while i-1 > len(applicants):
+            i = int(input("Please enter a valid applicant number:"))
         else:
             applicant = applicants[i-1]
             print(f"Details for {applicant.name}: ")
             print(f"CV Path: {applicant.cv}")
             print(f"Scores: {applicant.scores}")
-        return
 
     def view_applicants_list(self,shortlist):
         print(f"List of applicants for {shortlist.role.job_title}:")
