@@ -27,8 +27,13 @@ class Controller:
         self.current_view = "applicants_list"
 
     def show_applicant_details(self):
-        self.view.view_applicant_details(self.shortlist.applicants)
-        self.current_view = "applicant_details"
+        try:
+            i = int(input("Please enter the applicant number:"))
+            self.view.view_applicant_details(self.shortlist.applicants[i-1])
+            self.current_view = "applicant_details"
+        except (ValueError, IndexError):
+            pass
+    
 
     def run(self):
 
@@ -92,3 +97,18 @@ class Controller:
                 if k == key.ESC:
                     print("exiting the program...")
                     break
+
+"""view"""
+
+# home(default boot-up view) 
+# > "s" to shortlist view
+# > "h" for list of shortcut commands
+
+# applicant_list
+# shows only number and name
+
+# > "a" for list of applicants and their infos
+# > "c" for criteria
+# > "r" for role info and id
+# > "h" for list of shortcut commands
+

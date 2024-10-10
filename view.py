@@ -11,12 +11,7 @@ class View:
         print(f"Role title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
         
-    def view_applicant_details(self,applicants):
-        i = int(input("Please enter the applicant number:"))
-        while i-1 > len(applicants):
-            i = int(input("Please enter a valid applicant number:"))
-        else:
-            applicant = applicants[i-1]
+    def view_applicant_details(self,applicant):
             print(f"Details for {applicant.name}: ")
             print(f"CV Path: {applicant.cv}")
             print(f"Scores: {applicant.scores}")
