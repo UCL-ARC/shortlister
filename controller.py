@@ -41,6 +41,9 @@ class Controller:
 
         while True:
             k = readkey()
+            if k == key.ESC:
+                print("exiting the program...")
+                break
 
             if self.current_view == "home":
                 options = {"r":self.show_role_info,
@@ -49,9 +52,6 @@ class Controller:
                 output = options.get(k)
                 if output is not None:
                     output()
-                if k == key.ESC:
-                    print("exiting the program...")
-                    break
                 
             elif self.current_view == "applicants_list":
                 options = {"b":self.show_boot_message,
@@ -60,9 +60,6 @@ class Controller:
                 output = options.get(k)
                 if output is not None:
                     output()
-                if k == key.ESC:
-                    print("exiting the program...")
-                    break
             
             elif self.current_view == "applicant_details":
                 options = {"q":self.show_applicants_list,
@@ -72,10 +69,6 @@ class Controller:
                 if output is not None:
                     output()
 
-                if k == key.ESC:
-                    print("exiting the program...")
-                    break
-
             elif self.current_view == "role":
                 options = {"b":self.show_boot_message}
 
@@ -83,21 +76,12 @@ class Controller:
                 if output is not None:
                     output()
 
-                if k == key.ESC:
-                    print("exiting the program...")
-                    break
-
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
 
                 output = options.get(k)
                 if output is not None:
                     output()
-
-                if k == key.ESC:
-                    print("exiting the program...")
-                    break
-
 """view"""
 
 # home(default boot-up view) 
