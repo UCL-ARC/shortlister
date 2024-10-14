@@ -78,17 +78,4 @@ class Controller:
             output = options.get(k)
             if output is not None:
                 output()
-"""view"""
-
-# home(default boot-up view) 
-# > "s" to shortlist view
-# > "h" for list of shortcut commands
-
-# applicant_list
-# shows only number and name
-
-# > "a" for list of applicants and their infos
-# > "c" for criteria
-# > "r" for role info and id
-# > "h" for list of shortcut commands
 
