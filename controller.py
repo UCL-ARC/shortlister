@@ -1,5 +1,6 @@
 from view import View
-from readchar import readkey, key
+from readchar import key
+import readkeys
 from model import load_shortlist
 from startfile import startfile
 
@@ -46,7 +47,7 @@ class Controller:
         self.show_boot_message()
 
         while True:
-            k = readkey()
+            k = readkeys.getch()
             if k == key.ESC:
                 print("exiting the program...")
                 break
