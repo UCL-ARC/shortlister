@@ -25,7 +25,6 @@ class View:
         print(f"The criteria for {role.job_title} are:")
         print()
         
-
         for criterion in criteria:
             i = criteria.index(criterion)
             print(f"{i+1}. {criterion.name}")

@@ -40,7 +40,7 @@ class Controller:
 
     def open_applicant_pdf(self):
         startfile(self.current_applicant.cv)
-        
+
     def run(self):
 
         self.show_boot_message()
@@ -54,10 +54,6 @@ class Controller:
             if self.current_view == "home":
                 options = {"r":self.show_role_info,
                            "a":self.show_applicants_list}
-                
-                output = options.get(k)
-                if output is not None:
-                    output()
                 
             elif self.current_view == "applicants_list":
                 options = {"b":self.show_boot_message,
