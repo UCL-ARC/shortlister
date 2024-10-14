@@ -37,11 +37,10 @@ class Controller:
             self.current_view = "applicant_details"
         except (ValueError, IndexError):
             pass
+
     def open_applicant_pdf(self):
         startfile(self.current_applicant.cv)
         
-    
-
     def run(self):
 
         self.show_boot_message()
