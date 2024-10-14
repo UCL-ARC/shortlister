@@ -64,32 +64,20 @@ class Controller:
                 options = {"b":self.show_boot_message,
                            "d":self.show_applicant_details}
                 
-                output = options.get(k)
-                if output is not None:
-                    output()
-            
             elif self.current_view == "applicant_details":
                 options = {"q":self.show_applicants_list,
                            "b":self.show_boot_message,
-                           "o":self.open_applicant_pdf}
-
-                output = options.get(k)
-                if output is not None:
-                    output()
+                           "O":self.open_applicant_pdf}
 
             elif self.current_view == "role":
                 options = {"b":self.show_boot_message}
-
-                output = options.get(k)
-                if output is not None:
-                    output()
-
+                
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
 
-                output = options.get(k)
-                if output is not None:
-                    output()
+            output = options.get(k)
+            if output is not None:
+                output()
 """view"""
 
 # home(default boot-up view) 
