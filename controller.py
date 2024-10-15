@@ -77,10 +77,10 @@ class Controller:
                 options = {"b":self.show_boot_message}
             
             if options is not None:
+                output = options.get(k)
                 if k == "?":
                     for keypress,func in options.items():
-                        print(f"{keypress}:{func.__doc__}")
-                output = options.get(k)
-                if output is not None:
+                        print(f"{keypress}: {func.__doc__}")
+                elif output is not None:
                     output()
 
