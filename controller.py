@@ -48,6 +48,8 @@ class Controller:
 
         while True:
             k = readkeys.getch()
+            options = None
+            
             if k == key.ESC:
                 print("exiting the program...")
                 break
@@ -70,8 +72,9 @@ class Controller:
                 
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
-
-            output = options.get(k)
-            if output is not None:
-                output()
+            
+            if options is not None:
+                output = options.get(k)
+                if output is not None:
+                    output()
 
