@@ -6,6 +6,7 @@ class View:
     def boot_message(self,role,num_applicants):
         print(f"Shortlist for {role} loaded:")
         print(f"{num_applicants} applicants found")
+        print("('?' to show list of avaliable shortcuts)")
     
     def view_role(self,role):
         print(f"Role title: {role.job_title}")
