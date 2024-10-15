@@ -51,7 +51,7 @@ class Controller:
                 print("exiting the program...")
                 break
 
-            if self.current_view == "home":
+            elif self.current_view == "home":
                 options = {"r":self.show_role_info,
                            "a":self.show_applicants_list}
                 
@@ -71,6 +71,9 @@ class Controller:
                 options = {"b":self.show_boot_message}
             
             if options is not None:
+                if k == "?":
+                    for keypress,func in options.items():
+                        print(f"{keypress}:{func.__doc__}")
                 output = options.get(k)
                 if output is not None:
                     output()
