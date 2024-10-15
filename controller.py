@@ -13,22 +13,27 @@ class Controller:
         self.view = View()
 
     def show_boot_message(self):
+        """Shortlist overview"""
         self.view.boot_message(self.path,len(self.shortlist.applicants))
         self.current_view = "home"
 
     def show_criteria(self):
+        """Display criteria information"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
         self.current_view = "criteria"
 
     def show_role_info(self):
+        """Display role information"""
         self.view.view_role(self.shortlist.role)
         self.current_view = "role"
 
     def show_applicants_list(self):
+        """List all applicants"""
         self.view.view_applicants_list(self.shortlist)
         self.current_view = "applicants_list"
 
     def show_applicant_details(self):
+        """Select an applicant and view details"""
         try:
             i = int(input("Please enter the applicant number:"))
 
@@ -39,6 +44,7 @@ class Controller:
             pass
 
     def open_applicant_pdf(self):
+        """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
 
     def run(self):
