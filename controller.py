@@ -1,6 +1,7 @@
 from view import View
 from readchar import key
 import readkeys
+import platform
 from model import load_shortlist
 from startfile import startfile
 
@@ -47,8 +48,12 @@ class Controller:
         self.show_boot_message()
 
         while True:
-            k = readkeys.getch()
             options = None
+
+            if platform.system() == "Linux" or "Darwin":
+                k = readkeys.getkey()
+            elif platform.system() == "Windows":
+                k = readkeys.getch()
             
             if k == key.ESC:
                 print("exiting the program...")
@@ -77,4 +82,3 @@ class Controller:
                 output = options.get(k)
                 if output is not None:
                     output()
-
