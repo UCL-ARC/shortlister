@@ -17,8 +17,6 @@ class View:
             print(f"Scores: {applicant.scores}")
 
     def view_applicants_list(self,shortlist):
-        print(f"List of applicants for {shortlist.role.job_title}:")
-        
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
 
@@ -26,7 +24,6 @@ class View:
         print(f"The criteria for {role.job_title} are:")
         print()
         
-
         for criterion in criteria:
             i = criteria.index(criterion)
             print(f"{i+1}. {criterion.name}")

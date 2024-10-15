@@ -1,12 +1,14 @@
 from view import View
 from readchar import readkey, key
 from model import load_shortlist
+from startfile import startfile
 
 class Controller:
 
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
+        self.current_applicant = None
         self.current_view = "home"
         self.view = View()
 
@@ -29,11 +31,15 @@ class Controller:
     def show_applicant_details(self):
         try:
             i = int(input("Please enter the applicant number:"))
-            self.view.view_applicant_details(self.shortlist.applicants[i-1])
+
+            self.current_applicant = self.shortlist.applicants[i-1]
+            self.view.view_applicant_details(self.current_applicant)
             self.current_view = "applicant_details"
         except (ValueError, IndexError):
             pass
-    
+
+    def open_applicant_pdf(self):
+        startfile(self.current_applicant.cv)
 
     def run(self):
 
@@ -41,6 +47,8 @@ class Controller:
 
         while True:
             k = readkey()
+            options = None
+            
             if k == key.ESC:
                 print("exiting the program...")
                 break
@@ -49,50 +57,23 @@ class Controller:
                 options = {"r":self.show_role_info,
                            "a":self.show_applicants_list}
                 
-                output = options.get(k)
-                if output is not None:
-                    output()
-                
             elif self.current_view == "applicants_list":
                 options = {"b":self.show_boot_message,
                            "d":self.show_applicant_details}
                 
-                output = options.get(k)
-                if output is not None:
-                    output()
-            
             elif self.current_view == "applicant_details":
                 options = {"q":self.show_applicants_list,
-                           "b":self.show_boot_message}
-
-                output = options.get(k)
-                if output is not None:
-                    output()
+                           "b":self.show_boot_message,
+                           "O":self.open_applicant_pdf}
 
             elif self.current_view == "role":
                 options = {"b":self.show_boot_message}
 
-                output = options.get(k)
-                if output is not None:
-                    output()
-
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
-
+            
+            if options is not None:
                 output = options.get(k)
                 if output is not None:
                     output()
-"""view"""
-
-# home(default boot-up view) 
-# > "s" to shortlist view
-# > "h" for list of shortcut commands
-
-# applicant_list
-# shows only number and name
-
-# > "a" for list of applicants and their infos
-# > "c" for criteria
-# > "r" for role info and id
-# > "h" for list of shortcut commands
 
