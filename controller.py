@@ -68,7 +68,7 @@ class Controller:
 
             elif self.current_view == "role":
                 options = {"b":self.show_boot_message}
-                
+
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
             
