@@ -79,6 +79,7 @@ class Controller:
             if options is not None:
                 output = options.get(k)
                 if k == "?":
+                    print("---List of shortcuts---")
                     for keypress,func in options.items():
                         print(f"{keypress}: {func.__doc__}")
                 elif output is not None:
