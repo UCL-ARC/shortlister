@@ -66,7 +66,7 @@ class Controller:
                            "d":self.show_applicant_details}
                 
             elif self.current_view == "applicant_details":
-                options = {"q":self.show_applicants_list,
+                options = {"a":self.show_applicants_list,
                            "b":self.show_boot_message,
                            "O":self.open_applicant_pdf}
 
