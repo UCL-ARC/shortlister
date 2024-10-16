@@ -53,7 +53,7 @@ class Controller:
 
         while True:
             k = readkey()
-            if k == key.ESC:
+            if k == "q":
                 print("exiting the program...")
                 break
 
