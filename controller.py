@@ -80,6 +80,7 @@ class Controller:
                 output = options.get(k)
                 if k == "?":
                     print("---List of shortcuts---")
+                    print("q: Exit the program")
                     for keypress,func in options.items():
                         print(f"{keypress}: {func.__doc__}")
                 elif output is not None:
