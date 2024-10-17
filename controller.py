@@ -1,5 +1,5 @@
 from view import View
-from readchar import readkey, key
+from readchar import readkey
 from model import load_shortlist
 from startfile import startfile
 
