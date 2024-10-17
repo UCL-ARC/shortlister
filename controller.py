@@ -9,6 +9,7 @@ class Controller:
         self.path = path
         self.shortlist = load_shortlist(path)
         self.current_applicant = None
+        self.current_criterion = None
         self.current_view = "home"
         self.view = View()
 
@@ -47,6 +48,26 @@ class Controller:
         """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
 
+    def create_applicant_criterion():
+        pass
+
+    def edit_applicant_score(self):
+        """View and score applicants based on criteria"""
+        print("select the criteria you would like to mark:")
+
+        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
+        options = [str(i) for i in range(len(self.shortlist.role.criteria))]         
+        k = readkey()
+        
+        if k in options:
+            self.current_criterion = self.shortlist.role.criteria[int(k)]
+            print(self.current_criterion.scores)
+            scoring_options = [str(i) for i in range(len(self.current_criterion.scores))]
+            if k := readkey() in scoring_options:
+                self.current_applicant.scores.update(self.current_criterion.name,self.current_criterion.scores[int(k)])
+        else:
+            print("please press a valid key!")
+
     def run(self):
 
         self.show_boot_message()
@@ -67,6 +88,7 @@ class Controller:
                 
             elif self.current_view == "applicant_details":
                 options = {"a":self.show_applicants_list,
+                           "e":self.edit_applicant_score,
                            "b":self.show_boot_message,
                            "O":self.open_applicant_pdf}
 
@@ -85,4 +107,3 @@ class Controller:
                         print(f"{keypress}: {func.__doc__}")
                 elif output is not None:
                     output()
-
