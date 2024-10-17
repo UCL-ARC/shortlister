@@ -1,4 +1,4 @@
-"Name","Description"
-"PhD","Degree or relevant experience"
-"Research software","Authorship,development and maintenance"
-"Best practices","Issue tracking, testing, documentation etc."
+"Name","Description","Scoring"
+"PhD","Degree or relevant experience,"Excellent,Satisfactory,Unsatisfactory,Not present"
+"Research software","Authorship,development and maintenance","Excellent,Satisfactory,Unsatisfactory,Not present"
+"Best practices","Issue tracking, testing, documentation etc.","Excellent,Satisfactory,Unsatisfactory,Not present"

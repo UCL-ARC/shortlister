@@ -64,6 +64,6 @@ def load_criteria(csv_file):
         next(reader)
 
         for row in reader:
-            criterion = Criterion(row[0],row[1],[])
+            criterion = Criterion(row[0],row[1],row[2])
             criteria.append(criterion)
     return criteria
