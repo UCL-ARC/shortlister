@@ -53,13 +53,15 @@ class Controller:
 
     def edit_applicant_score(self):
         """View and score applicants based on criteria"""
-        print("select the criteria you would like to mark:")
+        print("Select the criteria you would like to mark:")
 
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria) #prints out criteria
         options = [str(i) for i in range(len(self.shortlist.role.criteria))] #sets avaliable keypress based on how many criterions in the criteria 
 
         k = readkey() #gets the keypress (0,1,2,3.etc)
-        print(self.shortlist.role.criteria[int(k)]) #test(to be removed later)
+
+        #shows the select criterion that you would like mark(might move into view.py)
+        print(f"{self.shortlist.role.criteria[int(k)].name} selected")
 
         if k in options: #checks if keypress is one of the avaliable options
             self.current_criterion = self.shortlist.role.criteria[int(k)] #sets the current criterion editing 
@@ -71,10 +73,13 @@ class Controller:
             k = readkey() #gets keypress again
             print(k)
             if k in scoring_options: #checks if keypress is in avaliable options
-                self.current_applicant.scores.update({self.current_criterion.name:self.current_criterion.scores[int(k)]}) #update the 
-                print(self.current_applicant)
+                self.current_applicant.scores.update({self.current_criterion.name:self.current_criterion.scores[int(k)]}) #updates the score dictionary in applicant instance
+
+                #shows the updated scores (might move into view.py)
+                print(f"Updated score for {self.current_applicant.name}")
+                print(self.current_applicant.scores)
             else:
-                print("something went wrong")
+                print("process aborted...")
         else:
             print("please press a valid key!")
 
