@@ -1,5 +1,5 @@
 from view import View
-from readchar import readkey, key
+from readchar import readkey
 from model import load_shortlist
 from startfile import startfile
 
@@ -13,22 +13,27 @@ class Controller:
         self.view = View()
 
     def show_boot_message(self):
+        """Shortlist overview"""
         self.view.boot_message(self.path,len(self.shortlist.applicants))
         self.current_view = "home"
 
     def show_criteria(self):
+        """Display criteria information"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
         self.current_view = "criteria"
 
     def show_role_info(self):
+        """Display role information"""
         self.view.view_role(self.shortlist.role)
         self.current_view = "role"
 
     def show_applicants_list(self):
+        """List all applicants"""
         self.view.view_applicants_list(self.shortlist)
         self.current_view = "applicants_list"
 
     def show_applicant_details(self):
+        """Select an applicant and view details"""
         try:
             i = int(input("Please enter the applicant number:"))
 
@@ -39,6 +44,7 @@ class Controller:
             pass
 
     def open_applicant_pdf(self):
+        """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
 
     def run(self):
@@ -47,13 +53,12 @@ class Controller:
 
         while True:
             k = readkey()
-            options = None
-            
-            if k == key.ESC:
+
+            if k == "q":
                 print("exiting the program...")
                 break
 
-            if self.current_view == "home":
+            elif self.current_view == "home":
                 options = {"r":self.show_role_info,
                            "a":self.show_applicants_list}
                 
@@ -62,7 +67,7 @@ class Controller:
                            "d":self.show_applicant_details}
                 
             elif self.current_view == "applicant_details":
-                options = {"q":self.show_applicants_list,
+                options = {"a":self.show_applicants_list,
                            "b":self.show_boot_message,
                            "O":self.open_applicant_pdf}
 
@@ -71,9 +76,17 @@ class Controller:
 
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
-            
-            if options is not None:
-                output = options.get(k)
-                if output is not None:
-                    output()
+
+            else:
+                options = None
+
+            if k == "?":
+                print("---List of shortcuts---")
+                print("q: Exit the program")
+                for keypress,func in options.items():
+                    print(f"{keypress}: {func.__doc__}")
+
+            output = options.get(k)
+            if output is not None:
+                output()
 
