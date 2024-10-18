@@ -55,13 +55,26 @@ class Controller:
         """View and score applicants based on criteria"""
         print("select the criteria you would like to mark:")
 
-        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
-        options = [str(i) for i in range(len(self.shortlist.role.criteria))]
+        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria) #prints out criteria
+        options = [str(i) for i in range(len(self.shortlist.role.criteria))] #sets avaliable keypress based on how many criterions in the criteria 
 
-        if k :=readkey() in options:
-            self.current_criterion = self.shortlist.role.criteria[int(k)]
-            for index,score in enumerate(self.current_criterion.scores):
+        k = readkey() #gets the keypress (0,1,2,3.etc)
+        print(self.shortlist.role.criteria[int(k)]) #test(to be removed later)
+
+        if k in options: #checks if keypress is one of the avaliable options
+            self.current_criterion = self.shortlist.role.criteria[int(k)] #sets the current criterion editing 
+            for index,score in enumerate(self.current_criterion.scores): #prints list of avaliable scoring for the criterion
                 print(f"{index}: {score}")
+
+            scoring_options = [str(i) for i in range(len(self.shortlist.role.criteria))] #sets the list of avaliable key for scoring
+
+            k = readkey() #gets keypress again
+            print(k)
+            if k in scoring_options: #checks if keypress is in avaliable options
+                self.current_applicant.scores.update({self.current_criterion.name:self.current_criterion.scores[int(k)]}) #update the 
+                print(self.current_applicant)
+            else:
+                print("something went wrong")
         else:
             print("please press a valid key!")
 
