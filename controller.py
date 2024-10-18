@@ -66,7 +66,7 @@ class Controller:
             for index,score in enumerate(self.current_criterion.scores): #prints list of avaliable scoring for the criterion
                 print(f"{index}: {score}")
 
-            scoring_options = [str(i) for i in range(len(self.shortlist.role.criteria))] #sets the list of avaliable key for scoring
+            scoring_options = [str(i) for i in range(len(self.current_criterion.scores))] #sets the list of avaliable key for scoring
 
             k = readkey() #gets keypress again
             print(k)
