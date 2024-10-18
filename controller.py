@@ -53,6 +53,7 @@ class Controller:
 
         while True:
             k = readkey()
+
             if k == "q":
                 print("exiting the program...")
                 break
@@ -72,7 +73,7 @@ class Controller:
 
             elif self.current_view == "role":
                 options = {"b":self.show_boot_message}
-                
+
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
 
