@@ -56,15 +56,12 @@ class Controller:
         print("select the criteria you would like to mark:")
 
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
-        options = [str(i) for i in range(len(self.shortlist.role.criteria))]         
-        k = readkey()
-        
-        if k in options:
+        options = [str(i) for i in range(len(self.shortlist.role.criteria))]
+
+        if k :=readkey() in options:
             self.current_criterion = self.shortlist.role.criteria[int(k)]
-            print(self.current_criterion.scores)
-            scoring_options = [str(i) for i in range(len(self.current_criterion.scores))]
-            if k := readkey() in scoring_options:
-                self.current_applicant.scores.update(self.current_criterion.name,self.current_criterion.scores[int(k)])
+            for index,score in enumerate(self.current_criterion.scores):
+                print(f"{index}: {score}")
         else:
             print("please press a valid key!")
 
