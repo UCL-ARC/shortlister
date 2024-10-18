@@ -47,10 +47,7 @@ class Controller:
     def open_applicant_pdf(self):
         """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
-
-    def create_applicant_criterion():
-        pass
-
+        
     def edit_applicant_score(self):
         """View and score applicants based on criteria"""
         print("Select the criteria you would like to mark:")
