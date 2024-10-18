@@ -75,14 +75,17 @@ class Controller:
                 
             elif self.current_view == "criteria":
                 options = {"b":self.show_boot_message}
-            
-            if options is not None:
-                output = options.get(k)
-                if k == "?":
-                    print("---List of shortcuts---")
-                    print("q: Exit the program")
-                    for keypress,func in options.items():
-                        print(f"{keypress}: {func.__doc__}")
-                elif output is not None:
-                    output()
+
+            else:
+                options = None
+
+            if k == "?":
+                print("---List of shortcuts---")
+                print("q: Exit the program")
+                for keypress,func in options.items():
+                    print(f"{keypress}: {func.__doc__}")
+
+            output = options.get(k)
+            if output is not None:
+                output()
 
