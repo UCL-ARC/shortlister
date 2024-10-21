@@ -12,7 +12,31 @@ class Controller:
         self.current_criterion = None
         self.current_view = "home"
         self.view = View()
+        self.options = None # intial state
+        self.options_1 = {"0":self.options_2a, # list of criteria
+                          "1":self.options_2b,}
 
+    def edit_appscore_start(self,k=None):
+        print("Select an criteria to edit score for:")
+        self.options = self.options_1
+        print(self.options)
+
+    def edit_criteria_select(self, k=None):
+        print("You selected A. Select more...")
+        self.options = {
+            "0": self.step3,
+            "1": self.step3,
+            "2": self.step3
+        }
+
+    def edit_criteria_quit(self, k=None):
+        print(f"You selected B. Back to start...")
+        self.options = self.step1_options
+
+    def edit_score_select(self, k=None):
+        print(f"You selected {k}. Back to start...")
+        self.options = self.step1_options
+    
     def show_boot_message(self):
         """Shortlist overview"""
         self.view.boot_message(self.path,len(self.shortlist.applicants))
@@ -118,4 +142,4 @@ class Controller:
                     for keypress,func in options.items():
                         print(f"{keypress}: {func.__doc__}")
                 elif output is not None:
-                    output()
+                    output(k=k)
