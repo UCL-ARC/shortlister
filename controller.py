@@ -55,38 +55,6 @@ class Controller:
         """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
         
-    def edit_applicant_score(self,k=None):
-        """View and score applicants based on criteria"""
-        print("Select the criteria you would like to mark:")
-
-        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria) #prints out criteria
-        options = [str(i) for i in range(len(self.shortlist.role.criteria))] #sets avaliable keypress based on how many criterions in the criteria 
-
-        k = readkey() #gets the keypress (0,1,2,3.etc)
-
-        #shows the select criterion that you would like mark(might move into view.py)
-        print(f"{self.shortlist.role.criteria[int(k)].name} selected")
-
-        if k in options: #checks if keypress is one of the avaliable options
-            self.current_criterion = self.shortlist.role.criteria[int(k)] #sets the current criterion editing 
-            for index,score in enumerate(self.current_criterion.scores): #prints list of avaliable scoring for the criterion
-                print(f"{index}: {score}")
-
-            scoring_options = [str(i) for i in range(len(self.current_criterion.scores))] #sets the list of avaliable key for scoring
-
-            k = readkey() #gets keypress again
-            print(k)
-            if k in scoring_options: #checks if keypress is in avaliable options
-                self.current_applicant.scores.update({self.current_criterion.name:self.current_criterion.scores[int(k)]}) #updates the score dictionary in applicant instance
-
-                #shows the updated scores (might move into view.py)
-                print(f"Updated score for {self.current_applicant.name}")
-                print(self.current_applicant.scores)
-            else:
-                print("process aborted...")
-        else:
-            print("please press a valid key!")
-
     def edit_appscore_start(self,k=None):
         """select a criteria to edit score for"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
