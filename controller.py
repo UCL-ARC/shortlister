@@ -21,26 +21,6 @@ class Controller:
                                    "b":self.show_boot_message,
                                    "O":self.open_applicant_pdf}
 
-    def edit_appscore_start(self,k=None):
-        print("Select an criteria to edit score for:")
-        self.options = None
-
-    def edit_criteria_select(self, k=None):
-        print("You selected A. Select more...")
-        self.options = {
-            "0": self.step3,
-            "1": self.step3,
-            "2": self.step3
-        }
-
-    def edit_criteria_quit(self, k=None):
-        print(f"You selected B. Back to start...")
-        self.options = self.step1_options
-
-    def edit_score_select(self, k=None):
-        print(f"You selected {k}. Back to start...")
-        self.options = self.step1_options
-    
     def show_boot_message(self,k=None):
         """Shortlist overview"""
         self.view.boot_message(self.path,len(self.shortlist.applicants))
@@ -106,6 +86,26 @@ class Controller:
         else:
             print("please press a valid key!")
 
+    def edit_appscore_start(self,k=None):
+        """select a criteria to edit score for"""
+        #proceeds to next step
+
+    def edit_criteria_select(self, k=None):
+        print("You selected (criteria-placeholder). Select the score you want to edit")
+        self.options = {
+            "0": self.edit_criteria_select,
+            "1": self.edit_criteria_select,
+            "2": self.edit_score_select}
+
+    def edit_criteria_quit(self, k=None):
+        print(f"You selected (stop editing the current criteria). Back to (applicant details)")
+
+    def edit_score_select(self, k=None):
+        print(f"You selected to update(criteria:score)") 
+              
+    def edit_score_confirm():
+              print("Update the current score and back to (applicant details)...")
+    
     def run(self):
 
         self.show_boot_message()
