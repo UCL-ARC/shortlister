@@ -10,6 +10,7 @@ class Controller:
         self.shortlist = load_shortlist(path)
         self.current_applicant = None
         self.current_criterion = None
+        self.current_score = None
         self.view = View()
         self.options = None # intial state
         self.options_home = {"r":self.show_role_info,
@@ -17,7 +18,7 @@ class Controller:
         self.options_applist = {"b":self.show_boot_message,
                                  "d":self.show_applicant_details}
         self.options_appdetail = {"a":self.show_applicants_list,
-                                   "e":self.edit_applicant_score,
+                                   "e":self.edit_appscore_start,
                                    "b":self.show_boot_message,
                                    "O":self.open_applicant_pdf}
 
@@ -88,31 +89,39 @@ class Controller:
 
     def edit_appscore_start(self,k=None):
         """select a criteria to edit score for"""
-        #show list of criteria
-        self.option = {[]:self.edit_criteria_select,
-                       "b":self.edit_criteria_quit}
-        
+        self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
+        options = [str(i) for i in range(len(self.shortlist.role.criteria))]
+        self.options = {i:self.edit_criteria_select for i in options} #generate options based on how many criteria there are
         #if a criteria number is selected, call the next function
-        #if b is pressed, quit editing
 
     def edit_criteria_select(self, k=None):
-        print("You selected (criteria-placeholder). Select the score you want to edit")
-        #show list of scores
-        self.options = {[]:self.edit_score_select,
-                        "b":self.edit_criteria_quit}
+        self.current_criterion = self.shortlist.role.criteria[int(k)]
+        print(f"You selected {self.current_criterion.name}. Select the score you want to edit")
+        options = [str(i) for i in range(len(self.current_criterion.scores))]
+        self.options = {i:self.edit_score_select for i in options}
+        
+        for index,score in enumerate(self.current_criterion.scores):
+                print(f"{index}: {score}")
+        
+        self.current_score = self.current_criterion.scores[int(k)]
 
+    def edit_score_select(self, k=None):
+        print(f"You selected to update: {self.current_criterion.name} with the score of {self.current_score}")
+        print("press 1 to continue with this change, or 0 to exit editing")
+        
+        self.options = {"1":self.edit_score_confirm,
+                        "0":self.edit_criteria_quit}
+              
+    def edit_score_confirm(self,k=None):
+        print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
+        self.current_applicant.scores.update({self.current_criterion.name:self.current_score})
+        self.view.view_applicant_details(self.current_applicant)
+        self.option = self.options_appdetail
+    
     def edit_criteria_quit(self, k=None):
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
         self.options = self.options_appdetail
 
-    def edit_score_select(self, k=None):
-        print(f"You selected to update(criteria:score)")
-        self.options = {} 
-              
-    def edit_score_fin(self):
-        print("Update the current score and back to (applicant details)...")
-        self.options = self.options_appdetail
-    
     def run(self):
 
         self.show_boot_message()
