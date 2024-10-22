@@ -54,7 +54,7 @@ class Controller:
     def open_applicant_pdf(self,k=None):
         """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
-        
+
     def edit_appscore_start(self,k=None):
         """select a criteria to edit score for"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
@@ -81,12 +81,14 @@ class Controller:
                         "0":self.edit_criteria_quit}
               
     def edit_score_confirm(self,k=None):
+        """Confirm changes to score"""
         print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
         self.current_applicant.scores.update({self.current_criterion.name:self.current_score})
         self.view.view_applicant_details(self.current_applicant)
-        self.option = self.options_appdetail
+        self.options = self.options_appdetail
     
     def edit_criteria_quit(self, k=None):
+        """Exit editing"""
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
         self.options = self.options_appdetail
 
