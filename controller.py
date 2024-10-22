@@ -88,23 +88,30 @@ class Controller:
 
     def edit_appscore_start(self,k=None):
         """select a criteria to edit score for"""
-        #proceeds to next step
+        #show list of criteria
+        self.option = {[]:self.edit_criteria_select,
+                       "b":self.edit_criteria_quit}
+        
+        #if a criteria number is selected, call the next function
+        #if b is pressed, quit editing
 
     def edit_criteria_select(self, k=None):
         print("You selected (criteria-placeholder). Select the score you want to edit")
-        self.options = {
-            "0": self.edit_criteria_select,
-            "1": self.edit_criteria_select,
-            "2": self.edit_score_select}
+        #show list of scores
+        self.options = {[]:self.edit_score_select,
+                        "b":self.edit_criteria_quit}
 
     def edit_criteria_quit(self, k=None):
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
+        self.options = self.options_appdetail
 
     def edit_score_select(self, k=None):
-        print(f"You selected to update(criteria:score)") 
+        print(f"You selected to update(criteria:score)")
+        self.options = {} 
               
-    def edit_score_confirm():
-              print("Update the current score and back to (applicant details)...")
+    def edit_score_fin(self):
+        print("Update the current score and back to (applicant details)...")
+        self.options = self.options_appdetail
     
     def run(self):
 
