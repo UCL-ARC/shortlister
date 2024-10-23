@@ -2,6 +2,7 @@ from view import View
 from readchar import readkey
 from model import load_shortlist
 from startfile import startfile
+import pickle
 
 class Controller:
 
@@ -55,6 +56,8 @@ class Controller:
             k = readkey()
 
             if k == "q":
+                with open(self.path+"\shortlist.pickle", "wb") as f:
+                    pickle.dump(self.shortlist, f)
                 print("exiting the program...")
                 break
 
