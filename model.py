@@ -33,7 +33,7 @@ class Shortlist:
 
 # gets the data of related properties and creates a object shortlist consisting of the role and all the applicants
 def load_shortlist(path):
-    criteria = load_criteria(path+"/criteria.csv")
+    criteria = load_criteria(path/"criteria.csv")
     role = load_role(path,criteria)
     applicants = load_applicants(path) 
     shortlist = Shortlist(role,applicants)
