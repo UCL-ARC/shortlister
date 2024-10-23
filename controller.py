@@ -56,7 +56,7 @@ class Controller:
             k = readkey()
 
             if k == "q":
-                with open(self.path+"\shortlist.pickle", "wb") as f:
+                with open(self.path/"shortlist.pickle", "wb") as f:
                     pickle.dump(self.shortlist, f)
                 print("exiting the program...")
                 break
