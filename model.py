@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Dict, List
 from dataclasses import dataclass
+import pickle
 import csv
 
 @dataclass
@@ -30,13 +31,25 @@ class Shortlist:
 
 #functions
 
+
+def load_pickle(path):
+    with open(path/"shortlist.pickle", "rb") as f:
+        shortlist = pickle.load(f)
+    return shortlist
+
 # gets the data of related properties and creates a object shortlist consisting of the role and all the applicants
 def load_shortlist(path):
-    criteria = load_criteria(path/"criteria.csv")
-    role = load_role(path,criteria)
-    applicants = load_applicants(path) 
-    shortlist = Shortlist(role,applicants)
-    return shortlist
+    file = path/"shortlist.pickle" 
+    if file.exists():
+        shortlist = load_pickle(path)
+        return shortlist
+        
+    else:
+        criteria = load_criteria(path/"criteria.csv")
+        role = load_role(path,criteria)
+        applicants = load_applicants(path) 
+        shortlist = Shortlist(role,applicants)
+        return shortlist
 
 # gets the path to the role_folder and the criteria.csv file, returns a Role object
 def load_role(path,criteria):
