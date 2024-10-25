@@ -77,7 +77,7 @@ class Controller:
         """Confirm changes to score"""
         print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
         
-        self.current_applicant.scores[self.current_criterion.name] = self.current_score
+        self.current_applicant.scores[self.current_criterion] = self.current_score
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
 
