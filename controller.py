@@ -14,13 +14,13 @@ class Controller:
         self.view = View()
         self.options = None # intial state
         self.options_home = {"r":self.show_role_info,
-                            "a":self.show_applicants_list}
-        self.options_applist = {"b":self.show_boot_message,
-                                 "d":self.show_applicant_details}
-        self.options_appdetail = {"a":self.show_applicants_list,
-                                   "e":self.edit_appscore_start,
-                                   "b":self.show_boot_message,
-                                   "O":self.open_applicant_pdf}
+                             "a":self.show_applicants_list}
+        self.options_applicant_list = {"b":self.show_boot_message,
+                                       "d":self.show_applicant_details}
+        self.options_applicant_detail = {"a":self.show_applicants_list,
+                                         "e":self.edit_appscore_start,
+                                         "b":self.show_boot_message,
+                                         "O":self.open_applicant_pdf}
 
     def show_boot_message(self,k=None):
         """Shortlist overview"""
@@ -38,7 +38,7 @@ class Controller:
     def show_applicants_list(self,k=None):
         """List all applicants"""
         self.view.view_applicants_list(self.shortlist)
-        self.options = self.options_applist
+        self.options = self.options_applicant_list
 
     def show_applicant_details(self,k=None):
         """Select an applicant and view details"""
@@ -47,7 +47,7 @@ class Controller:
 
             self.current_applicant = self.shortlist.applicants[i-1]
             self.view.view_applicant_details(self.current_applicant)
-            self.options = self.options_appdetail
+            self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
 
@@ -55,7 +55,7 @@ class Controller:
         """Open current applicant's CV"""
         startfile(self.current_applicant.cv)
 
-    def edit_appscore_start(self,k=None):
+    def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
         options = [str(i) for i in range(len(self.shortlist.role.criteria))]
@@ -85,12 +85,12 @@ class Controller:
         print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
         self.current_applicant.scores.update({self.current_criterion.name:self.current_score})
         self.view.view_applicant_details(self.current_applicant)
-        self.options = self.options_appdetail
+        self.options = self.options_applicant_detail
     
     def edit_criteria_quit(self, k=None):
         """Exit editing"""
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
-        self.options = self.options_appdetail
+        self.options = self.options_applicant_detail
 
     def run(self):
 
