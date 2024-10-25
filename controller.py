@@ -80,11 +80,6 @@ class Controller:
         self.current_applicant.scores[self.current_criterion.name] = self.current_score
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
-    
-    def edit_criteria_quit(self, k=None):
-        """Exit editing"""
-        print(f"You selected (stop editing the current criteria). Back to (applicant details)")
-        self.options = self.options_applicant_detail
 
     def run(self):
 
