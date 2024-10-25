@@ -4,12 +4,16 @@ from typing import Dict, List
 from dataclasses import dataclass
 import csv
 
-@dataclass
+@dataclass (frozen=True)
 class Criterion:
     name: str
     description: str
     scores: List[str]
-
+    
+    def __hash__(self):
+        # Convert list to tuple for hashing purposes
+        return hash((self.name, self.description, tuple(self.scores)))
+    
 @dataclass
 class Applicant:
     name: str
