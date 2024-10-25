@@ -83,6 +83,7 @@ class Controller:
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
         print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
+
         self.current_applicant.scores.update({self.current_criterion.name:self.current_score})
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
@@ -90,6 +91,7 @@ class Controller:
     def edit_criteria_quit(self, k=None):
         """Exit editing"""
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
+        
         self.options = self.options_applicant_detail
 
     def run(self):
@@ -106,10 +108,12 @@ class Controller:
             if k == "?":
                 print("---List of shortcuts---")
                 print("q: Exit the program")
+
                 for keypress,func in self.options.items():
                     print(f"{keypress}: {func.__doc__}")
             
             else :
                 output = self.options.get(k)
+
                 if output is not None:
                     output(k=k)
