@@ -18,7 +18,7 @@ class Controller:
         self.options_applicant_list = {"b":self.show_boot_message,
                                        "d":self.show_applicant_details}
         self.options_applicant_detail = {"a":self.show_applicants_list,
-                                         "e":self.edit_appscore_start,
+                                         "e":self.edit_score_start,
                                          "b":self.show_boot_message,
                                          "O":self.open_applicant_pdf}
 
