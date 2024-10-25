@@ -66,32 +66,24 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         print(f"You selected {self.current_criterion.name}. Select the score you want to edit")
         options = [str(i) for i in range(len(self.current_criterion.scores))]
-        self.options = {i:self.edit_score_select for i in options}
+        self.options = {i:self.edit_score_confirm for i in options}
         
         for index,score in enumerate(self.current_criterion.scores):
                 print(f"{index}: {score}")
         
         self.current_score = self.current_criterion.scores[int(k)]
 
-    def edit_score_select(self, k=None):
-        print(f"You selected to update: {self.current_criterion.name} with the score of {self.current_score}")
-        print("press 1 to continue with this change, or 0 to exit editing")
-        
-        self.options = {"1":self.edit_score_confirm,
-                        "0":self.edit_criteria_quit}
-              
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
         print(f"Updated score: {self.current_criterion.name}:{self.current_score} and back to (applicant details)...")
-
-        self.current_applicant.scores.update({self.current_criterion.name:self.current_score})
+        
+        self.current_applicant.scores[self.current_criterion.name] = self.current_score
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
     
     def edit_criteria_quit(self, k=None):
         """Exit editing"""
         print(f"You selected (stop editing the current criteria). Back to (applicant details)")
-        
         self.options = self.options_applicant_detail
 
     def run(self):
