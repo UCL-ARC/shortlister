@@ -15,7 +15,11 @@ class View:
     def view_applicant_details(self,applicant):
             print(f"Details for {applicant.name}: ")
             print(f"CV Path: {applicant.cv}")
-            print(f"Scores: {applicant.scores}")
+            print(f"Scores:",end=" ") 
+            if applicant.scores is not None:
+                for criterion,score in applicant.scores.items():
+                    print(f"{criterion.name}: {score}")
+            print()
 
     def view_applicants_list(self,shortlist):
         for index, applicant in enumerate(shortlist.applicants):
@@ -25,8 +29,5 @@ class View:
         print(f"The criteria for {role.job_title} are:")
         print()
         
-        for criterion in criteria:
-            i = criteria.index(criterion)
-            print(f"{i+1}. {criterion.name}")
-            print(f"{criterion.description}")
-            print()
+        for index,criterion in enumerate(criteria):
+            print(f"{index}. {criterion.name}: {criterion.description}")

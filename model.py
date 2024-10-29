@@ -1,15 +1,14 @@
-import glob
 from pathlib import Path
 from typing import Dict, List
 from dataclasses import dataclass
 import csv
 
-@dataclass
+@dataclass (frozen=True)
 class Criterion:
     name: str
     description: str
-    scores: List[str]
-
+    scores: tuple
+    
 @dataclass
 class Applicant:
     name: str
@@ -64,6 +63,6 @@ def load_criteria(csv_file):
         next(reader)
 
         for row in reader:
-            criterion = Criterion(row[0],row[1],[])
+            criterion = Criterion(name=row[0],description=row[1],scores= tuple(row[2].split(",")))
             criteria.append(criterion)
     return criteria
