@@ -44,7 +44,7 @@ class Controller:
         """Select an applicant and view details"""
         try:
             i = int(input("Please enter the applicant number:"))
-
+            print()
             self.current_applicant = self.shortlist.applicants[i-1]
             self.view.view_applicant_details(self.current_applicant)
             self.options = self.options_applicant_detail
@@ -65,7 +65,7 @@ class Controller:
     def edit_criteria_select(self, k=None):
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         
-        print(f"You selected {self.current_criterion.name}. Select the score you want to change to")
+        print(f"You selected {self.current_criterion.name}. Select the score you want to change to:\n")
         self.options = {str(i):self.edit_score_confirm for i, _ in enumerate(self.current_criterion.scores)}
         
         for index,score in enumerate(self.current_criterion.scores):
@@ -75,7 +75,7 @@ class Controller:
 
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
-        print(f"Updated score: {self.current_criterion.name} to: {self.current_score} and back to (applicant details)...")
+        print(f"Updated score: {self.current_criterion.name} to: {self.current_score} and back to (applicant details)...\n")
         
         self.current_applicant.scores[self.current_criterion] = self.current_score
         self.view.view_applicant_details(self.current_applicant)
@@ -89,11 +89,11 @@ class Controller:
             k = readkey()
 
             if k == "q":
-                print("exiting the program...")
+                print("\nexiting the program...")
                 break
 
             if k == "?":
-                print("---List of shortcuts---")
+                print("\n---List of shortcuts---")
                 print("q: Exit the program")
 
                 for keypress,func in self.options.items():
@@ -103,4 +103,5 @@ class Controller:
                 output = self.options.get(k)
 
                 if output is not None:
+                    print()
                     output(k=k)

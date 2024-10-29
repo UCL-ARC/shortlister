@@ -16,9 +16,10 @@ class View:
             print(f"Details for {applicant.name}: ")
             print(f"CV Path: {applicant.cv}")
             print(f"Scores:",end=" ") 
-            
-            for criterion,score in applicant.scores.items():
-                print(f"{criterion.name}: {score}")
+            if applicant.scores is not None:
+                for criterion,score in applicant.scores.items():
+                    print(f"{criterion.name}: {score}")
+            print()
 
     def view_applicants_list(self,shortlist):
     
