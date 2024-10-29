@@ -21,7 +21,6 @@ class View:
                 print(f"{criterion.name}: {score}")
 
     def view_applicants_list(self,shortlist):
-    
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
 
