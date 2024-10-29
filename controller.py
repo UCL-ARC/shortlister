@@ -12,7 +12,7 @@ class Controller:
         self.current_criterion = None
         self.current_score = None
         self.view = View()
-        self.options = None # intial state
+        self.options = None
         self.options_home = {"r":self.show_role_info,
                              "a":self.show_applicants_list}
         self.options_applicant_list = {"b":self.show_boot_message,
@@ -58,9 +58,7 @@ class Controller:
     def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
-        self.options = {str(i):self.edit_criteria_select for i, _ in enumerate(self.shortlist.role.criteria)} 
-        #generate options based on how many criteria there are
-        #if a criteria number is selected, call the next function
+        self.options = {str(i):self.edit_criteria_select for i, _ in enumerate(self.shortlist.role.criteria)}
 
     def edit_criteria_select(self, k=None):
         self.current_criterion = self.shortlist.role.criteria[int(k)]
@@ -91,7 +89,7 @@ class Controller:
             if k == "q":
                 print("\nexiting the program...")
                 break
-
+                
             if k == "?":
                 print("\n---List of shortcuts---")
                 print("q: Exit the program")
@@ -101,7 +99,7 @@ class Controller:
             
             else :
                 output = self.options.get(k)
-
+                
                 if output is not None:
                     print()
                     output(k=k)
