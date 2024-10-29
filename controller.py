@@ -58,15 +58,15 @@ class Controller:
     def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
         self.view.view_criteria(self.shortlist.role,self.shortlist.role.criteria)
-        options = [str(i) for i in range(len(self.shortlist.role.criteria))]
-        self.options = {i:self.edit_criteria_select for i in options} #generate options based on how many criteria there are
+        self.options = {str(i):self.edit_criteria_select for i, _ in enumerate(self.shortlist.role.criteria)} 
+        #generate options based on how many criteria there are
         #if a criteria number is selected, call the next function
 
     def edit_criteria_select(self, k=None):
         self.current_criterion = self.shortlist.role.criteria[int(k)]
+        
         print(f"You selected {self.current_criterion.name}. Select the score you want to edit")
-        options = [str(i) for i in range(len(self.current_criterion.scores))]
-        self.options = {i:self.edit_score_confirm for i in options}
+        self.options = {str(i):self.edit_score_confirm for i, _ in enumerate(self.current_criterion.scores)}
         
         for index,score in enumerate(self.current_criterion.scores):
                 print(f"{index}: {score}")
