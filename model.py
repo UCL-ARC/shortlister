@@ -7,11 +7,7 @@ import csv
 class Criterion:
     name: str
     description: str
-    scores: List[str]
-    
-    def __hash__(self):
-        # Convert list to tuple for hashing purposes
-        return hash((self.name, self.description, tuple(self.scores)))
+    scores: tuple
     
 @dataclass
 class Applicant:
@@ -67,6 +63,6 @@ def load_criteria(csv_file):
         next(reader)
 
         for row in reader:
-            criterion = Criterion(name=row[0],description=row[1],scores= row[2].split(","))
+            criterion = Criterion(name=row[0],description=row[1],scores= tuple(row[2].split(",")))
             criteria.append(criterion)
     return criteria
