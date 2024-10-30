@@ -1,6 +1,6 @@
-from view import View
+from source_code.view import View
 from readchar import readkey
-from model import load_shortlist,save_shortlist
+from source_code.model import load_shortlist,save_shortlist
 from startfile import startfile
 
 class Controller:

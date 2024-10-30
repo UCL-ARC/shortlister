@@ -1,4 +1,4 @@
-from controller import Controller
+from source_code.controller import Controller
 import argparse
 from pathlib import Path
 

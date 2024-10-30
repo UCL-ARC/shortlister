@@ -1,4 +1,4 @@
-from model import Applicant, Criterion, Role, Shortlist
+from source_code.model import Applicant, Criterion, Role, Shortlist
 import csv
 from pathlib import Path
 
