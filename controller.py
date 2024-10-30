@@ -10,7 +10,6 @@ class Controller:
         self.shortlist = load_shortlist(path)
         self.current_applicant = None
         self.current_criterion = None
-        self.current_score = None
         self.view = View()
         self.options = None
         self.options_home = {"r":self.show_role_info,
@@ -72,10 +71,9 @@ class Controller:
 
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
-        self.current_score = self.current_criterion.scores[int(k)]
-        print(f"Updated score: {self.current_criterion.name} to: {self.current_score} and back to (applicant details)...\n")
+        print(f"Updated score: {self.current_criterion.name} to: {self.current_criterion.scores[int(k)]} and back to (applicant details)...\n")
         
-        self.current_applicant.scores[self.current_criterion] = self.current_score
+        self.current_applicant.scores[self.current_criterion] = self.current_criterion.scores[int(k)]
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
 
