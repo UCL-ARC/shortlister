@@ -45,7 +45,7 @@ def save_shortlist(path,shortlist):
 def load_shortlist(path):
     file = path/pickle_file_name
     if file.exists():
-        shortlist = load_pickle(path)
+        shortlist = load_pickle(file)
 
     else:
         criteria = load_criteria(path/"criteria.csv")
