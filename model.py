@@ -22,27 +22,28 @@ class Role:
     job_id: str
     criteria: List[Criterion]
 
-
 @dataclass
 class Shortlist:
     role: Role
     applicants: List[Applicant]
 
-
 #functions
+
 pickle_file_name = "shortlist.pickle"
 
 def load_pickle(file_path):
+    """load shortlist from existing pickle file"""
     with open(file_path, "rb") as f:
         shortlist = pickle.load(f)
     return shortlist
 
 def save_shortlist(path,shortlist):
+    """save shortlist as a pickle file inside the role_directory"""
     with open(path/pickle_file_name, "wb") as f:
         pickle.dump(shortlist, f)
 
-# gets the data of related properties and creates a object shortlist consisting of the role and all the applicants
 def load_shortlist(path):
+    """import shortlist data from either pickle file or role directory if the former doesn't exist"""
     file = path/pickle_file_name
     if file.exists():
         shortlist = load_pickle(file)
@@ -55,14 +56,13 @@ def load_shortlist(path):
     
     return shortlist
 
-# gets the path to the role_folder and the criteria.csv file, returns a Role object
 def load_role(path,criteria):
+    """generates role object instance"""
     role = Role(path,"0001",criteria)
     return role
-    
 
-# gets a list of file names from path(path of the role directory), and returns a list of applicants 
 def load_applicants(path):
+    """generate a list of applicant instances from pdf format CVs"""
     p = Path(path)
     files = p.glob("*.pdf")
     applicants = []
@@ -72,8 +72,8 @@ def load_applicants(path):
         applicants.append(applicant)
     return applicants
 
-# reads in a csv file containing all the criteria, and returns a list of criterion
 def load_criteria(csv_file):
+    """generate criteria(list of criterion instances) from csv file"""
     criteria = []
     with open(csv_file) as file:
         reader= csv.reader(file)
