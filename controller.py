@@ -69,10 +69,10 @@ class Controller:
         for index,score in enumerate(self.current_criterion.scores):
                 print(f"{index}: {score}")
         
-        self.current_score = self.current_criterion.scores[int(k)]
 
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
+        self.current_score = self.current_criterion.scores[int(k)]
         print(f"Updated score: {self.current_criterion.name} to: {self.current_score} and back to (applicant details)...\n")
         
         self.current_applicant.scores[self.current_criterion] = self.current_score
