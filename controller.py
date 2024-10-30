@@ -1,6 +1,6 @@
 from view import View
 from readchar import readkey
-from model import load_shortlist
+from model import load_shortlist,save_shortlist
 from startfile import startfile
 
 class Controller:
@@ -85,6 +85,7 @@ class Controller:
             k = readkey()
 
             if k == "q":
+                save_shortlist(self.path,self.shortlist)
                 print("\nexiting the program...")
                 break
                 
