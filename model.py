@@ -37,7 +37,7 @@ def load_pickle(path):
         shortlist = pickle.load(f)
     return shortlist
 
-def save_pickle(path,shortlist):
+def save_shortlist(path,shortlist):
     with open(path/pickle_file_name, "wb") as f:
         pickle.dump(shortlist, f)
 
