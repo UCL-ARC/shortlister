@@ -30,20 +30,20 @@ class Shortlist:
 
 
 #functions
+pickle_file_name = "shortlist.pickle"
 
-
-def load_pickle(path,filename="shortlist.pickle"):
-    with open(path/filename, "rb") as f:
+def load_pickle(path):
+    with open(path/pickle_file_name, "rb") as f:
         shortlist = pickle.load(f)
     return shortlist
 
-def save_pickle(path,shortlist,filename="shortlist.pickle"):
-    with open(path/filename, "wb") as f:
+def save_pickle(path,shortlist):
+    with open(path/pickle_file_name, "wb") as f:
         pickle.dump(shortlist, f)
 
 # gets the data of related properties and creates a object shortlist consisting of the role and all the applicants
-def load_shortlist(path,filename="shortlist.pickle"):
-    file = path/filename
+def load_shortlist(path):
+    file = path/pickle_file_name
     if file.exists():
         shortlist = load_pickle(path)
 
