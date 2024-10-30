@@ -1,6 +1,6 @@
 from view import View
 from readchar import readkey
-from model import load_shortlist
+from model import load_shortlist,save_pickle
 from startfile import startfile
 
 class Controller:
@@ -56,6 +56,7 @@ class Controller:
 
             if k == "q":
                 print("exiting the program...")
+                save_pickle(self.path,self.shortlist)
                 break
 
             elif self.current_view == "home":
