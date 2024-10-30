@@ -32,8 +32,8 @@ class Shortlist:
 #functions
 pickle_file_name = "shortlist.pickle"
 
-def load_pickle(path):
-    with open(path/pickle_file_name, "rb") as f:
+def load_pickle(file_path):
+    with open(file_path, "rb") as f:
         shortlist = pickle.load(f)
     return shortlist
 
@@ -45,7 +45,7 @@ def save_shortlist(path,shortlist):
 def load_shortlist(path):
     file = path/pickle_file_name
     if file.exists():
-        shortlist = load_pickle(path)
+        shortlist = load_pickle(file)
 
     else:
         criteria = load_criteria(path/"criteria.csv")
