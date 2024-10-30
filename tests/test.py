@@ -42,5 +42,3 @@ def test_create_applicant(path):
 
 def test_read():
     pass
-
-print(test_create_applicant("test_role"))
