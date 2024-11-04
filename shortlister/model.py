@@ -83,3 +83,6 @@ def load_criteria(csv_file):
             criterion = Criterion(name=row[0],description=row[1],scores= tuple(row[2].split(",")))
             criteria.append(criterion)
     return criteria
+
+def update_applicant_score(applicant_score,criterion,score_index):
+    applicant_score[criterion] = criterion.scores[int(score_index)]

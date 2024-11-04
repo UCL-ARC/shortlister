@@ -1,6 +1,6 @@
 from shortlister.view import View
 from readchar import readkey
-from shortlister.model import load_shortlist,save_shortlist
+from shortlister.model import load_shortlist,save_shortlist,update_applicant_score
 from startfile import startfile
 
 class Controller:
@@ -73,8 +73,7 @@ class Controller:
         """Confirm changes to score"""
         print(f"Updated score: {self.current_criterion.name} to: {self.current_criterion.scores[int(k)]} and back to (applicant details)...\n")
         
-        self.current_applicant.scores[self.current_criterion] = self.current_criterion.scores[int(k)]
-        #move to model
+        update_applicant_score(self.current_applicant.scores,self.current_criterion,k)
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
 
