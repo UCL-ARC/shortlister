@@ -26,7 +26,25 @@ def test_load_role():
 
     assert result.job_title == expected
 
-def test_load_pickle():
-    result = mdl.load_pickle(Path(path)/pickle_file_name)
-    assert result is mdl.Shortlist
-    #not sure why it returns module not found error 
+def test_save_load():
+    expected = mdl.Shortlist(role= mdl.Role(job_title="test_role",
+                                             job_id="0000",
+                                             criteria=[]),
+                              applicants=[mdl.Applicant(name="George Smith",
+                                                        cv="placeholder",
+                                                        scores=[]),
+                                          mdl.Applicant(name = "Jim Chapman",
+                                                        cv="placeholder",
+                                                        scores=[])]
+                                                        )
+    
+    mdl.save_shortlist(path=Path("tests"), shortlist=expected)
+    result:mdl.Shortlist = mdl.load_pickle("tests/shortlist.pickle")
+
+    assert result.role.job_title == "test_role"
+    assert result.role.job_id == "0000"
+    assert result.role.criteria == []
+    assert result.applicants[0].name == "George Smith"
+    assert result.applicants[1].name == "Jim Chapman"
+
+    
