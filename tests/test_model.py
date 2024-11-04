@@ -2,18 +2,19 @@ import pytest
 from  shortlister import model
 from pathlib import Path
 
-path = "test_role"
-pickle_file_name = "shortlist.pickle"
+path= Path("test_role")
+pickle_file_name = Path("shortlist.pickle")
+csv_file=Path("criteria.csv")
 
-def test_load_criteria(filepath= "test_role/criteria.csv"):
-    criteria_result = model.load_criteria(filepath)
+def test_load_criteria():
+    criteria_result = model.load_criteria(path/csv_file)
     expected = model.Criterion
     for criterion in criteria_result:
         assert type(criterion) is expected
         assert criterion.name and criterion.description and criterion.scores is not None
 
 @pytest.mark.parametrize("folder_path,expected",
-                         [("test_role",["Emma Jones","Michael Davis","Sarah Thompson"]),
+                         [(path,["Emma Jones","Michael Davis","Sarah Thompson"]),
                           ("non_existing_folder",[])])
 def test_load_applicants(folder_path,expected):
     applicants = model.load_applicants(folder_path)
@@ -30,7 +31,7 @@ def test_load_role():
                 model.Criterion(name="Best practices",
                               description="Issue tracking, testing, documentation etc.",
                               scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent"))]
-    result = model.load_role(path,criteria)
+    result = model.load_role(path,model.load_criteria(path/csv_file))
     
 
     expected = model.Role(job_title="test_role",
@@ -40,19 +41,14 @@ def test_load_role():
     assert result == expected
 
 def test_save_load():
-    expected = model.Shortlist(role= model.Role(job_title="test_role",
-                                             job_id="0000",
-                                             criteria=[]),
-                              applicants=[model.Applicant(name="George Smith",
-                                                        cv="placeholder",
-                                                        scores=[]),
-                                          model.Applicant(name = "Jim Chapman",
-                                                        cv="placeholder",
-                                                        scores=[])]
-                                                        )
+    expected = model.Shortlist(role= model.Role(job_title="test_role",job_id="0000",criteria=[]),
+                               applicants=[model.Applicant(name="George Smith",cv="placeholder",scores=[]),
+                                           model.Applicant(name = "Jim Chapman",cv="placeholder",scores=[])
+                                           ]
+                                           )
     
     model.save_shortlist(path=Path("tests"), shortlist=expected)
-    result:model.Shortlist = model.load_pickle("tests/shortlist.pickle")
+    result:model.Shortlist = model.load_pickle(path/pickle_file_name)
 
     assert result.role.job_title == "test_role"
     assert result.role.job_id == "0000"
