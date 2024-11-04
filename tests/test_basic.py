@@ -39,6 +39,3 @@ def test_create_applicant(path):
         applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
     return applicants
-
-def test_read():
-    pass
