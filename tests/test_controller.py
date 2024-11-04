@@ -1,2 +1,2 @@
-import source_code.controller as ctrl
+import shortlister.controller as ctrl
 from pathlib import Path

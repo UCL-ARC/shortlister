@@ -1,4 +1,4 @@
-from source_code.controller import Controller
+from shortlister.controller import Controller
 import argparse
 from pathlib import Path
 

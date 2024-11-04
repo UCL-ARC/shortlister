@@ -1,5 +1,5 @@
 from readchar import readchar,readkey,key
-from source_code.controller import Controller
+from shortlister.controller import Controller
 
 run = True
 control = Controller("test_role")

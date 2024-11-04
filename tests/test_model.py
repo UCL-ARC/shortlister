@@ -1,5 +1,5 @@
 import pytest
-import source_code.model as mdl
+import shortlister.model as mdl
 from pathlib import Path
 
 path = "test_role"
@@ -11,7 +11,7 @@ def test_load_criteria(filepath= "test_role/criteria.csv"):
     for criterion in criteria_result:
         assert type(criterion) is expected
         assert criterion.name and criterion.description and criterion.scores is not None
-    ...
+        
 @pytest.mark.parametrize("folder_path,expected",
                          [("test_role",["Emma Jones","Michael Davis","Sarah Thompson"]),
                           ("non_existing_folder",[])])
