@@ -11,7 +11,7 @@ def test_load_criteria(filepath= "test_role/criteria.csv"):
     for criterion in criteria_result:
         assert type(criterion) is expected
         assert criterion.name and criterion.description and criterion.scores is not None
-        
+
 @pytest.mark.parametrize("folder_path,expected",
                          [("test_role",["Emma Jones","Michael Davis","Sarah Thompson"]),
                           ("non_existing_folder",[])])
@@ -21,10 +21,23 @@ def test_load_applicants(folder_path,expected):
     assert result == expected
 
 def test_load_role():
-    result = mdl.load_role(path,test_load_criteria)
-    expected = "test_role"
+    criteria = [mdl.Criterion(name="PhD",
+                              description="Degree or relevant experience",
+                              scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")),
+                mdl.Criterion(name="Research software",
+                              description="Authorship,development and maintenance",
+                              scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")),
+                mdl.Criterion(name="Best practices",
+                              description="Issue tracking, testing, documentation etc.",
+                              scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent"))]
+    result = mdl.load_role(path,criteria)
+    
 
-    assert result.job_title == expected
+    expected = mdl.Role(job_title="test_role",
+                        job_id="0001",
+                        criteria=criteria)
+
+    assert result == expected
 
 def test_save_load():
     expected = mdl.Shortlist(role= mdl.Role(job_title="test_role",
