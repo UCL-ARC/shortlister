@@ -2,3 +2,4 @@
 *pycache*/
 .vscode/
 test_role/
+tests/shortlist.pickle
