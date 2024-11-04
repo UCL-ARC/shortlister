@@ -74,6 +74,7 @@ class Controller:
         print(f"Updated score: {self.current_criterion.name} to: {self.current_criterion.scores[int(k)]} and back to (applicant details)...\n")
         
         self.current_applicant.scores[self.current_criterion] = self.current_criterion.scores[int(k)]
+        #move to model
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
 
