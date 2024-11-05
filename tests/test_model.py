@@ -66,17 +66,18 @@ def test_save_load():
                                                                                      description="Authorship,development and maintenance",
                                                                                      scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Unsatisfactory"})]
 
-    expected = model.Shortlist(role= model.Role(job_title="test_role",
+    shortlist = model.Shortlist(role= model.Role(job_title="tests",
                                                 job_id="0000",
                                                 criteria=c),
                                applicants=a)
     
-    model.save_shortlist(Path("tests"), expected)
-    result:model.Shortlist = model.load_pickle(path/pickle_file_name)
+    model.save_shortlist(Path("tests"), shortlist)
+    result:model.Shortlist = model.load_pickle(Path("tests")/pickle_file_name)
 
-    assert result.role.job_title == "test_role"
+    assert result.role.job_title == "tests"
     assert result.role.job_id == "0000"
-    assert result.role.criteria == []
+    assert result.role.criteria == c
+    assert result.applicants == a 
     assert result.applicants[0].name == "George Smith"
     assert result.applicants[1].name == "Jim Chapman"
 
