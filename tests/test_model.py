@@ -1,5 +1,5 @@
 import pytest
-from  shortlister import model
+from shortlister import model
 from pathlib import Path
 
 path= Path("test_role")
@@ -41,13 +41,37 @@ def test_load_role():
     assert result == expected
 
 def test_save_load():
-    expected = model.Shortlist(role= model.Role(job_title="test_role",job_id="0000",criteria=[]),
-                               applicants=[model.Applicant(name="George Smith",cv="placeholder",scores=[]),
-                                           model.Applicant(name = "Jim Chapman",cv="placeholder",scores=[])
-                                           ]
-                                           )
+    c = [model.Criterion(name="PhD",
+                         description="Degree or relevant experience",
+                         scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")),
+         model.Criterion(name="Research software",
+                         description="Authorship,development and maintenance",
+                         scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")),
+         model.Criterion(name="Best practices",
+                         description="Issue tracking, testing, documentation etc.",
+                         scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent"))]
     
-    model.save_shortlist(path=Path("tests"), shortlist=expected)
+    a = [model.Applicant(name="George Smith",
+                         cv="placeholder",
+                         scores={model.Criterion(name="PhD",
+                                                 description="Degree or relevant experience",
+                                                 scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Excellent",
+                                 model.Criterion(name="Research software",
+                                                 description="Authorship,development and maintenance",
+                                                 scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Satisfactory"}),
+         model.Applicant(name="Jim Chapman",cv="placeholder",scores={model.Criterion(name="PhD",
+                                                                                     description="Degree or relevant experience",
+                                                                                     scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Moderate",
+                                                                     model.Criterion(name="Research software",
+                                                                                     description="Authorship,development and maintenance",
+                                                                                     scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Unsatisfactory"})]
+
+    expected = model.Shortlist(role= model.Role(job_title="test_role",
+                                                job_id="0000",
+                                                criteria=c),
+                               applicants=a)
+    
+    model.save_shortlist(Path("tests"), expected)
     result:model.Shortlist = model.load_pickle(path/pickle_file_name)
 
     assert result.role.job_title == "test_role"
