@@ -30,6 +30,7 @@ class Shortlist:
 #functions
 
 pickle_file_name = "shortlist.pickle"
+criteria_file_name = "criteria.csv"
 
 def load_pickle(file_path):
     """load shortlist from existing pickle file"""
@@ -49,7 +50,7 @@ def load_shortlist(path):
         shortlist = load_pickle(file)
 
     else:
-        criteria = load_criteria(path/"criteria.csv")
+        criteria = load_criteria(path/criteria_file_name)
         role = load_role(path,criteria)
         applicants = load_applicants(path) 
         shortlist = Shortlist(role,applicants)
@@ -58,7 +59,7 @@ def load_shortlist(path):
 
 def load_role(path,criteria):
     """generates role object instance"""
-    role = Role(path,"0001",criteria)
+    role = Role(str(path),"0001",criteria)
     return role
 
 def load_applicants(path):
