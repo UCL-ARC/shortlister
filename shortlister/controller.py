@@ -61,18 +61,13 @@ class Controller:
 
     def edit_criteria_select(self, k=None):
         self.current_criterion = self.shortlist.role.criteria[int(k)]
-        
-        print(f"You selected {self.current_criterion.name}. Select the score you want to change to:\n")
+        self.view.view_selection_options(self.current_criterion)
         self.options = {str(i):self.edit_score_confirm for i, _ in enumerate(self.current_criterion.scores)}
         
-        for index,score in enumerate(self.current_criterion.scores):
-                print(f"{index}: {score}")
-        
-
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
-        print(f"Updated score: {self.current_criterion.name} to: {self.current_criterion.scores[int(k)]} and back to (applicant details)...\n")
         
+        self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
         update_applicant_score(self.current_applicant,self.current_criterion,k)
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
