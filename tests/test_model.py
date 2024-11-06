@@ -53,18 +53,13 @@ def test_save_load():
     
     a = [model.Applicant(name="George Smith",
                          cv="placeholder",
-                         scores={model.Criterion(name="PhD",
-                                                 description="Degree or relevant experience",
-                                                 scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Excellent",
-                                 model.Criterion(name="Research software",
-                                                 description="Authorship,development and maintenance",
-                                                 scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Satisfactory"}),
-         model.Applicant(name="Jim Chapman",cv="placeholder",scores={model.Criterion(name="PhD",
-                                                                                     description="Degree or relevant experience",
-                                                                                     scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Moderate",
-                                                                     model.Criterion(name="Research software",
-                                                                                     description="Authorship,development and maintenance",
-                                                                                     scores = ("Unsatisfactory","Moderate","Satisfactory","Excellent")): "Unsatisfactory"})]
+                         scores={c[0]:c[0].scores[3],
+                                 c[1]:c[1].scores[2],
+                                 c[2]:c[2].scores[0]}),
+         model.Applicant(name="Jim Chapman",
+                         cv="placeholder",
+                         scores={c[0]: c[0].scores[1],
+                                 c[1]: c[1].scores[0]})]
 
     shortlist = model.Shortlist(role= model.Role(job_title="tests",
                                                 job_id="0000",
