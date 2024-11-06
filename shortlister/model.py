@@ -91,3 +91,6 @@ def load_criteria(csv_file):
 
 def update_applicant_score(applicant: Applicant, criterion: Criterion, score_index: int):
     applicant.scores[criterion] = criterion.scores[score_index]
+
+def update_applicant_notes(applicant:Applicant, note:str):
+    applicant.notes.append(note)
