@@ -17,6 +17,8 @@ class Controller:
         self.options_applicant_list = {"b":self.show_boot_message,
                                        "d":self.show_applicant_details}
         self.options_applicant_detail = {"a":self.show_applicants_list,
+                                         "n":self.switch_next_applicant,
+                                         "p":self.switch_prev_applicant,
                                          "e":self.edit_score_start,
                                          "b":self.show_boot_message,
                                          "O":self.open_applicant_pdf}
@@ -66,11 +68,22 @@ class Controller:
         
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
-        
         self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
         update_applicant_score(self.current_applicant,self.current_criterion,int(k))
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
+
+    def switch_prev_applicant(self,k=None):
+        """shows details of the previous applicant in the shortlist"""
+        i = self.shortlist.applicants.index(self.current_applicant)
+        self.current_applicant = self.shortlist.applicants[i-1]
+        self.view.view_applicant_details(self.current_applicant)
+        
+    def switch_next_applicant(self,k=None):
+        """shows details of the next applicant in the shortlist"""
+        i = self.shortlist.applicants.index(self.current_applicant)
+        self.current_applicant = self.shortlist.applicants[i+1]
+        self.view.view_applicant_details(self.current_applicant)
 
     def run(self):
 
