@@ -15,6 +15,7 @@ class Applicant:
     name: str
     cv: str #path to cv
     scores: Dict[Criterion,str]
+    notes: List[str]
 
 @dataclass
 class Role:
@@ -62,15 +63,17 @@ def load_role(path,criteria):
     role = Role(str(path),"0001",criteria)
     return role
 
-def load_applicants(path,criteria:list[Criterion]):
+def load_applicants(path:Path,criteria:list[Criterion]):
     """generate a list of applicant instances from pdf format CVs"""
-    p = Path(path)
-    files = p.glob("*.pdf")
+    files = path.glob("*.pdf")
     applicants = []
 
     for file in files:
         name_parts = file.stem.split("_")
-        applicant = Applicant(" ".join(name_parts[0:2]),file,{criterion:"Not marked" for criterion in criteria})
+        applicant = Applicant(name=" ".join(name_parts[0:2]),
+                              cv=file,
+                              scores={criterion:"Not marked" for criterion in criteria},
+                              notes=[])
         applicants.append(applicant)
     return applicants
 

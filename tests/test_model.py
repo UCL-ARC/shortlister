@@ -15,7 +15,7 @@ def test_load_criteria():
 
 @pytest.mark.parametrize("folder_path,criteria,expected",
                          [(path,model.load_criteria(path/csv_file),["Emma Jones","Michael Davis","Sarah Thompson"]),
-                          ("non_existing_folder",[],[])])
+                          (Path("non_existing_folder"),[],[])])
 def test_load_applicants(folder_path,criteria,expected):
     applicants = model.load_applicants(folder_path,criteria)
     result = [applicant.name for applicant in applicants]
@@ -56,11 +56,13 @@ def test_save_load():
                          cv="c1",
                          scores={c[0]:c[0].scores[3],
                                  c[1]:c[1].scores[2],
-                                 c[2]:c[2].scores[0]}),
+                                 c[2]:c[2].scores[0]},
+                                 notes=["n1","n2","n3"]),
          model.Applicant(name="a2",
                          cv="c2",
                          scores={c[0]: c[0].scores[1],
-                                 c[1]: c[1].scores[0]})]
+                                 c[1]: c[1].scores[0]},
+                                 notes=["n1"])]
 
     shortlist = model.Shortlist(role= model.Role(job_title="tests",
                                                 job_id="0000",
