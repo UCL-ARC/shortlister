@@ -76,8 +76,12 @@ class Controller:
     def switch_prev_applicant(self,k=None):
         """shows details of the previous applicant in the shortlist"""
         i = self.shortlist.applicants.index(self.current_applicant)
-        self.current_applicant = self.shortlist.applicants[i-1]
-        self.view.view_applicant_details(self.current_applicant)
+
+        if i == 0:
+            pass
+        else:
+            self.current_applicant = self.shortlist.applicants[i-1]
+            self.view.view_applicant_details(self.current_applicant)
 
     def switch_next_applicant(self,k=None):
         """shows details of the next applicant in the shortlist"""
@@ -113,5 +117,4 @@ class Controller:
                 output = self.options.get(k)
                 
                 if output is not None:
-                    print()
                     output(k=k)
