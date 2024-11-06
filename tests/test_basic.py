@@ -1,4 +1,4 @@
-from model import Applicant, Criterion, Role, Shortlist
+from shortlister.model import Applicant, Criterion, Role, Shortlist
 import csv
 from pathlib import Path
 
@@ -39,8 +39,3 @@ def test_create_applicant(path):
         applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
     return applicants
-
-def test_read():
-    pass
-
-print(test_create_applicant("test_role"))

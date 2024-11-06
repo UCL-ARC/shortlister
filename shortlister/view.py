@@ -1,3 +1,4 @@
+from shortlister.model import Criterion
 class View: 
 
     def __init__(self):
@@ -13,13 +14,13 @@ class View:
         print(f"Role ID: {role.job_id}")
         
     def view_applicant_details(self,applicant):
-            print(f"Details for {applicant.name}: ")
-            print(f"CV Path: {applicant.cv}")
-            print("Scores:")
-            if applicant.scores is not None:
-                for criterion,score in applicant.scores.items():
-                    print(f"{criterion.name:^20}: {score:^20}")
-            print()
+        print(f"Details for {applicant.name}: ")
+        print(f"CV Path: {applicant.cv}")
+        print("Scores:")
+        if applicant.scores is not None:
+            for criterion,score in applicant.scores.items():
+                print(f"{criterion.name:^20}: {score:^20}")
+        print()
 
     def view_applicants_list(self,shortlist):
         for index, applicant in enumerate(shortlist.applicants):
@@ -31,3 +32,12 @@ class View:
         
         for index,criterion in enumerate(criteria):
             print(f"{index}. {criterion.name}: {criterion.description}")
+
+    def view_selection_options(self,criterion):
+        print(f"You selected {criterion.name}. Select the score you want to change to:\n")
+
+        for index,score in enumerate(criterion.scores):
+                    print(f"{index}: {score}")
+
+    def view_update(self,attribute,change):
+        print(f"Updated: {attribute} to: {change}\n")
