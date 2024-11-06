@@ -68,7 +68,7 @@ class Controller:
         """Confirm changes to score"""
         
         self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
-        update_applicant_score(self.current_applicant,self.current_criterion,k)
+        update_applicant_score(self.current_applicant,self.current_criterion,int(k))
         self.view.view_applicant_details(self.current_applicant)
         self.options = self.options_applicant_detail
 
