@@ -20,7 +20,7 @@ class View:
         if applicant.scores is not None:
             for criterion,score in applicant.scores.items():
                 print(f"{criterion.name:^20}: {score:^20}")
-        print()
+        print(f"Notes: {applicant.notes}\n")
 
     def view_applicants_list(self,shortlist:Shortlist):
         print("\nList of applicants:")
