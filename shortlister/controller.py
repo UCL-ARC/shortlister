@@ -78,11 +78,16 @@ class Controller:
         i = self.shortlist.applicants.index(self.current_applicant)
         self.current_applicant = self.shortlist.applicants[i-1]
         self.view.view_applicant_details(self.current_applicant)
-        
+
     def switch_next_applicant(self,k=None):
         """shows details of the next applicant in the shortlist"""
         i = self.shortlist.applicants.index(self.current_applicant)
-        self.current_applicant = self.shortlist.applicants[i+1]
+
+        if i+1 >= len(self.shortlist.applicants):
+            self.current_applicant = self.shortlist.applicants[0]
+        else:
+            self.current_applicant = self.shortlist.applicants[i+1]
+            
         self.view.view_applicant_details(self.current_applicant)
 
     def run(self):
