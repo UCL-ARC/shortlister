@@ -13,11 +13,11 @@ def test_load_criteria():
         assert type(criterion) is expected
         assert criterion.name and criterion.description and criterion.scores is not None
 
-@pytest.mark.parametrize("folder_path,criteria,expected",
-                         [(path,model.load_criteria(path/csv_file),["Emma Jones","Michael Davis","Sarah Thompson"]),
-                          ("non_existing_folder",[],[])])
-def test_load_applicants(folder_path,criteria,expected):
-    applicants = model.load_applicants(folder_path,criteria)
+@pytest.mark.parametrize("folder_path,expected",
+                         [(path,["Emma Jones","Michael Davis","Sarah Thompson"]),
+                          ("non_existing_folder",[])])
+def test_load_applicants(folder_path,expected):
+    applicants = model.load_applicants(folder_path)
     result = [applicant.name for applicant in applicants]
     assert result == expected
 
