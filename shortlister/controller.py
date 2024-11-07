@@ -97,9 +97,9 @@ class Controller:
     def create_applicant_note(self,k=None):
         """adds a new note for the applicant"""
         note = input("New note: ")
-        update_applicant_notes(self.current_applicant,note)
+        update_applicant_notes(self.applicant(self.applicant_index),note)
 
-        self.view.view_applicant_details(self.current_applicant)
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def run(self):
 
