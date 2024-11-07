@@ -8,7 +8,7 @@ class Controller:
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
-        self.current_applicant = None
+        self.applicant_index = int
         self.current_criterion = None
         self.view = View()
         self.options = None
@@ -47,15 +47,15 @@ class Controller:
         try:
             i = int(input("Please enter the applicant number:"))
             print()
-            self.current_applicant = self.shortlist.applicants[i-1]
-            self.view.view_applicant_details(self.current_applicant)
+            self.applicant_index = i-1
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
 
     def open_applicant_pdf(self,k=None):
         """Open current applicant's CV"""
-        startfile(self.current_applicant.cv)
+        startfile(self.applicant(self.applicant_index).cv)
 
     def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
@@ -70,30 +70,29 @@ class Controller:
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
         self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
-        update_applicant_score(self.current_applicant,self.current_criterion,int(k))
-        self.view.view_applicant_details(self.current_applicant)
+        update_applicant_score(self.applicant(self.applicant_index),self.current_criterion,int(k))
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
         self.options = self.options_applicant_detail
 
     def switch_prev_applicant(self,k=None):
         """shows details of the previous applicant in the shortlist"""
-        i = self.shortlist.applicants.index(self.current_applicant)
-
-        if i == 0:
+        if self.applicant_index == 0:
             pass
         else:
-            self.current_applicant = self.shortlist.applicants[i-1]
-            self.view.view_applicant_details(self.current_applicant)
+            self.applicant_index -=1
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def switch_next_applicant(self,k=None):
         """shows details of the next applicant in the shortlist"""
-        i = self.shortlist.applicants.index(self.current_applicant)
-
-        if i+1 >= len(self.shortlist.applicants):
-            self.current_applicant = self.shortlist.applicants[0]
+        if self.applicant_index+1 >= len(self.shortlist.applicants):
+            self.applicant_index = 0
         else:
-            self.current_applicant = self.shortlist.applicants[i+1]
+            self.applicant_index+=1
             
-        self.view.view_applicant_details(self.current_applicant)
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
+
+    def applicant(self,index):
+        return self.shortlist.applicants[index]
 
     def create_applicant_note(self,k=None):
         """adds a new note for the applicant"""

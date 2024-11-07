@@ -53,7 +53,7 @@ def load_shortlist(path):
     else:
         criteria = load_criteria(path/criteria_file_name)
         role = load_role(path,criteria)
-        applicants = load_applicants(path,criteria) 
+        applicants = load_applicants(path) 
         shortlist = Shortlist(role,applicants)
     
     return shortlist
@@ -63,17 +63,13 @@ def load_role(path,criteria):
     role = Role(str(path),"0001",criteria)
     return role
 
-def load_applicants(path:Path,criteria:list[Criterion]):
+def load_applicants(path):
     """generate a list of applicant instances from pdf format CVs"""
     files = path.glob("*.pdf")
     applicants = []
-
     for file in files:
         name_parts = file.stem.split("_")
-        applicant = Applicant(name=" ".join(name_parts[0:2]),
-                              cv=file,
-                              scores={criterion:"Not marked" for criterion in criteria},
-                              notes=[])
+        applicant = Applicant(" ".join(name_parts[0:2]),file,{})
         applicants.append(applicant)
     return applicants
 
