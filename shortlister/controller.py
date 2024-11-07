@@ -47,14 +47,14 @@ class Controller:
             i = int(input("Please enter the applicant number:"))
             print()
             self.applicant_index = i-1
-            self.view.view_applicant_details(self.shortlist.applicants[self.applicant_index])
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
 
     def open_applicant_pdf(self,k=None):
         """Open current applicant's CV"""
-        startfile(self.shortlist.applicants[self.applicant_index].cv)
+        startfile(self.applicant(self.applicant_index).cv)
 
     def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
@@ -69,8 +69,8 @@ class Controller:
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
         self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
-        update_applicant_score(self.shortlist.applicants[self.applicant_index],self.current_criterion,int(k))
-        self.view.view_applicant_details(self.shortlist.applicants[self.applicant_index])
+        update_applicant_score(self.applicant(self.applicant_index),self.current_criterion,int(k))
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
         self.options = self.options_applicant_detail
 
     def switch_prev_applicant(self,k=None):
@@ -79,7 +79,7 @@ class Controller:
             pass
         else:
             self.applicant_index -=1
-            self.view.view_applicant_details(self.shortlist.applicants[self.applicant_index])
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def switch_next_applicant(self,k=None):
         """shows details of the next applicant in the shortlist"""
@@ -88,7 +88,10 @@ class Controller:
         else:
             self.applicant_index+=1
             
-        self.view.view_applicant_details(self.shortlist.applicants[self.applicant_index])
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
+
+    def applicant(self,index):
+        return self.shortlist.applicants[index]
 
     def run(self):
 
