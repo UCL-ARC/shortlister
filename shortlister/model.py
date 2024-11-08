@@ -89,4 +89,4 @@ def update_applicant_score(applicant: Applicant, criterion: Criterion, score_ind
     applicant.scores[criterion] = criterion.scores[score_index]
 
 def update_applicant_notes(applicant:Applicant, new_note:str):
-    applicant.notes += f" {new_note}"
+    applicant.notes += f"; {new_note}"
