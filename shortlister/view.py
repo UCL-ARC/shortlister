@@ -6,15 +6,18 @@ class View:
         return
 
     def boot_message(self, role, num_applicants):
+        """Prints overview of shortlist to console."""
         print(f"\nShortlist for {role} loaded:")
         print(f"{num_applicants} applicants found")
         print("('?' to show list of avaliable shortcuts)")
 
     def view_role(self, role: Role):
+        """Prints overview of role to console."""
         print(f"\nRole title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
 
     def view_applicant_details(self, applicant: Applicant):
+        """Prints details of applicant to console."""
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
         print("Scores:")
@@ -24,12 +27,14 @@ class View:
         print(f"\nNotes: {applicant.notes}\n")
 
     def view_applicants_list(self, shortlist: Shortlist):
+        """Prints list of all applicants to console."""
         print("\nList of applicants:")
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
         print()
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
+        """Prints list of all criterion for the role to console."""
         print(f"The criteria for {role.job_title} are:")
         print()
 
@@ -37,6 +42,7 @@ class View:
             print(f"{index}. {criterion.name}: {criterion.description}")
 
     def view_selection_options(self, criterion: Criterion):
+        """Prints list of avaliable scoring option for selected criterion to console."""
         print(
             f"\nYou selected {criterion.name}. Select the score you want to change to:\n"
         )
