@@ -20,7 +20,7 @@ class Controller:
                                          "n":self.switch_next_applicant,
                                          "p":self.switch_prev_applicant,
                                          "e":self.edit_score_start,
-                                         "z":self.create_applicant_note,
+                                         "N":self.create_applicant_note,
                                          "b":self.show_boot_message,
                                          "O":self.open_applicant_pdf}
 
