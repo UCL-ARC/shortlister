@@ -75,10 +75,8 @@ class Controller:
 
     def switch_prev_applicant(self,k=None):
         """shows details of the previous applicant in the shortlist"""
-        if self.applicant_index == 0:
-            pass
-        else:
-            self.applicant_index -=1
+        if self.applicant_index > 0:
+            self.applicant_index -= 1
             self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def switch_next_applicant(self,k=None):
