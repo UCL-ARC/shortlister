@@ -1,6 +1,6 @@
 from shortlister.view import View
 from readchar import readkey
-from shortlister.model import load_shortlist,save_shortlist,update_applicant_score
+from shortlister.model import load_shortlist,save_shortlist,update_applicant_score,update_applicant_notes
 from startfile import startfile
 
 class Controller:
@@ -20,6 +20,7 @@ class Controller:
                                          "n":self.switch_next_applicant,
                                          "p":self.switch_prev_applicant,
                                          "e":self.edit_score_start,
+                                         "N":self.create_applicant_note,
                                          "b":self.show_boot_message,
                                          "O":self.open_applicant_pdf}
 
@@ -93,6 +94,13 @@ class Controller:
 
     def applicant(self,index):
         return self.shortlist.applicants[index]
+
+    def create_applicant_note(self,k=None):
+        """adds a new note for the applicant"""
+        note = input("New note: ")
+        update_applicant_notes(self.applicant(self.applicant_index),note)
+
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def run(self):
 
