@@ -15,7 +15,7 @@ class Applicant:
     name: str
     cv: str #path to cv
     scores: Dict[Criterion,str]
-    notes: List[str]
+    notes: str
 
 @dataclass
 class Role:
@@ -44,7 +44,7 @@ def save_shortlist(path,shortlist):
     with open(path/pickle_file_name, "wb") as f:
         pickle.dump(shortlist, f)
 
-def load_shortlist(path):
+def load_shortlist(path:Path):
     """import shortlist data from either pickle file or role directory if the former doesn't exist"""
     file = path/pickle_file_name
     if file.exists():
@@ -63,13 +63,13 @@ def load_role(path,criteria):
     role = Role(str(path),"0001",criteria)
     return role
 
-def load_applicants(path):
+def load_applicants(path:Path):
     """generate a list of applicant instances from pdf format CVs"""
     files = path.glob("*.pdf")
     applicants = []
     for file in files:
         name_parts = file.stem.split("_")
-        applicant = Applicant(" ".join(name_parts[0:2]),file,{})
+        applicant = Applicant(name=" ".join(name_parts[0:2]),cv=file,scores={},note="")
         applicants.append(applicant)
     return applicants
 
@@ -88,5 +88,5 @@ def load_criteria(csv_file):
 def update_applicant_score(applicant: Applicant, criterion: Criterion, score_index: int):
     applicant.scores[criterion] = criterion.scores[score_index]
 
-def update_applicant_notes(applicant:Applicant, note:str):
-    applicant.notes.append(note)
+def update_applicant_notes(applicant:Applicant, new_note:str):
+    applicant.notes += f" {new_note}"
