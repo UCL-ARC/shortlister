@@ -1,7 +1,5 @@
 from shortlister.controller import Controller
 from pathlib import Path
-from readchar import readkey
-import unittest
 
 controller = Controller(path=Path("test_role"))
 
