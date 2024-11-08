@@ -75,16 +75,19 @@ class Controller:
 
     def switch_prev_applicant(self,k=None):
         """shows details of the previous applicant in the shortlist"""
+
+        # ignores input if already at first applicant 
         if self.applicant_index > 0:
             self.applicant_index -= 1
             self.view.view_applicant_details(self.applicant(self.applicant_index))
 
     def switch_next_applicant(self,k=None):
         """shows details of the next applicant in the shortlist"""
-        if self.applicant_index+1 >= len(self.shortlist.applicants):
+        self.applicant_index += 1
+
+        # loop back to the first applicant if at last applicant
+        if self.applicant_index > len(self.shortlist.applicants) - 1:
             self.applicant_index = 0
-        else:
-            self.applicant_index+=1
             
         self.view.view_applicant_details(self.applicant(self.applicant_index))
 
