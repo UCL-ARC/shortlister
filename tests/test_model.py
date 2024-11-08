@@ -15,7 +15,7 @@ def test_load_criteria():
 
 @pytest.mark.parametrize("folder_path,expected",
                          [(path,["Emma Jones","Michael Davis","Sarah Thompson"]),
-                          ("non_existing_folder",[])])
+                          (Path("non_existing_folder"),[])])
 def test_load_applicants(folder_path,expected):
     applicants = model.load_applicants(folder_path)
     result = [applicant.name for applicant in applicants]
