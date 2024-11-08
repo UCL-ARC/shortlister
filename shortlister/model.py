@@ -69,7 +69,7 @@ def load_applicants(path:Path):
     applicants = []
     for file in files:
         name_parts = file.stem.split("_")
-        applicant = Applicant(name=" ".join(name_parts[0:2]),cv=file,scores={},note="")
+        applicant = Applicant(name=" ".join(name_parts[0:2]),cv=file,scores={},notes="")
         applicants.append(applicant)
     return applicants
 
