@@ -8,7 +8,7 @@ class Controller:
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
-        self.applicant_index = int
+        self.applicant_index: int = 0
         self.current_criterion = None
         self.view = View()
         self.options = None
