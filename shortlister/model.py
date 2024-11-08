@@ -35,8 +35,8 @@ class Shortlist:
 
 # functions
 
-pickle_file_name = "shortlist.pickle"
-criteria_file_name = "criteria.csv"
+PICKLE_FILE_NAME = "shortlist.pickle"
+CRITERIA_FILE_NAME = "criteria.csv"
 
 
 def load_pickle(file_path):
@@ -48,18 +48,18 @@ def load_pickle(file_path):
 
 def save_shortlist(path, shortlist):
     """save shortlist as a pickle file inside the role_directory"""
-    with open(path / pickle_file_name, "wb") as f:
+    with open(path / PICKLE_FILE_NAME, "wb") as f:
         pickle.dump(shortlist, f)
 
 
 def load_shortlist(path: Path):
     """import shortlist data from either pickle file or role directory if the former doesn't exist"""
-    file = path / pickle_file_name
+    file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
 
     else:
-        criteria = load_criteria(path / criteria_file_name)
+        criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
         applicants = load_applicants(path)
         shortlist = Shortlist(role, applicants)
