@@ -7,6 +7,7 @@ import csv
 
 @dataclass(frozen=True)
 class Criterion:
+    """A property of Role - contained within the attribute criteria(list of Criterion objects)."""
     name: str
     description: str
     scores: tuple
@@ -14,6 +15,7 @@ class Criterion:
 
 @dataclass
 class Applicant:
+    """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
     name: str
     cv: str  # path to cv
     scores: Dict[Criterion, str]
@@ -22,6 +24,7 @@ class Applicant:
 
 @dataclass
 class Role:
+    """A property of Shortlist."""
     job_title: str
     job_id: str
     criteria: List[Criterion]
@@ -29,31 +32,32 @@ class Role:
 
 @dataclass
 class Shortlist:
+    """Major class object containing all relevant role, applicant, criteria information for shortlisting."""
     role: Role
     applicants: List[Applicant]
 
-
-# functions
+# Constant variables
 
 PICKLE_FILE_NAME = "shortlist.pickle"
 CRITERIA_FILE_NAME = "criteria.csv"
 
+# Functions
 
 def load_pickle(file_path):
-    """load shortlist from existing pickle file"""
+    """Load shortlist from existing pickle file."""
     with open(file_path, "rb") as f:
         shortlist = pickle.load(f)
     return shortlist
 
 
 def save_shortlist(path, shortlist):
-    """save shortlist as a pickle file inside the role_directory"""
+    """Save shortlist as a pickle file within the role directory path."""
     with open(path / PICKLE_FILE_NAME, "wb") as f:
         pickle.dump(shortlist, f)
 
 
 def load_shortlist(path: Path):
-    """import shortlist data from either pickle file or role directory if the former doesn't exist"""
+    """Import shortlist data from either: 1. Pickle file or 2. Role directory (when there is no existing pickle data)."""
     file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
@@ -68,13 +72,13 @@ def load_shortlist(path: Path):
 
 
 def load_role(path, criteria):
-    """generates role object instance"""
+    """Generates role object instance."""
     role = Role(str(path), "0001", criteria)
     return role
 
 
 def load_applicants(path: Path):
-    """generate a list of applicant instances from pdf format CVs"""
+    """Generate a list of applicant instances from pdf format CVs."""
     files = path.glob("*.pdf")
     applicants = []
     for file in files:
@@ -87,7 +91,7 @@ def load_applicants(path: Path):
 
 
 def load_criteria(csv_file):
-    """generate criteria(list of criterion instances) from csv file"""
+    """Generate criteria(list of criterion instances) from csv file."""
     criteria = []
     with open(csv_file) as file:
         reader = csv.reader(file)
@@ -104,8 +108,10 @@ def load_criteria(csv_file):
 def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
+    """Updates applicant's score field with selected criterion and selected score from criterion."""
     applicant.scores[criterion] = criterion.scores[score_index]
 
 
 def update_applicant_notes(applicant: Applicant, new_note: str):
+    """Appends new note to applicant's notes section."""
     applicant.notes += f"; {new_note}"
