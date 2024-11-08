@@ -8,7 +8,7 @@ class Controller:
     def __init__(self,path):
         self.path = path
         self.shortlist = load_shortlist(path)
-        self.current_applicant = None
+        self.applicant_index: int = 0
         self.current_criterion = None
         self.view = View()
         self.options = None
@@ -17,6 +17,8 @@ class Controller:
         self.options_applicant_list = {"b":self.show_boot_message,
                                        "d":self.show_applicant_details}
         self.options_applicant_detail = {"a":self.show_applicants_list,
+                                         "n":self.switch_next_applicant,
+                                         "p":self.switch_prev_applicant,
                                          "e":self.edit_score_start,
                                          "b":self.show_boot_message,
                                          "O":self.open_applicant_pdf}
@@ -44,15 +46,15 @@ class Controller:
         try:
             i = int(input("Please enter the applicant number:"))
             print()
-            self.current_applicant = self.shortlist.applicants[i-1]
-            self.view.view_applicant_details(self.current_applicant)
+            self.applicant_index = i-1
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
 
     def open_applicant_pdf(self,k=None):
         """Open current applicant's CV"""
-        startfile(self.current_applicant.cv)
+        startfile(self.applicant(self.applicant_index).cv)
 
     def edit_score_start(self,k=None):
         """select a criteria to edit score for"""
@@ -66,11 +68,31 @@ class Controller:
         
     def edit_score_confirm(self,k=None):
         """Confirm changes to score"""
-        
         self.view.view_update(self.current_criterion.name,self.current_criterion.scores[int(k)])
-        update_applicant_score(self.current_applicant,self.current_criterion,int(k))
-        self.view.view_applicant_details(self.current_applicant)
+        update_applicant_score(self.applicant(self.applicant_index),self.current_criterion,int(k))
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
         self.options = self.options_applicant_detail
+
+    def switch_prev_applicant(self,k=None):
+        """shows details of the previous applicant in the shortlist"""
+
+        # ignores input if already at first applicant 
+        if self.applicant_index > 0:
+            self.applicant_index -= 1
+            self.view.view_applicant_details(self.applicant(self.applicant_index))
+
+    def switch_next_applicant(self,k=None):
+        """shows details of the next applicant in the shortlist"""
+        self.applicant_index += 1
+
+        # loop back to the first applicant if at last applicant
+        if self.applicant_index > len(self.shortlist.applicants) - 1:
+            self.applicant_index = 0
+            
+        self.view.view_applicant_details(self.applicant(self.applicant_index))
+
+    def applicant(self,index):
+        return self.shortlist.applicants[index]
 
     def run(self):
 
@@ -95,5 +117,4 @@ class Controller:
                 output = self.options.get(k)
                 
                 if output is not None:
-                    print()
                     output(k=k)
