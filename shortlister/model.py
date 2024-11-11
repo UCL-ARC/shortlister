@@ -121,7 +121,7 @@ def update_applicant_score(
 def update_applicant_notes(applicant: Applicant, new_note: str):
     """Appends new note to applicant's notes section."""
 
-    if applicant.notes == "":
-        applicant.notes += new_note
-    else:
-        applicant.notes += f"; {new_note}"
+    if len(applicant.notes):
+        applicant.notes += "; "
+    
+    applicant.notes += new_note
