@@ -20,11 +20,16 @@ class View:
         """Prints details of applicant to console."""
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
-        print("Scores:")
-        if applicant.scores is not None:
+
+        if applicant.scores:
+            print("Scores: ")
             for criterion, score in applicant.scores.items():
                 print(f"{criterion.name:^20}: {score:^20}")
-        print(f"\nNotes: {applicant.notes}\n")
+        else:
+            print("No scores")
+
+        if applicant.notes:
+            print(f"Notes: {applicant.notes}")
 
     def view_applicants_list(self, shortlist: Shortlist):
         """Prints list of all applicants to console."""

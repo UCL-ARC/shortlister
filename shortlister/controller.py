@@ -55,7 +55,7 @@ class Controller:
         try:
             i = int(input("Please enter the applicant number:"))
             print()
-            self.applicant_index = i - 1  # Compensates for index  
+            self.applicant_index = i - 1  # Compensates for index
             self.view.view_applicant_details(self.applicant(self.applicant_index))
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
