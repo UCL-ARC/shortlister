@@ -90,6 +90,8 @@ class Controller:
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
+        self.applicant(self.applicant_index).scores = {key: self.applicant(self.applicant_index).scores[key] for key in self.shortlist.role.criteria if key in self.applicant(self.applicant_index).scores}
+        
         self.view.view_applicant_details(self.applicant(self.applicant_index))
         self.options = self.options_applicant_detail
 
