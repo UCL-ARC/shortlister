@@ -1,6 +1,7 @@
 from shortlister.view import View
 from readchar import readkey
 from shortlister.model import (
+    Criterion,
     load_shortlist,
     save_shortlist,
     update_applicant_score,
@@ -121,6 +122,10 @@ class Controller:
         update_applicant_notes(self.applicant(self.applicant_index), note)
 
         self.view.view_applicant_details(self.applicant(self.applicant_index))
+    
+    def total_score(scores: dict[Criterion, str]) -> int:
+        """Takes applicant scores dictionary and returns a total score as a single number"""
+        ...
 
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
