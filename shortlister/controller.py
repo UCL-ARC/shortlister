@@ -3,7 +3,7 @@ from shortlister.view import View
 from readchar import readkey
 from shortlister.model import (
     Applicant,
-    Criterion,
+    total_score,
     load_shortlist,
     save_shortlist,
     update_applicant_score,
@@ -93,7 +93,6 @@ class Controller:
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
-        self.applicant(self.applicant_index).scores = {key: self.applicant(self.applicant_index).scores[key] for key in self.shortlist.role.criteria if key in self.applicant(self.applicant_index).scores}
 
         applicant:Applicant = self.applicant(self.applicant_index)
         self.view.view_applicant_details(applicant,total_score(applicant.scores))
