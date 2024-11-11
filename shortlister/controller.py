@@ -1,6 +1,8 @@
+from typing import Dict
 from shortlister.view import View
 from readchar import readkey
 from shortlister.model import (
+    Applicant,
     Criterion,
     load_shortlist,
     save_shortlist,
@@ -121,11 +123,12 @@ class Controller:
     def create_applicant_note(self, k=None):
         """Adds a new note to applicant's note section."""
         note = input("New note: ")
-        update_applicant_notes(self.applicant(self.applicant_index), note)
+        my_applicant:Applicant = self.applicant(self.applicant_index)
+        update_applicant_notes(my_applicant,note)
 
-        self.view.view_applicant_details(self.applicant(self.applicant_index),self.total_score(self.applicant(self.applicant_index).scores))
+        self.view.view_applicant_details(my_applicant,self.total_score(my_applicant.scores))
     
-    def total_score(self,scores: dict[Criterion, str]) -> int:
+    def total_score(self,scores: Dict[Criterion, str]) -> int:
         """Takes applicant scores dictionary and returns a total score as a single number"""
         score_to_value = {"Unsatisfactory":0, "Moderate":10, "Satisfactory":20,"Excellent":40}
         values = [score_to_value.get(score) for score in scores.values()]
