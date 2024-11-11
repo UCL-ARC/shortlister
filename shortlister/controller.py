@@ -57,7 +57,7 @@ class Controller:
             i = int(input("Please enter the applicant number:"))
             print()
             self.applicant_index = i - 1  # Compensates for index
-            self.view.view_applicant_details(self.applicant(self.applicant_index))
+            self.view.view_applicant_details(self.applicant(self.applicant_index),self.total_score(self.applicant(self.applicant_index).scores))
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
@@ -100,7 +100,7 @@ class Controller:
         # ignores input if already at first applicant
         if self.applicant_index > 0:
             self.applicant_index -= 1
-            self.view.view_applicant_details(self.applicant(self.applicant_index))
+            self.view.view_applicant_details(self.applicant(self.applicant_index),self.total_score(self.applicant(self.applicant_index).scores))
 
     def switch_next_applicant(self, k=None):
         """Display details of the next applicant in the shortlist."""
@@ -110,7 +110,7 @@ class Controller:
         if self.applicant_index > len(self.shortlist.applicants) - 1:
             self.applicant_index = 0
 
-        self.view.view_applicant_details(self.applicant(self.applicant_index))
+        self.view.view_applicant_details(self.applicant(self.applicant_index),self.total_score(self.applicant(self.applicant_index).scores))
 
     def applicant(self, index):
         """Returns applicant using its index in applicants."""
@@ -121,9 +121,9 @@ class Controller:
         note = input("New note: ")
         update_applicant_notes(self.applicant(self.applicant_index), note)
 
-        self.view.view_applicant_details(self.applicant(self.applicant_index))
+        self.view.view_applicant_details(self.applicant(self.applicant_index),self.total_score(self.applicant(self.applicant_index).scores))
     
-    def total_score(scores: dict[Criterion, str]) -> int:
+    def total_score(self,scores: dict[Criterion, str]) -> int:
         """Takes applicant scores dictionary and returns a total score as a single number"""
         score_to_value = {"Unsatisfactory":0, "Moderate":10, "Satisfactory":20,"Excellent":40}
         values = [score_to_value.get(score) for score in scores.values()]
