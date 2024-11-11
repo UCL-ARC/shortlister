@@ -127,7 +127,9 @@ class Controller:
     
     def total_score(scores: dict[Criterion, str]) -> int:
         """Takes applicant scores dictionary and returns a total score as a single number"""
-        ...
+        score_to_value = {"Unsatisfactory":0, "Moderate":10, "Satisfactory":20,"Excellent":40}
+        values = [score_to_value.get(score) for score in scores.values()]
+        return sum(values)
 
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
