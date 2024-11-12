@@ -17,9 +17,9 @@ class View:
         print(f"\nRole title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
 
-    def view_applicant_details(self, applicant: Applicant,criteria: List[Criterion], total_score):
+    def view_applicant_details(self, applicant: Applicant,criteria: List[Criterion], total_score,applicant_number,total_applicant):
         """Prints details of applicant to console."""
-        print(f"Details for {applicant.name}: ")
+        print(f"**{applicant_number}/{total_applicant} {applicant.name}**")
         print(f"CV Path: {applicant.cv}")
 
         if applicant.scores:
@@ -31,7 +31,9 @@ class View:
             print("No scores")
 
         if applicant.notes:
-            print(f"Notes: {applicant.notes}")
+            print(f"Notes: {applicant.notes}\n")
+        else:
+            print()
 
     def view_applicants_list(self, shortlist: Shortlist):
         """Prints list of all applicants to console."""
