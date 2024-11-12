@@ -24,12 +24,12 @@ class Controller:
         self.view = View()
         self.options = None
         self.options_home = {"r": self.show_role_info, "a": self.show_applicants_list}
-        self.options_sort = {"a": sort_alpha,
-                             "s": sort_ascending_score,
-                             "d": sort_descending_score}
+        self.options_sort = {"a": self.sort,
+                             "s": self.sort,
+                             "d": self.sort}
         self.options_applicant_list = {
             "b": self.show_boot_message,
-            "S": self.activate_sort,
+            "S": self.sort,
             "d": self.show_applicant_details,
         }
         self.options_applicant_detail = {
@@ -129,8 +129,16 @@ class Controller:
         update_applicant_notes(self.applicant(self.applicant_index),note)
         self.view_applicant_details()    
     
-    def activate_sort(self,k=None):       
-        self.options = self.options_sort
+    def sort(self,k=None):   
+        if k == "S":  #activate sort
+            self.options = self.options_sort
+        elif k == "a":
+            sort_alpha()
+        elif k == "s":
+            sort_ascending_score()
+        elif k == "d":
+            sort_descending_score()
+        
 
 # Utilities
     def applicant(self, index):
