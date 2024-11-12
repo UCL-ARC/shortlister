@@ -138,3 +138,12 @@ def total_score(scores: Dict[Criterion, str]) -> int:
     }
     values = [score_to_value.get(score) for score in scores.values()]
     return sum(values)
+
+def sort_alpha(applicants:List[Applicant]):
+    return applicants.sort(key=lambda applicant:applicant.name)
+
+def sort_ascending_score(applicants:List[Applicant]):
+    return applicants.sort(key=lambda applicant:total_score(applicant.scores))
+
+def sort_descending_score(applicants:List[Applicant]):
+    return applicants.sort(reverse=True,key=lambda applicant:total_score(applicant.scores))
