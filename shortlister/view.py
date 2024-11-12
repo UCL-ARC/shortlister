@@ -16,7 +16,7 @@ class View:
         print(f"\nRole title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
 
-    def view_applicant_details(self, applicant: Applicant,total_score):
+    def view_applicant_details(self, applicant: Applicant, total_score):
         """Prints details of applicant to console."""
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
