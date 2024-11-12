@@ -58,6 +58,8 @@ class View:
 
         for index, score in enumerate(criterion.scores):
             print(f"{index}: {score}")
+
+        # Shows the option to clear scores ONLY when the criterion has been previously marked
         if criterion in applicant.scores:
             print(f"c : Clear score")
 

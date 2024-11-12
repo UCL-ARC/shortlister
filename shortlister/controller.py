@@ -85,6 +85,8 @@ class Controller:
             str(i): self.edit_score_confirm
             for i, _ in enumerate(self.current_criterion.scores)
         }
+
+        # allows keypress for clearing score ONLY when the criterion has been previously marked  
         if self.current_criterion in self.applicant(self.applicant_index).scores:
             self.options["c"] = self.clear_score
 
@@ -139,6 +141,7 @@ class Controller:
         return self.shortlist.applicants[index]
         
     def view_applicant_details(self):
+        """Automatically parse arguments for view"""
         applicant:Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
         self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total)

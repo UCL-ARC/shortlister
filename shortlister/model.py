@@ -140,4 +140,5 @@ def total_score(scores: Dict[Criterion, str]) -> int:
     return sum(values)
 
 def clear_score(applicant:Applicant,criterion:Criterion):
+    """Removes criterion from Applicant's scores dictionary."""
     applicant.scores.pop(criterion)
