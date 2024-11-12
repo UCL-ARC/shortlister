@@ -60,7 +60,6 @@ class Controller:
             print()
             self.applicant_index = i - 1  # Compensates for index
             self.view_applicant_details()
-            self.view_applicant_details()
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
@@ -96,7 +95,6 @@ class Controller:
         )
 
         self.view_applicant_details()
-        self.view_applicant_details()
         self.options = self.options_applicant_detail
 
     def switch_prev_applicant(self, k=None):
@@ -105,7 +103,6 @@ class Controller:
         # ignores input if already at first applicant
         if self.applicant_index > 0:
             self.applicant_index -= 1
-        self.view_applicant_details()
         self.view_applicant_details()
 
     def switch_next_applicant(self, k=None):
@@ -117,25 +114,25 @@ class Controller:
             self.applicant_index = 0
 
         self.view_applicant_details()
-        self.view_applicant_details()
+
 
     def create_applicant_note(self, k=None):
         """Adds a new note to applicant's note section."""
         note = input("New note: ")
-        update_applicant_notes(self.applicant(self.applicant_index), note)
+        update_applicant_notes(self.applicant(self.applicant_index),note)
 
         self.view_applicant_details()
 
-    # Utilities
+# Utilities
     def applicant(self, index):
         """Returns applicant using its index in applicants."""
         return self.shortlist.applicants[index]
-
+        
     def view_applicant_details(self):
-        applicant: Applicant = self.applicant(self.applicant_index)
+        applicant:Applicant = self.applicant(self.applicant_index)
         t_score = total_score(applicant.scores)
-        self.view.view_applicant_details(applicant, t_score)
-
+        self.view.view_applicant_details(applicant,t_score)
+    
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
         self.show_boot_message()
