@@ -60,6 +60,7 @@ class Controller:
             print()
             self.applicant_index = i - 1  # Compensates for index
             self.view_applicant_details()
+            self.view_applicant_details()
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
@@ -95,6 +96,7 @@ class Controller:
         )
 
         self.view_applicant_details()
+        self.view_applicant_details()
         self.options = self.options_applicant_detail
 
     def switch_prev_applicant(self, k=None):
@@ -103,6 +105,7 @@ class Controller:
         # ignores input if already at first applicant
         if self.applicant_index > 0:
             self.applicant_index -= 1
+        self.view_applicant_details()
         self.view_applicant_details()
 
     def switch_next_applicant(self, k=None):
@@ -113,6 +116,7 @@ class Controller:
         if self.applicant_index > len(self.shortlist.applicants) - 1:
             self.applicant_index = 0
 
+        self.view_applicant_details()
         self.view_applicant_details()
 
 
