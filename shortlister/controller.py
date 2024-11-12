@@ -131,7 +131,9 @@ class Controller:
     def view_applicant_details(self):
         applicant:Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
-        self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total)
+        applicant_number = self.applicant_index + 1
+        total_applicant = len(self.shortlist.applicants)
+        self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total,applicant_number,total_applicant)
     
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
