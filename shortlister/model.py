@@ -138,3 +138,6 @@ def total_score(scores: Dict[Criterion, str]) -> int:
     }
     values = [score_to_value.get(score) for score in scores.values()]
     return sum(values)
+
+def clear_score(applicant:Applicant,criterion:Criterion):
+    applicant.scores.pop(criterion)
