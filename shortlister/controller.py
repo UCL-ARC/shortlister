@@ -8,6 +8,9 @@ from shortlister.model import (
     save_shortlist,
     update_applicant_score,
     update_applicant_notes,
+    sort_alpha,
+    sort_ascending_score,
+    sort_descending_score
 )
 from startfile import startfile
 
@@ -21,9 +24,9 @@ class Controller:
         self.view = View()
         self.options = None
         self.options_home = {"r": self.show_role_info, "a": self.show_applicants_list}
-        self.options_sort = {"a": ...,
-                             "s": ...,
-                             "d": ...,}
+        self.options_sort = {"a": sort_alpha,
+                             "s": sort_ascending_score,
+                             "d": sort_descending_score}
         self.options_applicant_list = {
             "b": self.show_boot_message,
             "S": self.activate_sort,
@@ -124,8 +127,10 @@ class Controller:
         """Adds a new note to applicant's note section."""
         note = input("New note: ")
         update_applicant_notes(self.applicant(self.applicant_index),note)
-
-        self.view_applicant_details()
+        self.view_applicant_details()    
+    
+    def activate_sort(self,k=None):       
+        self.options = self.options_sort
 
 # Utilities
     def applicant(self, index):
