@@ -3,3 +3,5 @@
 .vscode/
 test_role/
 tests/shortlist.pickle
+.pytest_cache/
+.ruff_cache/
