@@ -17,13 +17,13 @@ class View:
         print(f"\nRole title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
 
-    def view_applicant_details(self, applicant: Applicant,criteria: List[Criterion]):
+    def view_applicant_details(self, applicant: Applicant,criteria: List[Criterion], total_score):
         """Prints details of applicant to console."""
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
 
         if applicant.scores:
-            print("Scores: ")
+            print(f"Scores: ({total_score})")
             for order in criteria:
                 if order in applicant.scores:
                     print(f"{order.name:^20}: {applicant.scores[order]:^20}")

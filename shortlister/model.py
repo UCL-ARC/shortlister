@@ -123,5 +123,18 @@ def update_applicant_notes(applicant: Applicant, new_note: str):
 
     if len(applicant.notes):
         applicant.notes += "; "
-    
+
     applicant.notes += new_note
+
+
+def total_score(scores: Dict[Criterion, str]) -> int:
+    """Takes applicant scores dictionary and returns a total score as a single number"""
+
+    score_to_value = {
+        "Unsatisfactory": 0,
+        "Moderate": 10,
+        "Satisfactory": 20,
+        "Excellent": 40,
+    }
+    values = [score_to_value.get(score) for score in scores.values()]
+    return sum(values)
