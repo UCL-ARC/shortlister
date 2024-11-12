@@ -31,7 +31,9 @@ class View:
             print("No scores")
 
         if applicant.notes:
-            print(f"Notes: {applicant.notes}")
+            print(f"Notes: {applicant.notes}\n")
+        else:
+            print()
 
     def view_applicants_list(self, shortlist: Shortlist):
         """Prints list of all applicants to console."""
