@@ -21,8 +21,12 @@ class Controller:
         self.view = View()
         self.options = None
         self.options_home = {"r": self.show_role_info, "a": self.show_applicants_list}
+        self.options_sort = {"a": ...,
+                             "s": ...,
+                             "d": ...,}
         self.options_applicant_list = {
             "b": self.show_boot_message,
+            "S": self.activate_sort,
             "d": self.show_applicant_details,
         }
         self.options_applicant_detail = {
