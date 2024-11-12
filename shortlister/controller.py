@@ -80,15 +80,12 @@ class Controller:
     def edit_criteria_select(self, k=None):
         """Select score to change to for previously selected criteria."""
         self.current_criterion = self.shortlist.role.criteria[int(k)]
-        self.view.view_selection_options(self.current_criterion,self.applicant(self.applicant_index))
+        self.view.view_selection_options(self.current_criterion)
         self.options = {
             str(i): self.edit_score_confirm
             for i, _ in enumerate(self.current_criterion.scores)
         }
-
-        # allows keypress for clearing score ONLY when the criterion has been previously marked  
-        if self.current_criterion in self.applicant(self.applicant_index).scores:
-            self.options["c"] = self.clear_score
+        self.options["c"] = self.clear_score
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -99,13 +96,6 @@ class Controller:
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
 
-        self.view_applicant_details()
-        self.options = self.options_applicant_detail
-
-    def clear_score(self,k=None):
-        """Removes the selected Criterion and score from applicant"""
-        applicant:Applicant = self.applicant(self.applicant_index)
-        clear_score(applicant,self.current_criterion)
         self.view_applicant_details()
         self.options = self.options_applicant_detail
 
@@ -132,27 +122,30 @@ class Controller:
         """Adds a new note to applicant's note section."""
         note = input("New note: ")
         update_applicant_notes(self.applicant(self.applicant_index),note)
-
         self.view_applicant_details()
 
+    def clear_score(self, k=None):
+        clear_score(self.applicant(self.applicant_index),self.current_criterion)
+        self.view_applicant_details()
+        self.options = self.options_applicant_detail
+    
 # Utilities
-    def applicant(self, index):
+    def applicant(self, index:int) -> Applicant:
         """Returns applicant using its index in applicants."""
         return self.shortlist.applicants[index]
         
     def view_applicant_details(self):
-        """Automatically parse arguments for view"""
         applicant:Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
         self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total)
 
-    
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
         self.show_boot_message()
 
         while True:
             k = readkey()
+            print(k)
 
             if k == "q":
                 save_shortlist(self.path, self.shortlist)
@@ -168,6 +161,7 @@ class Controller:
 
             else:
                 output = self.options.get(k)
-
+                
                 if output is not None:
+                    #print(output)
                     output(k=k)
