@@ -1,4 +1,5 @@
 from shortlister.model import Applicant, Role, Criterion, Shortlist
+from typing import List
 
 
 class View:
@@ -16,15 +17,16 @@ class View:
         print(f"\nRole title: {role.job_title}")
         print(f"Role ID: {role.job_id}")
 
-    def view_applicant_details(self, applicant: Applicant):
+    def view_applicant_details(self, applicant: Applicant,criteria: List[Criterion]):
         """Prints details of applicant to console."""
         print(f"Details for {applicant.name}: ")
         print(f"CV Path: {applicant.cv}")
 
         if applicant.scores:
             print("Scores: ")
-            for criterion, score in applicant.scores.items():
-                print(f"{criterion.name:^20}: {score:^20}")
+            for order in criteria:
+                if order in applicant.scores:
+                    print(f"{order.name:^20}: {applicant.scores[order]:^20}")
         else:
             print("No scores")
 
