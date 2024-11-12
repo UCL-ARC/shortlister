@@ -80,12 +80,13 @@ class Controller:
     def edit_criteria_select(self, k=None):
         """Select score to change to for previously selected criteria."""
         self.current_criterion = self.shortlist.role.criteria[int(k)]
-        self.view.view_selection_options(self.current_criterion)
+        self.view.view_selection_options(self.current_criterion,self.applicant(self.applicant_index))
         self.options = {
             str(i): self.edit_score_confirm
             for i, _ in enumerate(self.current_criterion.scores)
         }
-        self.options["c"] = self.clear_score
+        if self.current_criterion in self.applicant(self.applicant_index).scores:
+            self.options["c"] = self.clear_score
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
