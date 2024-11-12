@@ -8,6 +8,7 @@ from shortlister.model import (
     save_shortlist,
     update_applicant_score,
     update_applicant_notes,
+    clear_score
 )
 from startfile import startfile
 
@@ -84,6 +85,7 @@ class Controller:
             str(i): self.edit_score_confirm
             for i, _ in enumerate(self.current_criterion.scores)
         }
+        self.options["c"] = self.clear_score
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -94,6 +96,13 @@ class Controller:
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
 
+        self.view_applicant_details()
+        self.options = self.options_applicant_detail
+
+    def clear_score(self,k=None):
+        """Removes the selected Criterion and score from applicant"""
+        applicant:Applicant = self.applicant(self.applicant_index)
+        clear_score(applicant,self.current_criterion)
         self.view_applicant_details()
         self.options = self.options_applicant_detail
 
@@ -132,6 +141,7 @@ class Controller:
         applicant:Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
         self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total)
+
     
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
