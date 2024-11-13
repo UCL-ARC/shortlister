@@ -129,15 +129,20 @@ class Controller:
         update_applicant_notes(self.applicant(self.applicant_index),note)
         self.view_applicant_details()    
     
-    def sort(self,k=None):   
+    def sort(self,k=None):
+        """Activates sort"""
         if k == "S":  #activate sort
+            print("Entering sorting mode")
             self.options = self.options_sort
         elif k == "a":
-            sort_alpha()
+            sort_alpha(self.shortlist.applicants)
+            self.show_applicants_list()
         elif k == "s":
-            sort_ascending_score()
+            sort_ascending_score(self.shortlist.applicants)
+            self.show_applicants_list()
         elif k == "d":
-            sort_descending_score()
+            sort_descending_score(self.shortlist.applicants)
+            self.show_applicants_list()
         
 
 # Utilities
