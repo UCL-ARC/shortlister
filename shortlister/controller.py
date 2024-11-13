@@ -21,19 +21,20 @@ class Controller:
         self.current_criterion = None
         self.view = View()
         self.options = None
-        self.options_home = {"r": self.show_role_info, "a": self.show_applicants_list}
+        self.options_home = {"r": (self.show_role_info,"Role"), 
+                             "a": (self.show_applicants_list,"List of applicants"),}
         self.options_applicant_list = {
-            "b": self.show_boot_message,
-            "d": self.show_applicant_details,
+            "b": (self.show_boot_message,"Home"),
+            "d": (self.show_applicant_details,"Select an applicant to view their details"),
         }
         self.options_applicant_detail = {
-            "a": self.show_applicants_list,
-            "n": self.switch_next_applicant,
-            "p": self.switch_prev_applicant,
-            "e": self.edit_score_start,
-            "N": self.create_applicant_note,
-            "b": self.show_boot_message,
-            "O": self.open_applicant_pdf,
+            "a": (self.show_applicants_list,"Back to applicant list"),
+            "n": (self.switch_next_applicant,"Next applicant"),
+            "p": (self.switch_prev_applicant,"Previous applicant"),
+            "e": (self.edit_score_start,"Edit score"),
+            "N": (self.create_applicant_note,"New note"),
+            "b": (self.show_boot_message,"Home"),
+            "O": (self.open_applicant_pdf,"Open applicant's CV"),
         }
 
     def show_boot_message(self, k=None):
@@ -147,7 +148,7 @@ class Controller:
 
         while True:
             k = readkey()
-            print(k)
+            #print(k)
 
             if k == "q":
                 save_shortlist(self.path, self.shortlist)
@@ -159,11 +160,12 @@ class Controller:
                 print("q: Exit the program")
 
                 for keypress, func in self.options.items():
-                    print(f"{keypress}: {func.__doc__}")
+                    print(f"{keypress}: {func[1]}")
 
             else:
                 output = self.options.get(k)
+                #print(type(output))
                 
                 if output is not None:
                     #print(output)
-                    output(k=k)
+                    output[0](k=k)
