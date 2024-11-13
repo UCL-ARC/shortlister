@@ -50,7 +50,7 @@ class View:
             print("No scores")
 
         if applicant.notes:
-            print(f"Notes: {applicant.notes}\n")
+            print(f"Notes: {applicant.notes}")
 
         print()
 

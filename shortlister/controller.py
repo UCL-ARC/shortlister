@@ -1,6 +1,6 @@
-from typing import Dict
+import sys
+
 from shortlister.view import View
-from readchar import readkey
 from shortlister.model import (
     Applicant,
     total_score,
@@ -11,8 +11,10 @@ from shortlister.model import (
     clear_score,
     sort_alpha,
     sort_ascending_score,
-    sort_descending_score
+    sort_descending_score,
 )
+
+from readchar import readkey
 from startfile import startfile
 
 
@@ -51,21 +53,22 @@ class Controller:
     def quit(self, k=None):
         # if we've activated quit
         if k == "q":
-            print("q")
             # ask for confirmation
-            print("Confirm with 'y/n'")
+            print("Are you sure? (y/n)")
+            print()
             self.options = {
                 "n": (self.quit, "no"),
                 "y": (self.quit, "yes"),
             }
         elif k == "y":
-            print("y")
             # quit confirmed - save and exit
             save_shortlist(self.path, self.shortlist)
             print("Goodbye.")
             sys.exit(0)
         else:
             # quit cancelled - back to home
+            print("Quit aborted")
+            print()
             self.options = self.options_home
 
     def show_home_message(self, k=None):
@@ -137,22 +140,17 @@ class Controller:
     def switch_applicant(self, k=None):
         """Move to next or previous applicant"""
 
-        # if next applicant
-        if k == "n":
+        # if next applicant, and not already at last
+        if k == "n" and (self.applicant_index < len(self.shortlist.applicants) - 1):
             self.applicant_index += 1
-
-            # loop back to the first applicant if at last applicant
-            if self.applicant_index > len(self.shortlist.applicants) - 1:
-                self.applicant_index = 0
-
-            self.view_applicant_details()
-
-        # otherwise, previous applicant
+        # if previous and not already at first
+        elif k == "p" and (self.applicant_index > 0):
+            self.applicant_index -= 1
+        # otherwise do nothing
         else:
-            # ignores input if already at first applicant
-            if self.applicant_index > 0:
-                self.applicant_index -= 1
-                self.view_applicant_details()
+            return
+
+        self.view_applicant_details()
 
     def create_applicant_note(self, k=None):
         """Adds a new note to applicant's note section."""
@@ -207,7 +205,7 @@ class Controller:
 
         while True:
             k = readkey()
-            #print(k)
+            # print(k)
 
             if k == "?":
                 # show available keypress options
@@ -218,5 +216,5 @@ class Controller:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
                 if action is not None:
-                    #print(action)
+                    # print(action)
                     action[0](k=k)
