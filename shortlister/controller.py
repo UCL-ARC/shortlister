@@ -8,7 +8,8 @@ from shortlister.model import (
     save_shortlist,
     update_applicant_score,
     update_applicant_notes,
-    clear_score
+    clear_score,
+    SCORE_AND_VALUE
 )
 from startfile import startfile
 
@@ -83,14 +84,14 @@ class Controller:
         self.view.view_selection_options(self.current_criterion)
         self.options = {
             str(i): self.edit_score_confirm
-            for i, _ in enumerate(self.current_criterion.scores)
+            for i, _ in enumerate(SCORE_AND_VALUE.keys())
         }
         self.options["c"] = self.clear_score
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
         self.view.view_update(
-            self.current_criterion.name, self.current_criterion.scores[int(k)]
+            self.current_criterion.name, list(SCORE_AND_VALUE.keys())[int(k)]
         )
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
