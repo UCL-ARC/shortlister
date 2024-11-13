@@ -74,8 +74,8 @@ class Controller:
         """select a criteria to edit score for."""
         self.view.view_criteria(self.shortlist.role, self.shortlist.role.criteria)
         self.options = {
-            str(i): self.edit_criteria_select
-            for i, _ in enumerate(self.shortlist.role.criteria)
+            str(i): (self.edit_criteria_select,c.name)
+            for i, c in enumerate(self.shortlist.role.criteria)
         }
 
     def edit_criteria_select(self, k=None):
@@ -83,10 +83,10 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         self.view.view_selection_options(self.current_criterion)
         self.options = {
-            str(i): self.edit_score_confirm
-            for i, _ in enumerate(self.current_criterion.scores)
+            str(i): (self.edit_score_confirm,s)
+            for i, s in enumerate(self.current_criterion.scores)
         }
-        self.options["c"] = self.clear_score
+        self.options["c"] = (self.clear_score,f"Clear score: {self.current_criterion.name}")
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -164,7 +164,7 @@ class Controller:
 
             else:
                 output = self.options.get(k)
-                #print(type(output))
+                print(type(output))
                 
                 if output is not None:
                     #print(output)
