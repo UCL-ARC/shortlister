@@ -143,15 +143,15 @@ class Controller:
         if k == "S":  #activate sort
             print("Entering sorting mode")
             self.options = self.options_sort
+            return
         elif k == "a":
             sort_alpha(self.shortlist.applicants)
-            self.show_applicants_list()
         elif k == "s":
             sort_ascending_score(self.shortlist.applicants)
-            self.show_applicants_list()
         elif k == "d":
             sort_descending_score(self.shortlist.applicants)
-            self.show_applicants_list()
+            
+        self.show_applicants_list()
         
 
 # Utilities
