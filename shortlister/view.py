@@ -40,7 +40,6 @@ class View:
         print("\nList of applicants:")
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
-        print()
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""

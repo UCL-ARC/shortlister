@@ -9,7 +9,10 @@ from shortlister.model import (
     update_applicant_score,
     update_applicant_notes,
     clear_score,
-    SCORE_AND_VALUE
+    SCORE_AND_VALUE,
+    sort_alpha,
+    sort_ascending_score,
+    sort_descending_score
 )
 from startfile import startfile
 
@@ -22,19 +25,24 @@ class Controller:
         self.current_criterion = None
         self.view = View()
         self.options = None
-        self.options_home = {"r": self.show_role_info, "a": self.show_applicants_list}
+        self.options_home = {"r": (self.show_role_info,"Show role information"), 
+                             "a": (self.show_applicants_list,"List of applicants"),}
+        self.options_sort = {"a": (self.sort,"Sort by: Alphabetical order(default)"),
+                             "s": (self.sort,"Sort by: Score(Ascending)"),
+                             "d": (self.sort,"Sort by: Score(Descending)")}
         self.options_applicant_list = {
-            "b": self.show_boot_message,
-            "d": self.show_applicant_details,
+            "b": (self.show_boot_message,"Home"),
+            "S": (self.sort,"Activate sort mode"),
+            "d": (self.show_applicant_details,"Select an applicant to view their details"),
         }
         self.options_applicant_detail = {
-            "a": self.show_applicants_list,
-            "n": self.switch_next_applicant,
-            "p": self.switch_prev_applicant,
-            "e": self.edit_score_start,
-            "N": self.create_applicant_note,
-            "b": self.show_boot_message,
-            "O": self.open_applicant_pdf,
+            "a": (self.show_applicants_list,"Back to applicant list"),
+            "n": (self.switch_next_applicant,"Next applicant"),
+            "p": (self.switch_prev_applicant,"Previous applicant"),
+            "e": (self.edit_score_start,"Edit score"),
+            "N": (self.create_applicant_note,"New note"),
+            "b": (self.show_boot_message,"Home"),
+            "O": (self.open_applicant_pdf,"Open applicant's CV"),
         }
 
     def show_boot_message(self, k=None):
@@ -74,8 +82,8 @@ class Controller:
         """select a criteria to edit score for."""
         self.view.view_criteria(self.shortlist.role, self.shortlist.role.criteria)
         self.options = {
-            str(i): self.edit_criteria_select
-            for i, _ in enumerate(self.shortlist.role.criteria)
+            str(i): (self.edit_criteria_select,c.name)
+            for i, c in enumerate(self.shortlist.role.criteria)
         }
 
     def edit_criteria_select(self, k=None):
@@ -83,10 +91,10 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         self.view.view_selection_options(self.current_criterion)
         self.options = {
-            str(i): self.edit_score_confirm
-            for i, _ in enumerate(SCORE_AND_VALUE.keys())
+            str(i): (self.edit_score_confirm,s)
+            for i, s in enumerate(SCORE_AND_VALUE.keys())
         }
-        self.options["c"] = self.clear_score
+        self.options["c"] = (self.clear_score,f"Clear score: {self.current_criterion.name}")
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -130,6 +138,24 @@ class Controller:
         self.view_applicant_details()
         self.options = self.options_applicant_detail
     
+        self.view_applicant_details()    
+    
+    def sort(self,k=None):
+        """Activates sort"""
+        if k == "S":  #activate sort
+            print("Entering sorting mode")
+            self.options = self.options_sort
+            return
+        elif k == "a":
+            sort_alpha(self.shortlist.applicants)
+        elif k == "s":
+            sort_ascending_score(self.shortlist.applicants)
+        elif k == "d":
+            sort_descending_score(self.shortlist.applicants)
+            
+        self.show_applicants_list()
+        
+
 # Utilities
     def applicant(self, index:int) -> Applicant:
         """Returns applicant using its index in applicants."""
@@ -148,7 +174,7 @@ class Controller:
 
         while True:
             k = readkey()
-            print(k)
+            #print(k)
 
             if k == "q":
                 save_shortlist(self.path, self.shortlist)
@@ -160,11 +186,12 @@ class Controller:
                 print("q: Exit the program")
 
                 for keypress, func in self.options.items():
-                    print(f"{keypress}: {func.__doc__}")
+                    print(f"{keypress}: {func[1]}")
 
             else:
                 output = self.options.get(k)
+                #print(type(output))
                 
                 if output is not None:
                     #print(output)
-                    output(k=k)
+                    output[0](k=k)
