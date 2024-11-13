@@ -21,7 +21,7 @@ class Controller:
         self.current_criterion = None
         self.view = View()
         self.options = None
-        self.options_home = {"r": (self.show_role_info,"Role"), 
+        self.options_home = {"r": (self.show_role_info,"Show role information"), 
                              "a": (self.show_applicants_list,"List of applicants"),}
         self.options_applicant_list = {
             "b": (self.show_boot_message,"Home"),
@@ -164,7 +164,7 @@ class Controller:
 
             else:
                 output = self.options.get(k)
-                print(type(output))
+                #print(type(output))
                 
                 if output is not None:
                     #print(output)
