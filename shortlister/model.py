@@ -44,6 +44,12 @@ class Shortlist:
 
 PICKLE_FILE_NAME = "shortlist.pickle"
 CRITERIA_FILE_NAME = "criteria.csv"
+SCORE_AND_VALUE = {
+    "Unsatisfactory": 0,
+    "Moderate": 10,
+    "Satisfactory": 20,
+    "Excellent": 40,
+}
 
 # Functions
 
@@ -114,7 +120,8 @@ def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
     """Updates applicant's score field with selected criterion and selected score from criterion."""
-    applicant.scores[criterion] = criterion.scores[score_index]
+    scores = SCORE_AND_VALUE.keys()
+    applicant.scores[criterion] = scores[score_index]
 
 
 def update_applicant_notes(applicant: Applicant, new_note: str):
@@ -129,13 +136,7 @@ def update_applicant_notes(applicant: Applicant, new_note: str):
 def total_score(scores: Dict[Criterion, str]) -> int:
     """Takes applicant scores dictionary and returns a total score as a single number"""
 
-    score_to_value = {
-        "Unsatisfactory": 0,
-        "Moderate": 10,
-        "Satisfactory": 20,
-        "Excellent": 40,
-    }
-    values = [score_to_value.get(score) for score in scores.values()]
+    values = [SCORE_AND_VALUE.get(score) for score in scores.values()]
     return sum(values)
 
 def clear_score(applicant:Applicant,criterion:Criterion):
