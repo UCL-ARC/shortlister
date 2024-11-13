@@ -93,7 +93,8 @@ def load_applicants(path: Path):
             name=" ".join(name_parts[0:2]), cv=file, scores={}, notes=""
         )
         applicants.append(applicant)
-    return applicants.sort()
+    sort_alpha(applicants)
+    return applicants
 
 
 def load_criteria(csv_file):
