@@ -11,7 +11,6 @@ class Criterion:
 
     name: str
     description: str
-    scores: tuple
 
 
 @dataclass
@@ -105,7 +104,7 @@ def load_criteria(csv_file):
 
         for row in reader:
             criterion = Criterion(
-                name=row[0], description=row[1], scores=tuple(row[2].split(","))
+                name=row[0], description=row[1]
             )
             criteria.append(criterion)
     return criteria
