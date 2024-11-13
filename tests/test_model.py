@@ -2,6 +2,13 @@ import pytest
 from shortlister import model
 from pathlib import Path
 
+SCORES_VALUES={
+    "Unsatisfactory": 0,
+    "Moderate": 10,
+    "Satisfactory": 20,
+    "Excellent": 40,
+}
+SCORES = list(SCORES_VALUES.keys())
 path = Path("test_role")
 pickle_file_name = Path("shortlist.pickle")
 csv_file = Path("criteria.csv")
@@ -12,7 +19,7 @@ def test_load_criteria():
     expected = model.Criterion
     for criterion in criteria_result:
         assert type(criterion) is expected
-        assert criterion.name and criterion.description and criterion.scores is not None
+        assert criterion.name and criterion.description is not None
 
 
 @pytest.mark.parametrize(
@@ -33,17 +40,15 @@ def test_load_role():
         model.Criterion(
             name="PhD",
             description="Degree or relevant experience",
-            scores=("Unsatisfactory", "Moderate", "Satisfactory", "Excellent"),
         ),
         model.Criterion(
             name="Research software",
             description="Authorship,development and maintenance",
-            scores=("Unsatisfactory", "Moderate", "Satisfactory", "Excellent"),
+
         ),
         model.Criterion(
             name="Best practices",
             description="Issue tracking, testing, documentation etc.",
-            scores=("Unsatisfactory", "Moderate", "Satisfactory", "Excellent"),
         ),
     ]
 
@@ -56,22 +61,22 @@ def test_load_role():
 def test_save_load():
     s = ("1", "2", "3", "4")
     c = [
-        model.Criterion(name="c1", description="d1", scores=s),
-        model.Criterion(name="c2", description="d2", scores=s),
-        model.Criterion(name="c3", description="d3", scores=s),
+        model.Criterion(name="c1", description="d1"),
+        model.Criterion(name="c2", description="d2"),
+        model.Criterion(name="c3", description="d3"),
     ]
 
     a = [
         model.Applicant(
             name="a1",
             cv="c1",
-            scores={c[0]: c[0].scores[3], c[1]: c[1].scores[2], c[2]: c[2].scores[0]},
+            scores={c[0]: SCORES[3], c[1]: SCORES[2], c[2]: SCORES[0]},
             notes="n1",
         ),
         model.Applicant(
             name="a2",
             cv="c2",
-            scores={c[0]: c[0].scores[1], c[1]: c[1].scores[0]},
+            scores={c[0]: SCORES[1], c[1]: SCORES[0]},
             notes="n2",
         ),
     ]
