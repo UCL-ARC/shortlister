@@ -26,12 +26,12 @@ class Controller:
         self.options = None
         self.options_home = {"r": (self.show_role_info,"Show role information"), 
                              "a": (self.show_applicants_list,"List of applicants"),}
-        self.options_sort = {"a": self.sort,
-                             "s": self.sort,
-                             "d": self.sort}
+        self.options_sort = {"a": (self.sort,"Sort by: Alphabetical order(default)"),
+                             "s": (self.sort,"Sort by: Score(Ascending)"),
+                             "d": (self.sort,"Sort by: Score(Descending)")}
         self.options_applicant_list = {
             "b": (self.show_boot_message,"Home"),
-            "S": self.sort,
+            "S": self.sort,"Activate sort mode"
             "d": (self.show_applicant_details,"Select an applicant to view their details"),
         }
         self.options_applicant_detail = {
