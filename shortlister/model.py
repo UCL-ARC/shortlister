@@ -138,3 +138,8 @@ def total_score(scores: Dict[Criterion, str]) -> int:
     }
     values = [score_to_value.get(score) for score in scores.values()]
     return sum(values)
+
+def clear_score(applicant:Applicant,criterion:Criterion):
+    """Removes criterion from Applicant's scores dictionary."""
+    if criterion in applicant.scores:
+        del applicant.scores[criterion]

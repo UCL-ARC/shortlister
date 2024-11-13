@@ -50,7 +50,7 @@ class View:
         for index, criterion in enumerate(criteria):
             print(f"{index}. {criterion.name}: {criterion.description}")
 
-    def view_selection_options(self, criterion: Criterion):
+    def view_selection_options(self, criterion: Criterion,):
         """Prints list of avaliable scoring option for selected criterion to console."""
         print(
             f"\nYou selected {criterion.name}. Select the score you want to change to:\n"
@@ -58,6 +58,7 @@ class View:
 
         for index, score in enumerate(criterion.scores):
             print(f"{index}: {score}")
+        print("c: Clear scores\n")
 
     def view_update(self, attribute, change):
         print(f"Updated: {attribute} to: {change}\n")
