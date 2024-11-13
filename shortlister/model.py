@@ -150,3 +150,8 @@ def sort_ascending_score(applicants:List[Applicant]):
 def sort_descending_score(applicants:List[Applicant]):
     """Sort by score(highest to lowest)."""
     return applicants.sort(reverse=True,key=lambda applicant:total_score(applicant.scores))
+
+def clear_score(applicant:Applicant,criterion:Criterion):
+    """Removes criterion from Applicant's scores dictionary."""
+    if criterion in applicant.scores:
+        del applicant.scores[criterion]

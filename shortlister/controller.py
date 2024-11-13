@@ -8,6 +8,7 @@ from shortlister.model import (
     save_shortlist,
     update_applicant_score,
     update_applicant_notes,
+    clear_score,
     sort_alpha,
     sort_ascending_score,
     sort_descending_score
@@ -91,6 +92,7 @@ class Controller:
             str(i): self.edit_score_confirm
             for i, _ in enumerate(self.current_criterion.scores)
         }
+        self.options["c"] = self.clear_score
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -127,6 +129,13 @@ class Controller:
         """Adds a new note to applicant's note section."""
         note = input("New note: ")
         update_applicant_notes(self.applicant(self.applicant_index),note)
+        self.view_applicant_details()
+
+    def clear_score(self, k=None):
+        clear_score(self.applicant(self.applicant_index),self.current_criterion)
+        self.view_applicant_details()
+        self.options = self.options_applicant_detail
+    
         self.view_applicant_details()    
     
     def sort(self,k=None):
@@ -146,14 +155,16 @@ class Controller:
         
 
 # Utilities
-    def applicant(self, index):
+    def applicant(self, index:int) -> Applicant:
         """Returns applicant using its index in applicants."""
         return self.shortlist.applicants[index]
         
     def view_applicant_details(self):
         applicant:Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
-        self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total)
+        applicant_number = self.applicant_index + 1
+        total_applicant = len(self.shortlist.applicants)
+        self.view.view_applicant_details(applicant,self.shortlist.role.criteria,total,applicant_number,total_applicant)
     
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
@@ -161,6 +172,7 @@ class Controller:
 
         while True:
             k = readkey()
+            print(k)
 
             if k == "q":
                 save_shortlist(self.path, self.shortlist)
@@ -176,6 +188,7 @@ class Controller:
 
             else:
                 output = self.options.get(k)
-
+                
                 if output is not None:
+                    #print(output)
                     output(k=k)
