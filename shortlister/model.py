@@ -120,7 +120,7 @@ def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
     """Updates applicant's score field with selected criterion and selected score from criterion."""
-    scores = SCORE_AND_VALUE.keys()
+    scores = list(SCORE_AND_VALUE.keys())
     applicant.scores[criterion] = scores[score_index]
 
 
