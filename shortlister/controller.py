@@ -8,7 +8,10 @@ from shortlister.model import (
     save_shortlist,
     update_applicant_score,
     update_applicant_notes,
-    clear_score
+    clear_score,
+    sort_alpha,
+    sort_ascending_score,
+    sort_descending_score
 )
 from startfile import startfile
 
@@ -23,8 +26,12 @@ class Controller:
         self.options = None
         self.options_home = {"r": (self.show_role_info,"Show role information"), 
                              "a": (self.show_applicants_list,"List of applicants"),}
+        self.options_sort = {"a": self.sort,
+                             "s": self.sort,
+                             "d": self.sort}
         self.options_applicant_list = {
             "b": (self.show_boot_message,"Home"),
+            "S": self.sort,
             "d": (self.show_applicant_details,"Select an applicant to view their details"),
         }
         self.options_applicant_detail = {
@@ -130,6 +137,24 @@ class Controller:
         self.view_applicant_details()
         self.options = self.options_applicant_detail
     
+        self.view_applicant_details()    
+    
+    def sort(self,k=None):
+        """Activates sort"""
+        if k == "S":  #activate sort
+            print("Entering sorting mode")
+            self.options = self.options_sort
+            return
+        elif k == "a":
+            sort_alpha(self.shortlist.applicants)
+        elif k == "s":
+            sort_ascending_score(self.shortlist.applicants)
+        elif k == "d":
+            sort_descending_score(self.shortlist.applicants)
+            
+        self.show_applicants_list()
+        
+
 # Utilities
     def applicant(self, index:int) -> Applicant:
         """Returns applicant using its index in applicants."""

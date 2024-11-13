@@ -93,6 +93,7 @@ def load_applicants(path: Path):
             name=" ".join(name_parts[0:2]), cv=file, scores={}, notes=""
         )
         applicants.append(applicant)
+    sort_alpha(applicants)
     return applicants
 
 
@@ -138,6 +139,18 @@ def total_score(scores: Dict[Criterion, str]) -> int:
     }
     values = [score_to_value.get(score) for score in scores.values()]
     return sum(values)
+
+def sort_alpha(applicants:List[Applicant]):
+    """Sort by alphabetical order."""
+    return applicants.sort(key=lambda applicant:applicant.name)
+
+def sort_ascending_score(applicants:List[Applicant]):
+    """Sort by score (lowest to highest)."""
+    return applicants.sort(key=lambda applicant:total_score(applicant.scores))
+
+def sort_descending_score(applicants:List[Applicant]):
+    """Sort by score(highest to lowest)."""
+    return applicants.sort(reverse=True,key=lambda applicant:total_score(applicant.scores))
 
 def clear_score(applicant:Applicant,criterion:Criterion):
     """Removes criterion from Applicant's scores dictionary."""
