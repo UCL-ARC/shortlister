@@ -31,7 +31,7 @@ class Controller:
                              "d": (self.sort,"Sort by: Score(Descending)")}
         self.options_applicant_list = {
             "b": (self.show_boot_message,"Home"),
-            "S": self.sort,"Activate sort mode"
+            "S": (self.sort,"Activate sort mode"),
             "d": (self.show_applicant_details,"Select an applicant to view their details"),
         }
         self.options_applicant_detail = {
