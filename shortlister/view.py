@@ -1,4 +1,4 @@
-from shortlister.model import Applicant, Role, Criterion, Shortlist, RANK_AND_SCORE
+from shortlister.model import Applicant, Role, Criterion, Shortlist, tab, abbreviate, RANK_AND_SCORE
 from tabulate import tabulate
 import pydoc
 from typing import List
@@ -63,38 +63,17 @@ class View:
         print()
     
     def view_applicant_table(self, shortlist:Shortlist):
+        """Prints a table summary of applicants and their scores"""
 
-        # create abbreviated criterion headers for containing respective score 
-        header = []
+        # creates heading 
+        criteria_headings = abbreviate([criterion.name for criterion in shortlist.role.criteria])
+        header = ["No.","Name"]+criteria_headings#
 
-        for criterion in shortlist.role.criteria:
-            if " " in criterion.name: 
-                separated = criterion.name.split(" ")
-                abbrev = "".join(word[0].upper() for word in separated)
-                header.append (abbrev)
-            else:
-                header.append(criterion.name)
+        # creates applicant and score data  
+        applicant_data = tab(shortlist.applicants,shortlist.role.criteria)
 
-        # tab is a list of lists:
-        # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
-        tab = []
-        i = 0    # sets the applicant number 
-        for applicant in shortlist.applicants:
-            i += 1
-            applicant_info = []   # list with correct information format for each row   
-            applicant_info.append(i)    # applicant number
-            applicant_info.append(applicant.name)   # applicant name
-
-            # append criterion score in the order criteria
-            for order in shortlist.role.criteria:
-                if order in applicant.scores:
-                    applicant_info.append(applicant.scores.get(order)[0])
-                else:
-                    # fills in N/A if a score is not marked yet
-                    applicant_info.append("-")
-            tab.append(applicant_info)
-            
-        pydoc.pager(tabulate(tab,headers=["No.","Name"]+header))
+        # display table  
+        pydoc.pager(tabulate(applicant_data,headers=header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
