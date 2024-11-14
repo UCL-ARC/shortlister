@@ -1,4 +1,5 @@
 from shortlister.model import Applicant, Role, Criterion, Shortlist, RANK_AND_SCORE
+from tabulate import tabulate
 from typing import List
 
 
@@ -59,6 +60,28 @@ class View:
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
         print()
+    
+    def view_applicant_table(self, shortlist:Shortlist):
+
+        header = [criterion.name for criterion in shortlist.role.criteria]
+
+        tab = []
+        i = 0
+        for applicant in shortlist.applicants:
+            i += 1
+            applicant_info = []
+            applicant_info.append(i)
+            applicant_info.append(applicant.name)
+            for order in shortlist.role.criteria:
+                if order in applicant.scores:
+                    applicant_info.append(applicant.scores.get(order))
+                else:
+                    applicant_info.append("N/A")
+            tab.append(applicant_info)
+            
+
+        #enumerate when the reset list is fone
+        print(tabulate(tab,headers=["No.","Name"]+header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
