@@ -120,9 +120,8 @@ def load_criteria(csv_file):
 def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
-    """Updates applicant's score field with selected criterion and selected score from criterion."""
-    scores = list(RANK_AND_SCORE.keys())
-    applicant.scores[criterion] = scores[score_index]
+    """Updates applicant's score field with selected criterion and selected score"""
+    applicant.scores[criterion] = list(RANK_AND_SCORE)[score_index]
 
 
 def update_applicant_notes(applicant: Applicant, new_note: str):

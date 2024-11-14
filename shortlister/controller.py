@@ -92,14 +92,14 @@ class Controller:
         self.view.view_selection_options(self.current_criterion)
         self.options = {
             str(i): (self.edit_score_confirm,s)
-            for i, s in enumerate(RANK_AND_SCORE.keys())
+            for i, s in enumerate(RANK_AND_SCORE)
         }
         self.options["c"] = (self.clear_score,f"Clear score: {self.current_criterion.name}")
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
         self.view.view_update(
-            self.current_criterion.name, list(RANK_AND_SCORE.keys())[int(k)]
+            self.current_criterion.name, list(RANK_AND_SCORE)[int(k)]
         )
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
