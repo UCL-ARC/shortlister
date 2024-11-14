@@ -70,19 +70,19 @@ class View:
             print(f"{index+1}. {applicant.name}")
         print()
 
-    def view_applicant_table(self, shortlist: Shortlist):
+    def view_applicant_table(self, applicants:List[Applicant], criteria:List[Criterion]):
         """Prints a table summary of applicants and their scores"""
 
         # creates heading
         criteria_headings = abbreviate(
-            [criterion.name for criterion in shortlist.role.criteria]
+            [criterion.name for criterion in criteria]
         )
         header = ["No.", "Name"] + criteria_headings
 
         # creates applicant and score data
-        applicant_data = tab(shortlist.applicants, shortlist.role.criteria)
+        applicant_data = tab(applicants, criteria)
 
-        # display table
+        # displays table
         pydoc.pager(tabulate(applicant_data, headers=header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
