@@ -44,7 +44,7 @@ class Shortlist:
 
 PICKLE_FILE_NAME = "shortlist.pickle"
 CRITERIA_FILE_NAME = "criteria.csv"
-SCORE_AND_VALUE = {
+RANK_AND_SCORE = {
     "Unsatisfactory": 0,
     "Moderate": 10,
     "Satisfactory": 20,
@@ -121,7 +121,7 @@ def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
     """Updates applicant's score field with selected criterion and selected score from criterion."""
-    scores = list(SCORE_AND_VALUE.keys())
+    scores = list(RANK_AND_SCORE.keys())
     applicant.scores[criterion] = scores[score_index]
 
 
@@ -137,7 +137,7 @@ def update_applicant_notes(applicant: Applicant, new_note: str):
 def total_score(scores: Dict[Criterion, str]) -> int:
     """Takes applicant scores dictionary and returns a total score as a single number"""
 
-    values = [SCORE_AND_VALUE.get(score) for score in scores.values()]
+    values = [RANK_AND_SCORE.get(score) for score in scores.values()]
     return sum(values)
 
 def sort_alpha(applicants:List[Applicant]):
