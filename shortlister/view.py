@@ -67,7 +67,7 @@ class View:
 
         # creates heading 
         criteria_headings = abbreviate([criterion.name for criterion in shortlist.role.criteria])
-        header = ["No.","Name"]+criteria_headings#
+        header = ["No.","Name"]+criteria_headings
 
         # creates applicant and score data  
         applicant_data = tab(shortlist.applicants,shortlist.role.criteria)
