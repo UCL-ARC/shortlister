@@ -9,6 +9,7 @@ from shortlister.model import (
     update_applicant_score,
     update_applicant_notes,
     clear_score,
+    RANK_AND_SCORE,
     sort_alpha,
     sort_ascending_score,
     sort_descending_score,
@@ -117,8 +118,8 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         self.view.view_selection_options(self.current_criterion)
         self.options = {
-            str(i): (self.edit_score_confirm, s)
-            for i, s in enumerate(self.current_criterion.scores)
+            str(i): (self.edit_score_confirm,s)
+            for i, s in enumerate(RANK_AND_SCORE)
         }
         self.options["c"] = (
             self.clear_score,
@@ -128,7 +129,7 @@ class Controller:
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
         self.view.view_update(
-            self.current_criterion.name, self.current_criterion.scores[int(k)]
+            self.current_criterion.name, list(RANK_AND_SCORE)[int(k)]
         )
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)

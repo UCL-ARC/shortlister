@@ -11,7 +11,6 @@ class Criterion:
 
     name: str
     description: str
-    scores: tuple
 
 
 @dataclass
@@ -45,6 +44,12 @@ class Shortlist:
 
 PICKLE_FILE_NAME = "shortlist.pickle"
 CRITERIA_FILE_NAME = "criteria.csv"
+RANK_AND_SCORE = {
+    "Unsatisfactory": 0,
+    "Moderate": 10,
+    "Satisfactory": 20,
+    "Excellent": 40,
+}
 
 # Functions
 
@@ -106,7 +111,7 @@ def load_criteria(csv_file):
 
         for row in reader:
             criterion = Criterion(
-                name=row[0], description=row[1], scores=tuple(row[2].split(","))
+                name=row[0], description=row[1]
             )
             criteria.append(criterion)
     return criteria
@@ -115,8 +120,8 @@ def load_criteria(csv_file):
 def update_applicant_score(
     applicant: Applicant, criterion: Criterion, score_index: int
 ):
-    """Updates applicant's score field with selected criterion and selected score from criterion."""
-    applicant.scores[criterion] = criterion.scores[score_index]
+    """Updates applicant's score field with selected criterion and selected score"""
+    applicant.scores[criterion] = list(RANK_AND_SCORE)[score_index]
 
 
 def update_applicant_notes(applicant: Applicant, new_note: str):
@@ -131,13 +136,7 @@ def update_applicant_notes(applicant: Applicant, new_note: str):
 def total_score(scores: Dict[Criterion, str]) -> int:
     """Takes applicant scores dictionary and returns a total score as a single number"""
 
-    score_to_value = {
-        "Unsatisfactory": 0,
-        "Moderate": 10,
-        "Satisfactory": 20,
-        "Excellent": 40,
-    }
-    values = [score_to_value.get(score) for score in scores.values()]
+    values = [RANK_AND_SCORE.get(score) for score in scores.values()]
     return sum(values)
 
 

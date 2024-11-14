@@ -1,7 +1,8 @@
 .venv/
 *pycache*/
 .vscode/
-test_role/
+test_role/shortlist.pickle
 tests/shortlist.pickle
 .pytest_cache/
 .ruff_cache/
+shortlister/notebook.ipynb

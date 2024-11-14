@@ -1,4 +1,4 @@
-from shortlister.model import Applicant, Role, Criterion, Shortlist
+from shortlister.model import Applicant, Role, Criterion, Shortlist, RANK_AND_SCORE
 from typing import List
 
 
@@ -77,7 +77,7 @@ class View:
             f"You selected {criterion.name}. Select the score you want to change to:\n"
         )
 
-        for index, score in enumerate(criterion.scores):
+        for index, score in enumerate(RANK_AND_SCORE.keys()):
             print(f"{index}: {score}")
         print("c: Clear scores\n")
         print()
