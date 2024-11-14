@@ -1,5 +1,6 @@
 from shortlister.model import Applicant, Role, Criterion, Shortlist, RANK_AND_SCORE
 from tabulate import tabulate
+import pydoc
 from typing import List
 
 
@@ -63,8 +64,16 @@ class View:
     
     def view_applicant_table(self, shortlist:Shortlist):
 
-        # create criterion headers for containing respective score 
-        header = [criterion.name for criterion in shortlist.role.criteria]
+        # create abbreviated criterion headers for containing respective score 
+        header = []
+
+        for criterion in shortlist.role.criteria:
+            if " " in criterion.name: 
+                separated = criterion.name.split(" ")
+                abbrev = "".join(word[0].upper() for word in separated)
+                header.append (abbrev)
+            else:
+                header.append(criterion.name)
 
         # tab is a list of lists:
         # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
@@ -79,13 +88,13 @@ class View:
             # append criterion score in the order criteria
             for order in shortlist.role.criteria:
                 if order in applicant.scores:
-                    applicant_info.append(applicant.scores.get(order))
+                    applicant_info.append(applicant.scores.get(order)[0])
                 else:
                     # fills in N/A if a score is not marked yet
-                    applicant_info.append("N/A")
+                    applicant_info.append("-")
             tab.append(applicant_info)
             
-        print(tabulate(tab,headers=["No.","Name"]+header))
+        pydoc.pager(tabulate(tab,headers=["No.","Name"]+header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
