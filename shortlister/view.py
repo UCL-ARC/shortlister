@@ -63,24 +63,28 @@ class View:
     
     def view_applicant_table(self, shortlist:Shortlist):
 
+        # create criterion headers for containing respective score 
         header = [criterion.name for criterion in shortlist.role.criteria]
 
+        # tab is a list of lists:
+        # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
         tab = []
-        i = 0
+        i = 0    # sets the applicant number 
         for applicant in shortlist.applicants:
             i += 1
-            applicant_info = []
-            applicant_info.append(i)
-            applicant_info.append(applicant.name)
+            applicant_info = []   # list with correct information format for each row   
+            applicant_info.append(i)    # applicant number
+            applicant_info.append(applicant.name)   # applicant name
+
+            # append criterion score in the order criteria
             for order in shortlist.role.criteria:
                 if order in applicant.scores:
                     applicant_info.append(applicant.scores.get(order))
                 else:
+                    # fills in N/A if a score is not marked yet
                     applicant_info.append("N/A")
             tab.append(applicant_info)
             
-
-        #enumerate when the reset list is fone
         print(tabulate(tab,headers=["No.","Name"]+header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
