@@ -29,6 +29,7 @@ class Controller:
         self.options = None
         self.options_home = {
             "a": (self.show_applicants_list, "applicants"),
+            "t": (self.show_applicant_table,"applicant table"),
             "r": (self.show_role_info, "role"),
             "q": (self.quit, "quit"),
         }
@@ -100,6 +101,10 @@ class Controller:
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
+
+    def show_applicant_table(self,k=None):
+        """View condensed table of applicant information"""
+        self.view.view_applicant_table(self.shortlist)
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
