@@ -2,7 +2,7 @@ import pytest
 from shortlister import model
 from pathlib import Path
 
-SCORES_VALUES={
+SCORES_VALUES = {
     "Unsatisfactory": 0,
     "Moderate": 10,
     "Satisfactory": 20,
@@ -44,7 +44,6 @@ def test_load_role():
         model.Criterion(
             name="Research software",
             description="Authorship,development and maintenance",
-
         ),
         model.Criterion(
             name="Best practices",

@@ -29,7 +29,7 @@ class Controller:
         self.options = None
         self.options_home = {
             "a": (self.show_applicants_list, "applicants"),
-            "t": (self.show_applicant_table,"applicant table"),
+            "t": (self.show_applicant_table, "applicant table"),
             "r": (self.show_role_info, "role"),
             "q": (self.quit, "quit"),
         }
@@ -102,7 +102,7 @@ class Controller:
         except (ValueError, IndexError):
             pass
 
-    def show_applicant_table(self,k=None):
+    def show_applicant_table(self, k=None):
         """View condensed table of applicant information"""
         self.view.view_applicant_table(self.shortlist)
 
@@ -123,8 +123,7 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         self.view.view_selection_options(self.current_criterion)
         self.options = {
-            str(i): (self.edit_score_confirm,s)
-            for i, s in enumerate(RANK_AND_SCORE)
+            str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
         }
         self.options["c"] = (
             self.clear_score,
@@ -133,9 +132,7 @@ class Controller:
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
-        self.view.view_update(
-            self.current_criterion.name, list(RANK_AND_SCORE)[int(k)]
-        )
+        self.view.view_update(self.current_criterion.name, list(RANK_AND_SCORE)[int(k)])
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )

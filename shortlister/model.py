@@ -110,9 +110,7 @@ def load_criteria(csv_file):
         next(reader)
 
         for row in reader:
-            criterion = Criterion(
-                name=row[0], description=row[1]
-            )
+            criterion = Criterion(name=row[0], description=row[1])
             criteria.append(criterion)
     return criteria
 
@@ -162,19 +160,21 @@ def clear_score(applicant: Applicant, criterion: Criterion):
     if criterion in applicant.scores:
         del applicant.scores[criterion]
 
+
 # creating tabular data
 
-def tab(applicants:List[Applicant],criteria:List[Criterion]) -> List:
+
+def tab(applicants: List[Applicant], criteria: List[Criterion]) -> List:
     """Generates applicant and score data for summary table"""
     # tab is a list of lists:
     # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
     tab = []
-    i = 0    # sets the applicant number 
+    i = 0  # sets the applicant number
     for applicant in applicants:
         i += 1
-        applicant_info = []   # list with correct information format for each row   
-        applicant_info.append(i)    # applicant number
-        applicant_info.append(applicant.name)   # applicant name
+        applicant_info = []  # list with correct information format for each row
+        applicant_info.append(i)  # applicant number
+        applicant_info.append(applicant.name)  # applicant name
         # append criterion score in the order criteria
         for criterion in criteria:
             if criterion in applicant.scores:
@@ -185,15 +185,19 @@ def tab(applicants:List[Applicant],criteria:List[Criterion]) -> List:
         tab.append(applicant_info)
     return tab
 
-def abbreviate(list_of_strings:List[str]) -> list[str]:
+
+def abbreviate(list_of_strings: List[str]) -> list[str]:
     """Create abbreviations for all strings in a list."""
     abbreviations = []
     for string in list_of_strings:
-        if " " in string: 
-            separated = string.split(" ") # separates individual words in string into a list
-            abbrev = "".join(word[0].upper() for word in separated)  # uppercase and combine the 
+        if " " in string:
+            separated = string.split(
+                " "
+            )  # separates individual words in string into a list
+            abbrev = "".join(
+                word[0].upper() for word in separated
+            )  # uppercase and combine the
             abbreviations.append(abbrev)
         else:
             abbreviations.append(string)
     return abbreviations
-    

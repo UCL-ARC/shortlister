@@ -1,4 +1,12 @@
-from shortlister.model import Applicant, Role, Criterion, Shortlist, tab, abbreviate, RANK_AND_SCORE
+from shortlister.model import (
+    Applicant,
+    Role,
+    Criterion,
+    Shortlist,
+    tab,
+    abbreviate,
+    RANK_AND_SCORE,
+)
 from tabulate import tabulate
 import pydoc
 from typing import List
@@ -61,19 +69,21 @@ class View:
         for index, applicant in enumerate(shortlist.applicants):
             print(f"{index+1}. {applicant.name}")
         print()
-    
-    def view_applicant_table(self, shortlist:Shortlist):
+
+    def view_applicant_table(self, shortlist: Shortlist):
         """Prints a table summary of applicants and their scores"""
 
-        # creates heading 
-        criteria_headings = abbreviate([criterion.name for criterion in shortlist.role.criteria])
-        header = ["No.","Name"]+criteria_headings
+        # creates heading
+        criteria_headings = abbreviate(
+            [criterion.name for criterion in shortlist.role.criteria]
+        )
+        header = ["No.", "Name"] + criteria_headings
 
-        # creates applicant and score data  
-        applicant_data = tab(shortlist.applicants,shortlist.role.criteria)
+        # creates applicant and score data
+        applicant_data = tab(shortlist.applicants, shortlist.role.criteria)
 
-        # display table  
-        pydoc.pager(tabulate(applicant_data,headers=header))
+        # display table
+        pydoc.pager(tabulate(applicant_data, headers=header))
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
