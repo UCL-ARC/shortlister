@@ -9,7 +9,7 @@ from shortlister.model import (
 )
 from tabulate import tabulate
 import pydoc
-from typing import List
+from typing import Dict, List
 
 
 class View:
@@ -92,19 +92,21 @@ class View:
 
         for index, criterion in enumerate(criteria):
             print(f"{index}. {criterion.name}: {criterion.description}")
+        print()
 
     def view_selection_options(
         self,
         criterion: Criterion,
+        options: Dict[str,tuple]
     ):
         """Prints list of avaliable scoring option for selected criterion to console."""
         print(
             f"You selected {criterion.name}. Select the score you want to change to:\n"
         )
+        # prints all of the available options
+        for index, action in options.items():
+            print(f"{index}: {action[1]}")
 
-        for index, score in enumerate(RANK_AND_SCORE.keys()):
-            print(f"{index}: {score}")
-        print("c: Clear scores\n")
         print()
 
     def view_update(self, attribute, change):
