@@ -36,7 +36,7 @@ class Controller:
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
             "t": (self.show_applicant_table, "applicant table"),
-            "b": (self.show_home_message, "home"),
+            "q": (self.show_home_message, "home"),
         }
         self.options_sort = {
             "a": (self.sort, "alphabetically"),
@@ -49,7 +49,7 @@ class Controller:
             "O": (self.open_applicant_pdf, "open CV"),
             "n": (self.switch_applicant, "next"),
             "p": (self.switch_applicant, "previous"),
-            "a": (self.show_applicants_list, "applicants"),
+            "q": (self.show_applicants_list, "applicants"),
         }
 
     def quit(self, k=None):
@@ -117,18 +117,27 @@ class Controller:
             str(i): (self.edit_criteria_select, c.name)
             for i, c in enumerate(self.shortlist.role.criteria)
         }
+        # press q to quit at next step
+        self.options["q"] = (self.edit_criteria_select,"applicant detail")
 
     def edit_criteria_select(self, k=None):
         """Select score to change to for previously selected criteria."""
-        self.current_criterion = self.shortlist.role.criteria[int(k)]
-        self.view.view_selection_options(self.current_criterion)
-        self.options = {
-            str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
-        }
-        self.options["c"] = (
-            self.clear_score,
-            f"Clear score: {self.current_criterion.name}",
-        )
+        # return to applicant detail if key was "q", else continue to select criterion to score
+        if k == "q":
+            self.view_applicant_details()
+            self.options = self.options_applicant_detail
+        else:
+            self.current_criterion = self.shortlist.role.criteria[int(k)]
+            self.view.view_selection_options(self.current_criterion)
+            self.options = {
+                str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
+            }
+            self.options["c"] = (
+                self.clear_score,
+                f"Clear score: {self.current_criterion.name}",
+            )
+            # returns to criterion selection
+            self.options["q"] = (self.edit_score_start,"change criterion")
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
