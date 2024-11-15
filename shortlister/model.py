@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 import csv
 import pickle
+import fitz
 
 
 @dataclass(frozen=True)
@@ -105,6 +106,28 @@ def load_applicants(path: Path):
     sort_alpha(applicants)
     return applicants
 
+# wip
+def load_applicants_from_pdf(path: Path):
+    files = path.glob("*.pdf")
+    for file in files:
+        doc = fitz.open(file)  # example document
+        page = doc[0]
+        text = page.get_text(sort=True) # extract text in reading order 
+
+        # turns text into a list of string for each line
+        lines = text.splitlines()
+
+        # remove empty lines
+        for line in lines:
+            if line == "":
+                lines.remove(line)
+
+        # removes starting/trailling whitespaces in each line
+        cleaned = list(line.strip() for line in lines)
+        
+        # takes the section with simple field and info
+        applicant_info:List[str] = cleaned[1:-7]
+        print(applicant_info)
 
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
