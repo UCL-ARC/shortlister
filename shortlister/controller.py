@@ -18,6 +18,8 @@ from shortlister.model import (
 from readchar import readkey
 from startfile import startfile
 
+# resolves import issues in jupyter notebook
+sys.path.append("C:/Users/shinn/github_projects/shortlister/shortlister")
 
 class Controller:
     def __init__(self, path):
