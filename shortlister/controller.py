@@ -35,6 +35,7 @@ class Controller:
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
+            "t": (self.show_applicant_table, "applicant table"),
             "b": (self.show_home_message, "home"),
         }
         self.options_sort = {
@@ -101,6 +102,10 @@ class Controller:
         except (ValueError, IndexError):
             pass
 
+    def show_applicant_table(self, k=None):
+        """View condensed table of applicant information"""
+        self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
         startfile(self.applicant(self.applicant_index).cv)
@@ -118,8 +123,7 @@ class Controller:
         self.current_criterion = self.shortlist.role.criteria[int(k)]
         self.view.view_selection_options(self.current_criterion)
         self.options = {
-            str(i): (self.edit_score_confirm,s)
-            for i, s in enumerate(RANK_AND_SCORE)
+            str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
         }
         self.options["c"] = (
             self.clear_score,
@@ -128,9 +132,7 @@ class Controller:
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
-        self.view.view_update(
-            self.current_criterion.name, list(RANK_AND_SCORE)[int(k)]
-        )
+        self.view.view_update(self.current_criterion.name, list(RANK_AND_SCORE)[int(k)])
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
