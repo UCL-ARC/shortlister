@@ -4,6 +4,7 @@ from typing import Dict, List
 import csv
 import pickle
 import fitz
+import fitz
 
 
 @dataclass(frozen=True)
