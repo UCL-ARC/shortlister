@@ -19,6 +19,10 @@ class Applicant:
 
     name: str
     cv: str  # path to cv
+    email: str
+    phone: str
+    post_code: str
+    right_to_work: bool
     scores: Dict[Criterion, str]
     notes: str
 
