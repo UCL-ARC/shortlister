@@ -3,7 +3,7 @@ from shortlister.model import (
     Role,
     Criterion,
     Shortlist,
-    tab,
+    applicant_table,
     abbreviate,
     RANK_AND_SCORE,
 )
@@ -80,7 +80,7 @@ class View:
         header = ["No.", "Name"] + criteria_headings
 
         # creates applicant and score data
-        applicant_data = tab(applicants, criteria)
+        applicant_data = applicant_table(applicants, criteria)
 
         # displays table
         pydoc.pager(tabulate(applicant_data, headers=header))

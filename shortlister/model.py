@@ -164,7 +164,7 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 # creating tabular data
 
 
-def tab(applicants: List[Applicant], criteria: List[Criterion]) -> List:
+def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> List:
     """Generates applicant and score data for summary table"""
     # tab is a list of lists:
     # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
@@ -196,7 +196,7 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
             )  # separates individual words in string into a list
             abbrev = "".join(
                 word[0].upper() for word in separated
-            )  # uppercase and combine the
+            )  # combine intial of all words and return as uppercase
             abbreviations.append(abbrev)
         else:
             abbreviations.append(string)
