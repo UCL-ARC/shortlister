@@ -93,8 +93,6 @@ class View:
         for index, criterion in enumerate(criteria):
             print(f"{index}. {criterion.name}: {criterion.description}")
         print()
-        print("('q' to return to applicant detail)")
-        print()
 
     def view_selection_options(
         self,
