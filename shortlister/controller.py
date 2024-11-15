@@ -130,16 +130,16 @@ class Controller:
             self.options = self.options_applicant_detail
         else:
             self.current_criterion = self.shortlist.role.criteria[int(k)]
-            self.view.view_selection_options(self.current_criterion)
             self.options = {
                 str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
             }
             self.options["c"] = (
                 self.clear_score,
-                f"Clear score: {self.current_criterion.name}",
+                f"clear score",
             )
             # returns to criterion selection
-            self.options["q"] = (self.edit_score_start,"change criterion")
+            self.options["q"] = (self.edit_score_start,"return to criterion selection")
+            self.view.view_selection_options(self.current_criterion,self.options)
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
