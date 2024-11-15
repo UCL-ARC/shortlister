@@ -29,13 +29,13 @@ class Controller:
         self.options = None
         self.options_home = {
             "a": (self.show_applicants_list, "applicants"),
-            "t": (self.show_applicant_table, "applicant table"),
             "r": (self.show_role_info, "role"),
             "q": (self.quit, "quit"),
         }
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
+            "t": (self.show_applicant_table, "applicant table"),
             "b": (self.show_home_message, "home"),
         }
         self.options_sort = {
