@@ -26,6 +26,7 @@ class Applicant:
     post_code: str
     country_region: str
     right_to_work: bool
+    visa_requirement: str
     scores: Dict[Criterion, str]
     notes: str
 
@@ -138,17 +139,17 @@ def load_applicants_from_pdf(path: Path):
         if 'Do you have the unrestricted right to work in the UK?' in right_to_work:
             i = right_to_work.index('Do you have the unrestricted right to work in the UK?')
             if right_to_work[i+1] == "No":
-                right_to_work = False
-            elif right_to_work == "Yes":
+                j = right_to_work.index("If no, please give details of your VISA requirements")
+                visa_req_text = right_to_work[j+1] 
+                applicant_right_to_work = False
+                
+            elif right_to_work[i+1] == "Yes":
                 right_to_work = True
+                visa_req_text = None
             else:
                 print("Something went wrong")
         else:
-            right_to_work = False
-
-
-            
-
+            raise ValueError("Right to work is not identified")
 
         info = get_info(fields,applicant_info)
         first_name = info[0]
@@ -164,7 +165,8 @@ def load_applicants_from_pdf(path: Path):
                               phone=phone, 
                               post_code=post_code, 
                               country_region=country_region, 
-                              right_to_work=right_to_work, 
+                              right_to_work=applicant_right_to_work, 
+                              visa_requirement=visa_req_text,
                               scores={},
                               notes="")
         applicants.append(applicant)
