@@ -104,7 +104,9 @@ def test_save_load():
     assert result.applicants[1].name == "a2"
 
 def test_load_applicant_from_pdf():
-    applicants:List[model.Applicant] = model.load_applicants_from_pdf("C:\Users\shinn\github_projects\shortlister\shortlister\test_role\Sarah_Thompson_82376_Candidate_Pack.pdf")
-    for applicant in applicants:
-        assert applicant.name == "Emma Jones"
-        assert applicant.email == 'emmaj@outlook.com'
+    applicants:List[model.Applicant] = model.load_applicants_from_pdf(Path("test_role\Sarah_Thompson_82376_Candidate_Pack.pdf"))
+    assert applicants[0].name == "Emma Jones"
+    assert applicants[0].email == 'emmaj@outlook.com'
+    assert applicants[0].phone == '+44 07871235436'
+    assert applicants[0].post_code == 'UB4 4RW'
+    assert applicants[0].country_region == 'United Kingdom, London'
