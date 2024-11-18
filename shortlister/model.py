@@ -84,7 +84,7 @@ def load_shortlist(path: Path):
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
-        applicants = load_applicants_from_pdf(path)
+        applicants = load_applicants(path)
         shortlist = Shortlist(role, applicants)
 
     return shortlist
@@ -98,10 +98,11 @@ def load_role(path, criteria):
 
 def load_applicants(path: Path):
     """Generate a list of applicant instances from pdf format CVs."""
-    files = path.glob("*.pdf")
+    files = list(path.glob("*.pdf"))
     applicants = []
     for file in files:
-        load_applicants_from_pdf(file)
+        applicant = load_applicants_from_pdf(Path(file))
+        applicants.append(applicant)
     sort_alpha(applicants)
     return applicants
 
@@ -115,7 +116,7 @@ def load_applicants_from_pdf(file: Path):
     # turns text into a list of string representing each extracted line
     lines = text.splitlines()
     # remove empty line from list 
-    cleaned = [line for line in lines if len(line.strip())]
+    cleaned = [line.strip() for line in lines if len(line.strip())]
     
     # sets the value of each field
     info = extract_info_from_text(cleaned)
@@ -201,9 +202,10 @@ def extract_info_from_text(cleaned_list):
     info = []
 
     # removes header/footer and other irrelevant info
-    applicant_info = cleaned_list[1:-7]
-    right_to_work = cleaned_list[-7:-3]
+    applicant_info = cleaned_list[1:-5]
+    right_to_work = cleaned_list[-5:-1]
 
+    # filter out the field name and retain only the info to applicant 
     for field in fields:
         for i in applicant_info:
             if field in i:
@@ -212,19 +214,20 @@ def extract_info_from_text(cleaned_list):
                 info.append(clean.strip())
                 
     # finds where the question is and checks the next index which contains the answer to the question
-    if 'Do you have the unrestricted right to work in the UK?' in right_to_work:
-        i = right_to_work.index('Do you have the unrestricted right to work in the UK?')
+    if "Do you have the unrestricted right to work in the UK?" in right_to_work:
+        i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
         if right_to_work[i+1] == "No":
             j = right_to_work.index("If no, please give details of your VISA requirements")
             visa_req_text = right_to_work[j+1] 
             applicant_right_to_work = False
             
         elif right_to_work[i+1] == "Yes":
-            right_to_work = True
+            applicant_right_to_work = True
             visa_req_text = None
         else:
             print("Something went wrong")
-        info.append(applicant_right_to_work,visa_req_text)
+        info.append(applicant_right_to_work)
+        info.append(visa_req_text)
     else:
         raise ValueError("Right to work is not identified")
         
