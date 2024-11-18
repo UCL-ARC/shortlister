@@ -104,7 +104,8 @@ def load_applicants(path: Path):
         try:
             applicant = load_applicants_from_pdf(Path(file))
             applicants.append(applicant)
-        except Exception(f"Corrupted pdf file!:{file}"):
+        except ValueError:
+            print(f"Corrupt/incorrect pdf file: {file}")
             continue
     sort_alpha(applicants)
     return applicants
