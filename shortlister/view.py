@@ -54,6 +54,7 @@ class View:
         print(f"Phone:{applicant.phone}")
         print(f"Post code:{applicant.post_code}")
         print(f"Country/Region:{applicant.country_region}")
+        print(f"Right to work: {applicant.right_to_work}- {applicant.visa_requirement}")
 
         if applicant.scores:
             print(f"Scores: ({total_score})")
