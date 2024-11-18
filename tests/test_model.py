@@ -1,3 +1,4 @@
+from typing import List
 import pytest
 from shortlister import model
 from pathlib import Path
@@ -101,3 +102,9 @@ def test_save_load():
     assert result.applicants == a
     assert result.applicants[0].name == "a1"
     assert result.applicants[1].name == "a2"
+
+def test_load_applicant_from_pdf():
+    applicants:List[model.Applicant] = model.load_applicants_from_pdf("C:\Users\shinn\github_projects\shortlister\shortlister\test_role\Sarah_Thompson_82376_Candidate_Pack.pdf")
+    for applicant in applicants:
+        assert applicant.name == "Emma Jones"
+        assert applicant.email == 'emmaj@outlook.com'
