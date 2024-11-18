@@ -105,25 +105,22 @@ def load_applicants(path: Path):
     sort_alpha(applicants)
     return applicants
 
-# wip
 def load_applicants_from_pdf(file: Path):
     """Create single Applicant instance from PDF files in the role directory"""
-    # fields names to get related applicant information
-
     doc = pymupdf.open(file)
     # takes the first page of the pdf (the candidate pack)
     page = doc[0]
     # extract text in reading order
     text = page.get_text(sort=True)
-    # turns text into a list of string for each line
+    # turns text into a list of string representing each extracted line
     lines = text.splitlines()
-    # remove line from list if stripped line is empty
+    # remove empty line from list 
     cleaned = [line for line in lines if len(line.strip())]
     
     # sets the value of each field
     info = extract_info_from_text(cleaned)
     first_name,last_name,email,phone,postcode,country_region,applicant_right_to_work,visa_req_text = [i for i in info]
-    #create applicant instances with above information
+    #create applicant instance with above information
     applicant = Applicant(name=f"{first_name} {last_name}",
                           cv=file, 
                           email=email, 
@@ -198,6 +195,8 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 
 def extract_info_from_text(cleaned_list):
     """gets the section containing applicant information from extracted text"""
+
+    # fields names to get related applicant information
     fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
     info = []
 
