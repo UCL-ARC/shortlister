@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 import csv
 import pickle
-import fitz
+import pymupdf
 import re
 
 
@@ -101,82 +101,40 @@ def load_applicants(path: Path):
     files = path.glob("*.pdf")
     applicants = []
     for file in files:
-        name_parts = file.stem.split("_")
-        applicant = Applicant(
-            name=" ".join(name_parts[0:2]), cv=file, scores={}, notes=""
-        )
-        applicants.append(applicant)
+        load_applicants_from_pdf(file)
     sort_alpha(applicants)
     return applicants
 
 # wip
-def load_applicants_from_pdf(path: Path):
-    """Populate list of Applicants from PDF files in the role directory"""
+def load_applicants_from_pdf(file: Path):
+    """Create single Applicant instance from PDF files in the role directory"""
     # fields names to get related applicant information
-    fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
-    applicants = []
-    files = path.glob("*.pdf")
 
-
-    for file in files:
-        doc = fitz.open(file)
-        page = doc[0]  # takes the first page of the pdf (the candidate pack)
-        text = page.get_text(sort=True) # extract text in reading order
-
-        # turns text into a list of string for each line
-        lines = text.splitlines()
-
-        # remove empty lines
-        for line in lines:
-            if line == "":
-                lines.remove(line)
-
-        # removes starting/trailling whitespaces in each line
-        cleaned = list(line.strip() for line in lines)
-        
-        # takes the section with simple field and info
-        applicant_info = cleaned[1:-7]
-        right_to_work = cleaned[-7:-3]
-
-        # finds where the question is and checks the next index which contains the answer to the question
-        if 'Do you have the unrestricted right to work in the UK?' in right_to_work:
-            i = right_to_work.index('Do you have the unrestricted right to work in the UK?')
-            if right_to_work[i+1] == "No":
-                j = right_to_work.index("If no, please give details of your VISA requirements")
-                visa_req_text = right_to_work[j+1] 
-                applicant_right_to_work = False
-                
-            elif right_to_work[i+1] == "Yes":
-                right_to_work = True
-                visa_req_text = None
-            else:
-                print("Something went wrong")
-        else:
-            raise ValueError("Right to work is not identified")
-        
-        # sets the value of each field
-        info = get_info(fields,applicant_info)
-        first_name = info[0]
-        last_name = info[1]
-        email = info[2]
-        phone = info[3]
-        post_code = info[4]
-        country_region = info[5]
-
-        #create applicant instances with above information
-        applicant = Applicant(name=f"{first_name} {last_name}",
-                              cv=file, 
-                              email=email, 
-                              phone=phone, 
-                              post_code=post_code, 
-                              country_region=country_region, 
-                              right_to_work=applicant_right_to_work, 
-                              visa_requirement=visa_req_text,
-                              scores={},
-                              notes="")
-        applicants.append(applicant)
+    doc = pymupdf.open(file)
+    # takes the first page of the pdf (the candidate pack)
+    page = doc[0]
+    # extract text in reading order
+    text = page.get_text(sort=True)
+    # turns text into a list of string for each line
+    lines = text.splitlines()
+    # remove line from list if stripped line is empty
+    cleaned = [line for line in lines if len(line.strip())]
     
-    return applicants
+    # sets the value of each field
+    info = extract_info_from_text(cleaned)
+    first_name,last_name,email,phone,postcode,country_region,applicant_right_to_work,visa_req_text = [i for i in info]
+    #create applicant instances with above information
+    applicant = Applicant(name=f"{first_name} {last_name}",
+                          cv=file, 
+                          email=email, 
+                          phone=phone, 
+                          post_code=postcode, 
+                          country_region=country_region, 
+                          right_to_work=applicant_right_to_work, 
+                          visa_requirement=visa_req_text,
+                          scores={},
+                          notes="")
+    return applicant
 
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
@@ -238,15 +196,39 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 
 # text extraction
 
-def get_info(fields,applicant_info):
+def extract_info_from_text(cleaned_list):
     """gets the section containing applicant information from extracted text"""
+    fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
     info = []
+
+    # removes header/footer and other irrelevant info
+    applicant_info = cleaned_list[1:-7]
+    right_to_work = cleaned_list[-7:-3]
+
     for field in fields:
         for i in applicant_info:
             if field in i:
                 unclean = i.replace(field,"")
                 clean = re.sub(r'\s{2,}', ' ', unclean)
                 info.append(clean.strip())
+                
+    # finds where the question is and checks the next index which contains the answer to the question
+    if 'Do you have the unrestricted right to work in the UK?' in right_to_work:
+        i = right_to_work.index('Do you have the unrestricted right to work in the UK?')
+        if right_to_work[i+1] == "No":
+            j = right_to_work.index("If no, please give details of your VISA requirements")
+            visa_req_text = right_to_work[j+1] 
+            applicant_right_to_work = False
+            
+        elif right_to_work[i+1] == "Yes":
+            right_to_work = True
+            visa_req_text = None
+        else:
+            print("Something went wrong")
+        info.append(applicant_right_to_work,visa_req_text)
+    else:
+        raise ValueError("Right to work is not identified")
+        
     return info
 
 
