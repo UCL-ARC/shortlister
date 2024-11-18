@@ -50,6 +50,10 @@ class View:
         """Prints details of applicant to console."""
         print(f"** {applicant_number}/{total_applicant} {applicant.name} **")
         print(f"CV Path: {applicant.cv}")
+        print(f"Email:{applicant.email}")
+        print(f"Phone:{applicant.phone}")
+        print(f"Post code:{applicant.post_code}")
+        print(f"Country/Region:{applicant.country_region}")
 
         if applicant.scores:
             print(f"Scores: ({total_score})")
