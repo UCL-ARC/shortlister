@@ -83,7 +83,7 @@ def load_shortlist(path: Path):
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
-        applicants = load_applicants(path)
+        applicants = load_applicants_from_pdf(path)
         shortlist = Shortlist(role, applicants)
 
     return shortlist
@@ -133,7 +133,22 @@ def load_applicants_from_pdf(path: Path):
         # takes the section with simple field and info
         applicant_info = cleaned[1:-7]
         right_to_work = cleaned[-7:-3]
-        #print([field for field in applicant_info]+right_to_work)
+
+        # finds where the question is and checks the next index which contains the answer to the question
+        if 'Do you have the unrestricted right to work in the UK?' in right_to_work:
+            i = right_to_work.index('Do you have the unrestricted right to work in the UK?')
+            if right_to_work[i+1] == "No":
+                right_to_work = False
+            elif right_to_work == "Yes":
+                right_to_work = True
+            else:
+                print("Something went wrong")
+        else:
+            right_to_work = False
+
+
+            
+
 
         info = get_info(fields,applicant_info)
         first_name = info[0]
@@ -143,7 +158,15 @@ def load_applicants_from_pdf(path: Path):
         post_code = info[5]
         country_region = info[6]
 
-        applicant = Applicant(name=" ".join(first_name,last_name),cv=file,email=email,phone=phone, post_code=post_code,country_region=country_region,right_to_work=False)
+        applicant = Applicant(name=f"{first_name} {last_name}",
+                              cv=file, 
+                              email=email, 
+                              phone=phone, 
+                              post_code=post_code, 
+                              country_region=country_region, 
+                              right_to_work=right_to_work, 
+                              scores={},
+                              notes="")
         applicants.append(applicant)
     
     return applicants
