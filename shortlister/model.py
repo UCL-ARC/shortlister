@@ -111,7 +111,7 @@ def load_applicants(path: Path):
 
 # wip
 def load_applicants_from_pdf(path: Path):
-    fields = ("First Name","Last Name","Known as","Email Address","Preferred Phone Number","Postcode","Country & Region")
+    fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
     applicants = []
     files = path.glob("*.pdf")
     for file in files:
@@ -154,10 +154,10 @@ def load_applicants_from_pdf(path: Path):
         info = get_info(fields,applicant_info)
         first_name = info[0]
         last_name = info[1]
-        email = info[3]
-        phone = info[4]
-        post_code = info[5]
-        country_region = info[6]
+        email = info[2]
+        phone = info[3]
+        post_code = info[4]
+        country_region = info[5]
 
         applicant = Applicant(name=f"{first_name} {last_name}",
                               cv=file, 
