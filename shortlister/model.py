@@ -101,8 +101,11 @@ def load_applicants(path: Path):
     files = list(path.glob("*.pdf"))
     applicants = []
     for file in files:
-        applicant = load_applicants_from_pdf(Path(file))
-        applicants.append(applicant)
+        try:
+            applicant = load_applicants_from_pdf(Path(file))
+            applicants.append(applicant)
+        except Exception(f"Corrupted pdf file!:{file}"):
+            continue
     sort_alpha(applicants)
     return applicants
 
