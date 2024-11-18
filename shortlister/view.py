@@ -75,13 +75,13 @@ class View:
             print(f"{index+1}. {applicant.name}")
         print()
 
-    def view_applicant_table(self, applicants:List[Applicant], criteria:List[Criterion]):
+    def view_applicant_table(
+        self, applicants: List[Applicant], criteria: List[Criterion]
+    ):
         """Prints a table summary of applicants and their scores"""
 
         # creates heading
-        criteria_headings = abbreviate(
-            [criterion.name for criterion in criteria]
-        )
+        criteria_headings = abbreviate([criterion.name for criterion in criteria])
         header = ["No.", "Name"] + criteria_headings
 
         # creates applicant and score data

@@ -110,6 +110,7 @@ def load_applicants(path: Path):
     sort_alpha(applicants)
     return applicants
 
+
 def load_applicants_from_pdf(file: Path):
     """Create single Applicant instance from PDF files in the role directory"""
     doc = pymupdf.open(file)
@@ -119,24 +120,36 @@ def load_applicants_from_pdf(file: Path):
     text = page.get_text(sort=True)
     # turns text into a list of string representing each extracted line
     lines = text.splitlines()
-    # remove empty line from list 
+    # remove empty line from list
     cleaned = [line.strip() for line in lines if len(line.strip())]
-    
+
     # sets the value of each field
     info = extract_info_from_text(cleaned)
-    first_name,last_name,email,phone,postcode,country_region,applicant_right_to_work,visa_req_text = [i for i in info]
-    #create applicant instance with above information
-    applicant = Applicant(name=f"{first_name} {last_name}",
-                          cv=file, 
-                          email=email, 
-                          phone=phone, 
-                          post_code=postcode, 
-                          country_region=country_region, 
-                          right_to_work=applicant_right_to_work, 
-                          visa_requirement=visa_req_text,
-                          scores={},
-                          notes="")
+    (
+        first_name,
+        last_name,
+        email,
+        phone,
+        postcode,
+        country_region,
+        applicant_right_to_work,
+        visa_req_text,
+    ) = [i for i in info]
+    # create applicant instance with above information
+    applicant = Applicant(
+        name=f"{first_name} {last_name}",
+        cv=file,
+        email=email,
+        phone=phone,
+        post_code=postcode,
+        country_region=country_region,
+        right_to_work=applicant_right_to_work,
+        visa_requirement=visa_req_text,
+        scores={},
+        notes="",
+    )
     return applicant
+
 
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
@@ -196,36 +209,47 @@ def clear_score(applicant: Applicant, criterion: Criterion):
     if criterion in applicant.scores:
         del applicant.scores[criterion]
 
+
 # text extraction
+
 
 def extract_info_from_text(cleaned_list):
     """gets the section containing applicant information from extracted text"""
 
     # fields names to get related applicant information
-    fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
+    fields = (
+        "First Name",
+        "Last Name",
+        "Email Address",
+        "Preferred Phone Number",
+        "Postcode",
+        "Country & Region",
+    )
     info = []
 
     # removes header/footer and other irrelevant info
     applicant_info = cleaned_list[1:-5]
     right_to_work = cleaned_list[-5:-1]
 
-    # filter out the field name and retain only the info to applicant 
+    # filter out the field name and retain only the info to applicant
     for field in fields:
         for i in applicant_info:
             if field in i:
-                unclean = i.replace(field,"")
-                clean = re.sub(r'\s{2,}', ' ', unclean)
+                unclean = i.replace(field, "")
+                clean = re.sub(r"\s{2,}", " ", unclean)
                 info.append(clean.strip())
-                
+
     # finds where the question is and checks the next index which contains the answer to the question
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
-        if right_to_work[i+1] == "No":
-            j = right_to_work.index("If no, please give details of your VISA requirements")
-            visa_req_text = right_to_work[j+1] 
+        if right_to_work[i + 1] == "No":
+            j = right_to_work.index(
+                "If no, please give details of your VISA requirements"
+            )
+            visa_req_text = right_to_work[j + 1]
             applicant_right_to_work = False
-            
-        elif right_to_work[i+1] == "Yes":
+
+        elif right_to_work[i + 1] == "Yes":
             applicant_right_to_work = True
             visa_req_text = None
         else:
@@ -234,7 +258,7 @@ def extract_info_from_text(cleaned_list):
         info.append(visa_req_text)
     else:
         raise ValueError("Right to work is not identified")
-        
+
     return info
 
 

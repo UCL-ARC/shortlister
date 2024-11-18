@@ -114,10 +114,13 @@ def test_save_load():
     assert result.applicants[0].name == "a1"
     assert result.applicants[1].name == "a2"
 
+
 def test_load_applicant_from_pdf():
-    applicant: model.Applicant = model.load_applicants_from_pdf(Path("test_role\Emma_Jones_16743_Candidate_Pack.pdf"))
+    applicant: model.Applicant = model.load_applicants_from_pdf(
+        Path("test_role\Emma_Jones_16743_Candidate_Pack.pdf")
+    )
     assert applicant.name == "Emma Jones"
-    assert applicant.email == 'emmaj@outlook.com'
-    assert applicant.phone == '+44 07871235436'
-    assert applicant.post_code == 'UB4 4RW'
-    assert applicant.country_region == 'United Kingdom, London'
+    assert applicant.email == "emmaj@outlook.com"
+    assert applicant.phone == "+44 07871235436"
+    assert applicant.post_code == "UB4 4RW"
+    assert applicant.country_region == "United Kingdom, London"
