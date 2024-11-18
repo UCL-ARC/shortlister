@@ -4,7 +4,7 @@ from typing import Dict, List
 import csv
 import pickle
 import fitz
-import fitz
+import re
 
 
 @dataclass(frozen=True)
@@ -24,6 +24,7 @@ class Applicant:
     email: str
     phone: str
     post_code: str
+    country_region: str
     right_to_work: bool
     scores: Dict[Criterion, str]
     notes: str
@@ -109,8 +110,11 @@ def load_applicants(path: Path):
 
 # wip
 def load_applicants_from_pdf(path: Path):
+    fields = ("First Name","Last Name","Known as","Email Address","Preferred Phone Number","Postcode","Country & Region")
+    applicants = []
     files = path.glob("*.pdf")
     for file in files:
+
         doc = fitz.open(file)  # example document
         page = doc[0]
         text = page.get_text(sort=True) # extract text in reading order 
@@ -129,7 +133,20 @@ def load_applicants_from_pdf(path: Path):
         # takes the section with simple field and info
         applicant_info = cleaned[1:-7]
         right_to_work = cleaned[-7:-3]
-        print([field for field in applicant_info]+right_to_work)
+        #print([field for field in applicant_info]+right_to_work)
+
+        info = get_info(fields,applicant_info)
+        first_name = info[0]
+        last_name = info[1]
+        email = info[3]
+        phone = info[4]
+        post_code = info[5]
+        country_region = info[6]
+
+        applicant = Applicant(name=" ".join(first_name,last_name),cv=file,email=email,phone=phone, post_code=post_code,country_region=country_region,right_to_work=False)
+        applicants.append(applicant)
+    
+    return applicants
 
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
@@ -188,6 +205,19 @@ def clear_score(applicant: Applicant, criterion: Criterion):
     """Removes criterion from Applicant's scores dictionary."""
     if criterion in applicant.scores:
         del applicant.scores[criterion]
+
+# text extraction
+
+def get_info(fields,applicant_info):
+    """gets the section containing applicant information from extracted text"""
+    info = []
+    for field in fields:
+        for i in applicant_info:
+            if field in i:
+                unclean = i.replace(field,"")
+                clean = re.sub(r'\s{2,}', ' ', unclean)
+                info.append(clean.strip())
+    return info
 
 
 # creating tabular data
