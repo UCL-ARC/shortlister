@@ -111,14 +111,17 @@ def load_applicants(path: Path):
 
 # wip
 def load_applicants_from_pdf(path: Path):
+    """Populate list of Applicants from PDF files in the role directory"""
+    # fields names to get related applicant information
     fields = ("First Name","Last Name","Email Address","Preferred Phone Number","Postcode","Country & Region")
     applicants = []
     files = path.glob("*.pdf")
-    for file in files:
 
-        doc = fitz.open(file)  # example document
-        page = doc[0]
-        text = page.get_text(sort=True) # extract text in reading order 
+
+    for file in files:
+        doc = fitz.open(file)
+        page = doc[0]  # takes the first page of the pdf (the candidate pack)
+        text = page.get_text(sort=True) # extract text in reading order
 
         # turns text into a list of string for each line
         lines = text.splitlines()
@@ -150,7 +153,8 @@ def load_applicants_from_pdf(path: Path):
                 print("Something went wrong")
         else:
             raise ValueError("Right to work is not identified")
-
+        
+        # sets the value of each field
         info = get_info(fields,applicant_info)
         first_name = info[0]
         last_name = info[1]
@@ -159,6 +163,7 @@ def load_applicants_from_pdf(path: Path):
         post_code = info[4]
         country_region = info[5]
 
+        #create applicant instances with above information
         applicant = Applicant(name=f"{first_name} {last_name}",
                               cv=file, 
                               email=email, 
