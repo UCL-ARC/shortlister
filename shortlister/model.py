@@ -4,7 +4,6 @@ from typing import Dict, List
 import csv
 import pickle
 import pymupdf
-import re
 
 
 @dataclass(frozen=True)
@@ -217,14 +216,12 @@ def extract_info_from_text(lines):
     """gets the section containing applicant information from extracted text"""
 
     # fields names to get related applicant information
-    fields = (
-        "First Name",
+    fields = dict.fromkeys(["First Name",
         "Last Name",
         "Email Address",
         "Preferred Phone Number",
         "Postcode",
-        "Country & Region",
-    )
+        "Country & Region",], "<unretrievable>")
     info = []
 
     # removes header/footer and other irrelevant info
@@ -233,12 +230,11 @@ def extract_info_from_text(lines):
 
     # filter out the field name and retain only the info to applicant
     for field in fields:
-        for i in applicant_info:
-            if field in i:
-                unclean = i.replace(field, "")
-                clean = re.sub(r"\s{2,}", " ", unclean)
-                info.append(clean.strip())
-
+        for line in applicant_info:
+            if line.startswith(field):
+                line.removeprefix(field)
+                line.strip()
+                fields[field] = line
     # finds where the question is and checks the next index which contains the answer to the question
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
