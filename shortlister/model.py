@@ -124,29 +124,23 @@ def load_applicants_from_pdf(file: Path):
 
     # sets the value of each field
     info = extract_info_from_text(cleaned)
-    (
-        first_name,
-        last_name,
-        email,
-        phone,
-        postcode,
-        country_region,
-        applicant_right_to_work,
-        visa_req_text,
-    ) = [i for i in info]
-    # create applicant instance with above information
+
     applicant = Applicant(
-        name=f"{first_name} {last_name}",
+        name=f"{info["First Name"]} {info["Last Name"]}",
         cv=file,
-        email=email,
-        phone=phone,
-        postcode=postcode,
-        country_region=country_region,
-        right_to_work=applicant_right_to_work,
-        visa_requirement=visa_req_text,
+        email=info["Email Address"],
+        phone=info["Preferred Phone Number"],
+        postcode=info["Postcode"],
+        country_region=info["Country & Region"],
+        right_to_work=info["Right To Work"],
+        visa_requirement=info["Visa Requirements"],
         scores={},
         notes="",
-    )
+        )
+    if info["First Name"] or info["Last Name"] == "<unretrievable>":
+        name_parts = file.stem.split("_")
+        applicant.name =" ".join(name_parts[0:2])
+        
     return applicant
 
 
@@ -222,8 +216,8 @@ def extract_info_from_text(lines:List[str]):
         "Preferred Phone Number",
         "Postcode",
         "Country & Region",
-        "Right to work",
-        "Visa requirements",], "<unretrievable>")
+        "Right To Work",
+        "Visa Requirements",], "<unretrievable>")
 
     # removes header/footer and other irrelevant info
     applicant_info = lines[1:-5]
