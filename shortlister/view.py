@@ -52,7 +52,7 @@ class View:
         print(f"CV Path: {applicant.cv}")
         print(f"Email:{applicant.email}")
         print(f"Phone:{applicant.phone}")
-        print(f"Post code:{applicant.postcode}")
+        print(f"Postcode:{applicant.postcode}")
         print(f"Country/Region:{applicant.country_region}")
         print(f"Right to work: {applicant.right_to_work}- {applicant.visa_requirement}")
 
