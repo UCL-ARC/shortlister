@@ -136,11 +136,11 @@ def load_applicants_from_pdf(file: Path):
         visa_requirement=info["Visa Requirements"],
         scores={},
         notes="",
-        )
-    
+    )
+
     if info["First Name"] or info["Last Name"] == "<unretrievable>":
         name_parts = file.stem.split("_")
-        applicant.name =" ".join(name_parts[0:2])
+        applicant.name = " ".join(name_parts[0:2])
 
     return applicant
 
@@ -207,18 +207,23 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 # text extraction
 
 
-def extract_info_from_text(lines:List[str]):
+def extract_info_from_text(lines: List[str]):
     """gets the section containing applicant information from extracted text"""
 
     # fields names to get related applicant information
-    fields = dict.fromkeys(["First Name",
-        "Last Name",
-        "Email Address",
-        "Preferred Phone Number",
-        "Postcode",
-        "Country & Region",
-        "Right To Work",
-        "Visa Requirements",], "<unretrievable>")
+    fields = dict.fromkeys(
+        [
+            "First Name",
+            "Last Name",
+            "Email Address",
+            "Preferred Phone Number",
+            "Postcode",
+            "Country & Region",
+            "Right To Work",
+            "Visa Requirements",
+        ],
+        "<unretrievable>",
+    )
 
     # removes header/footer and other irrelevant info
     applicant_info = lines[1:-5]
@@ -228,12 +233,14 @@ def extract_info_from_text(lines:List[str]):
     for field in fields:
         for line in applicant_info:
             if line.startswith(field):
-                data = line.removeprefix(field)   # removes the field and leaves only the information
-                fields[field] = data.strip()    # removes whitespaces
+                data = line.removeprefix(
+                    field
+                )  # removes the field and leaves only the information
+                fields[field] = data.strip()  # removes whitespaces
                 break
         else:
             continue
-    
+
     # finds where the question is and checks the next index which contains the answer to the question
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
