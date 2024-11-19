@@ -100,21 +100,23 @@ def load_applicants(path: Path):
     files = path.glob("*.pdf")
     applicants = []
     for file in files:
-        try:
-            applicant = load_applicants_from_pdf(file)
-            applicants.append(applicant)
-        except ValueError:
-            print(f"Corrupt/incorrect pdf file: {file}")
-            continue
+        applicant = load_applicants_from_pdf(file)
+        applicants.append(applicant)
+        
     sort_alpha(applicants)
     return applicants
 
 
 def load_applicants_from_pdf(file: Path):
     """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
-    doc = pymupdf.open(file)
+    try:
+        doc = pymupdf.open(file)
+    except ValueError:
+        print(f"Corrupt/incorrect pdf file: {file}")
+
     # takes the first page of the pdf (the candidate pack)
     page = doc[0]
+    
     # extract text in reading order
     text = page.get_text(sort=True)
     # turns text into a list of string representing each extracted line
