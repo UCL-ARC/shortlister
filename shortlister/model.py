@@ -212,7 +212,7 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 # text extraction
 
 
-def extract_info_from_text(lines):
+def extract_info_from_text(lines:List[str]):
     """gets the section containing applicant information from extracted text"""
 
     # fields names to get related applicant information
