@@ -23,7 +23,7 @@ class Applicant:
     cv: str  # path to cv
     email: str
     phone: str
-    post_code: str
+    postcode: str
     country_region: str
     right_to_work: bool
     visa_requirement: str
@@ -98,11 +98,11 @@ def load_role(path, criteria):
 
 def load_applicants(path: Path):
     """Generate a list of applicant instances from pdf format CVs."""
-    files = list(path.glob("*.pdf"))
+    files = path.glob("*.pdf")
     applicants = []
     for file in files:
         try:
-            applicant = load_applicants_from_pdf(Path(file))
+            applicant = load_applicants_from_pdf(file)
             applicants.append(applicant)
         except ValueError:
             print(f"Corrupt/incorrect pdf file: {file}")
@@ -112,7 +112,7 @@ def load_applicants(path: Path):
 
 
 def load_applicants_from_pdf(file: Path):
-    """Create single Applicant instance from PDF files in the role directory"""
+    """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
     doc = pymupdf.open(file)
     # takes the first page of the pdf (the candidate pack)
     page = doc[0]
@@ -141,7 +141,7 @@ def load_applicants_from_pdf(file: Path):
         cv=file,
         email=email,
         phone=phone,
-        post_code=postcode,
+        postcode=postcode,
         country_region=country_region,
         right_to_work=applicant_right_to_work,
         visa_requirement=visa_req_text,
@@ -213,7 +213,7 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 # text extraction
 
 
-def extract_info_from_text(cleaned_list):
+def extract_info_from_text(lines):
     """gets the section containing applicant information from extracted text"""
 
     # fields names to get related applicant information
@@ -228,8 +228,8 @@ def extract_info_from_text(cleaned_list):
     info = []
 
     # removes header/footer and other irrelevant info
-    applicant_info = cleaned_list[1:-5]
-    right_to_work = cleaned_list[-5:-1]
+    applicant_info = lines[1:-5]
+    right_to_work = lines[-5:-1]
 
     # filter out the field name and retain only the info to applicant
     for field in fields:

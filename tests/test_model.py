@@ -71,7 +71,7 @@ def test_save_load():
             cv="c1",
             email="e1",
             phone="p1",
-            post_code="po1",
+            postcode="po1",
             country_region="r1",
             right_to_work=True,
             visa_requirement=None,
@@ -83,7 +83,7 @@ def test_save_load():
             cv="c2",
             email="e2",
             phone="p2",
-            post_code="po2",
+            postcode="po2",
             country_region="r2",
             right_to_work=False,
             visa_requirement="text",
@@ -122,5 +122,5 @@ def test_load_applicant_from_pdf():
     assert applicant.name == "Emma Jones"
     assert applicant.email == "emmaj@outlook.com"
     assert applicant.phone == "+44 07871235436"
-    assert applicant.post_code == "UB4 4RW"
+    assert applicant.postcode == "UB4 4RW"
     assert applicant.country_region == "United Kingdom, London"
