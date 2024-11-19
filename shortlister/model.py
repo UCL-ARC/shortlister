@@ -137,10 +137,11 @@ def load_applicants_from_pdf(file: Path):
         scores={},
         notes="",
         )
+    
     if info["First Name"] or info["Last Name"] == "<unretrievable>":
         name_parts = file.stem.split("_")
         applicant.name =" ".join(name_parts[0:2])
-        
+
     return applicant
 
 
@@ -247,8 +248,8 @@ def extract_info_from_text(lines:List[str]):
             applicant_right_to_work = True
             visa_req_text = None
 
-        fields["Right to work"] = applicant_right_to_work
-        fields["Visa requirements"] = visa_req_text
+        fields["Right To Work"] = applicant_right_to_work
+        fields["Visa Requirements"] = visa_req_text
 
     return fields
 
