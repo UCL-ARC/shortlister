@@ -232,9 +232,12 @@ def extract_info_from_text(lines):
     for field in fields:
         for line in applicant_info:
             if line.startswith(field):
-                line.removeprefix(field)
-                line.strip()
-                fields[field] = line
+                data = line.removeprefix(field)   # removes the field and leaves only the information
+                fields[field] = data.strip()    # removes whitespaces
+                break
+        else:
+            continue
+    
     # finds where the question is and checks the next index which contains the answer to the question
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
