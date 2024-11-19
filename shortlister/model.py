@@ -221,8 +221,9 @@ def extract_info_from_text(lines:List[str]):
         "Email Address",
         "Preferred Phone Number",
         "Postcode",
-        "Country & Region",], "<unretrievable>")
-    info = []
+        "Country & Region",
+        "Right to work",
+        "Visa requirements",], "<unretrievable>")
 
     # removes header/footer and other irrelevant info
     applicant_info = lines[1:-5]
@@ -245,20 +246,17 @@ def extract_info_from_text(lines:List[str]):
             j = right_to_work.index(
                 "If no, please give details of your VISA requirements"
             )
-            visa_req_text = right_to_work[j + 1]
             applicant_right_to_work = False
+            visa_req_text = right_to_work[j + 1]
 
         elif right_to_work[i + 1] == "Yes":
             applicant_right_to_work = True
             visa_req_text = None
-        else:
-            print("Something went wrong")
-        info.append(applicant_right_to_work)
-        info.append(visa_req_text)
-    else:
-        raise ValueError("Right to work is not identified")
 
-    return info
+        fields["Right to work"] = applicant_right_to_work
+        fields["Visa requirements"] = visa_req_text
+
+    return fields
 
 
 # creating tabular data
