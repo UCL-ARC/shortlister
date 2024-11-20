@@ -124,26 +124,24 @@ def load_applicants_from_pdf(file: Path):
     # sets the value of each field
     info = extract_info_from_text(cleaned)
 
-    try:
-        applicant = Applicant(
-            name=f"{info["First Name"]} {info["Last Name"]}",
-            cv=file,
-            email=info["Email Address"],
-            phone=info["Preferred Phone Number"],
-            postcode=info["Postcode"],
-            country_region=info["Country & Region"],
-            right_to_work=info["Right To Work"],
-            visa_requirement=info["Visa Requirements"],
-            scores={},
-            notes="",
-        )
-    except ValueError:
-        print(f"Corrupt/incorrect pdf file: {file}")
+    applicant = Applicant(
+        name=f"{info["First Name"]} {info["Last Name"]}",
+        cv=file,
+        email=info["Email Address"],
+        phone=info["Preferred Phone Number"],
+        postcode=info["Postcode"],
+        country_region=info["Country & Region"],
+        right_to_work=info["Right To Work"],
+        visa_requirement=info["Visa Requirements"],
+        scores={},
+        notes="",
+    )
 
 
     if info["First Name"] or info["Last Name"] == "<unretrievable>":
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
+        print(f"Corrupt/incorrect pdf file: {file}")
 
     return applicant
 
