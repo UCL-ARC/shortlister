@@ -25,6 +25,7 @@ class Controller:
         self.shortlist = load_shortlist(path)
         self.applicant_index: int = 0
         self.current_criterion = None
+        self.current_applicant_view = "List"
         self.view = View()
         self.options = None
         self.options_home = {
@@ -104,7 +105,14 @@ class Controller:
 
     def show_applicant_table(self, k=None):
         """View condensed table of applicant information"""
-        self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+        if self.current_applicant_view == "List":
+            # switch to table view if already displaying applicant list
+            self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+            self.current_applicant_view = "Table"
+        else:
+            # display applicant list if the above doesn't apply
+            self.view.view_applicants_list(self.shortlist)
+            self.current_applicant_view = "List"
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
