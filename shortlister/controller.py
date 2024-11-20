@@ -36,7 +36,7 @@ class Controller:
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
-            "t": (self.show_applicant_table, "applicant table"),
+            "t": (self.switch_applicants_list_table, "applicant table"),
             "q": (self.show_home_message, "home"),
         }
         self.options_sort = {
@@ -103,8 +103,8 @@ class Controller:
         except (ValueError, IndexError):
             pass
 
-    def show_applicant_table(self, k=None):
-        """View condensed table of applicant information"""
+    def switch_applicants_list_table(self, k=None):
+        """Switch between list and table view of applicants"""
         if self.current_applicant_view == "List":
             # switch to table view if already displaying applicant list
             self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
