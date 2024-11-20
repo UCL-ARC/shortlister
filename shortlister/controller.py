@@ -50,7 +50,7 @@ class Controller:
             "O": (self.open_applicant_pdf, "open CV"),
             "n": (self.switch_applicant, "next"),
             "p": (self.switch_applicant, "previous"),
-            "q": (self.show_applicants_list, "applicants"),
+            "q": (self.switch_applicants_list_table, "applicants"),
         }
 
     def quit(self, k=None):
@@ -105,14 +105,24 @@ class Controller:
 
     def switch_applicants_list_table(self, k=None):
         """Switch between list and table view of applicants"""
-        if self.current_applicant_view == "List":
-            # switch to table view if already displaying applicant list
-            self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
-            self.current_applicant_view = "Table"
-        else:
-            # display applicant list if the above doesn't apply
-            self.view.view_applicants_list(self.shortlist)
-            self.current_applicant_view = "List"
+        # when intention is to switch from list to table or vice versa 
+        if k == "t":
+            if self.current_applicant_view == "List":
+                # switch to table view if already displaying applicant list
+                self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+                self.current_applicant_view = "Table"
+            else:
+                # display applicant list if the above doesn't apply
+                self.view.view_applicants_list(self.shortlist)
+                self.current_applicant_view = "List"
+        # when going back from applicant detail
+        elif k == "q":
+            # could put move this to show_applicant_list
+            if self.current_applicant_view == "List":
+                self.view.view_applicants_list(self.shortlist)
+            else:
+                self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+            self.options = self.options_applicant_list
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
