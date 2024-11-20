@@ -181,7 +181,7 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> L
                 applicant_info.append(applicant.scores.get(criterion)[0])
             else:
                 # fills in N/A if a score is not marked yet
-                applicant_info.append("-")
+                applicant_info.append("·")
         tab.append(applicant_info)
     return tab
 
