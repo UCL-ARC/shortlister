@@ -109,10 +109,7 @@ def load_applicants(path: Path):
 
 def load_applicants_from_pdf(file: Path):
     """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
-    try:
-        doc = pymupdf.open(file)
-    except ValueError:
-        print(f"Corrupt/incorrect pdf file: {file}")
+    doc = pymupdf.open(file)
 
     # takes the first page of the pdf (the candidate pack)
     page = doc[0]
@@ -127,18 +124,22 @@ def load_applicants_from_pdf(file: Path):
     # sets the value of each field
     info = extract_info_from_text(cleaned)
 
-    applicant = Applicant(
-        name=f"{info["First Name"]} {info["Last Name"]}",
-        cv=file,
-        email=info["Email Address"],
-        phone=info["Preferred Phone Number"],
-        postcode=info["Postcode"],
-        country_region=info["Country & Region"],
-        right_to_work=info["Right To Work"],
-        visa_requirement=info["Visa Requirements"],
-        scores={},
-        notes="",
-    )
+    try:
+        applicant = Applicant(
+            name=f"{info["First Name"]} {info["Last Name"]}",
+            cv=file,
+            email=info["Email Address"],
+            phone=info["Preferred Phone Number"],
+            postcode=info["Postcode"],
+            country_region=info["Country & Region"],
+            right_to_work=info["Right To Work"],
+            visa_requirement=info["Visa Requirements"],
+            scores={},
+            notes="",
+        )
+    except ValueError:
+        print(f"Corrupt/incorrect pdf file: {file}")
+
 
     if info["First Name"] or info["Last Name"] == "<unretrievable>":
         name_parts = file.stem.split("_")
