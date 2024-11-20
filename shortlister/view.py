@@ -83,7 +83,8 @@ class View:
         applicant_data = applicant_table(applicants, criteria)
 
         # displays table
-        pydoc.pager(tabulate(applicant_data, headers=header))
+        pydoc.pager(tabulate(applicant_data, headers=header, numalign="middle"))
+        print()
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
