@@ -137,11 +137,10 @@ def load_applicants_from_pdf(file: Path):
         notes="",
     )
 
-
-    if info["First Name"] or info["Last Name"] == "<unretrievable>":
+    if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
-        print(f"Corrupt/incorrect pdf file: {file}")
+        print(f"Couldn't retrieve applicant data from: {file}")
 
     return applicant
 
