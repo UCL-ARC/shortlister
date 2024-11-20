@@ -174,7 +174,11 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> L
         i += 1
         applicant_info = []  # list with correct information format for each row
         applicant_info.append(i)  # applicant number
-        applicant_info.append(applicant.name)  # applicant name
+        # truncate name of applicant if it's more than 15 chars long
+        if len(applicant.name) > 15:
+            applicant_info.append(applicant.name[0:15]+"...")
+        else:
+            applicant_info.append(applicant.name)  # applicant name
         # append criterion score in the order criteria
         for criterion in criteria:
             if criterion in applicant.scores:
