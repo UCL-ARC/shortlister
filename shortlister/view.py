@@ -83,7 +83,7 @@ class View:
         applicant_data = applicant_table(applicants, criteria)
 
         # displays table
-        pydoc.pager(tabulate(applicant_data, headers=header, numalign="middle"))
+        pydoc.pager(tabulate(applicant_data, headers=header,stralign="center",colalign=("center","left")))
         print()
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
