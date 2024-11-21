@@ -26,6 +26,7 @@ class Applicant:
     country_region: str
     right_to_work: bool
     visa_requirement: str
+    applicantion_text: str
     scores: Dict[Criterion, str]
     notes: str
 
@@ -111,11 +112,12 @@ def load_applicants_from_pdf(file: Path):
     """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
     doc = pymupdf.open(file)
 
-    # takes the first page of the pdf (the candidate pack)
-    page = doc[0]
-    
+    # takes the first page of the pdf (the candidate pack)   
+    cover = doc[0]
+    rest_of_pages = doc[1:]
+    remaining_pdf = [page.get_text(sort=True) for page in rest_of_pages]
     # extract text in reading order
-    text = page.get_text(sort=True)
+    text = cover.get_text(sort=True)
     # turns text into a list of string representing each extracted line
     lines = text.splitlines()
     # remove empty line from list
@@ -133,9 +135,11 @@ def load_applicants_from_pdf(file: Path):
         country_region=info["Country & Region"],
         right_to_work=info["Right To Work"],
         visa_requirement=info["Visa Requirements"],
+        applicantion_text= remaining_pdf,
         scores={},
         notes="",
     )
+    print(applicant.applicantion_text)
 
     if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
