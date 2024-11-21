@@ -115,6 +115,7 @@ def load_applicants_from_pdf(file: Path):
     # takes the first page of the pdf (the candidate pack)   
     cover = doc[0]
     rest_of_pages = doc[1:]
+    # extract the remaining pdf pages 
     remaining_pdf = tuple([page.get_text(sort=True) for page in rest_of_pages])
     # extract text in reading order
     text = cover.get_text(sort=True)
@@ -135,11 +136,12 @@ def load_applicants_from_pdf(file: Path):
         country_region=info["Country & Region"],
         right_to_work=info["Right To Work"],
         visa_requirement=info["Visa Requirements"],
-        application_text= remaining_pdf,
+        application_text=remaining_pdf,
         scores={},
         notes="",
     )
 
+    # if either of the name field can't be extracted, get applicant's name from their cv filename
     if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
