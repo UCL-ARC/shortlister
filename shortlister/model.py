@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import csv
 import pickle
 import pymupdf
@@ -26,7 +26,7 @@ class Applicant:
     country_region: str
     right_to_work: bool
     visa_requirement: str
-    applicantion_text: str
+    application_text: Tuple[str]
     scores: Dict[Criterion, str]
     notes: str
 
@@ -115,7 +115,7 @@ def load_applicants_from_pdf(file: Path):
     # takes the first page of the pdf (the candidate pack)   
     cover = doc[0]
     rest_of_pages = doc[1:]
-    remaining_pdf = [page.get_text(sort=True) for page in rest_of_pages]
+    remaining_pdf = tuple([page.get_text(sort=True) for page in rest_of_pages])
     # extract text in reading order
     text = cover.get_text(sort=True)
     # turns text into a list of string representing each extracted line
@@ -135,11 +135,11 @@ def load_applicants_from_pdf(file: Path):
         country_region=info["Country & Region"],
         right_to_work=info["Right To Work"],
         visa_requirement=info["Visa Requirements"],
-        applicantion_text= remaining_pdf,
+        application_text= remaining_pdf,
         scores={},
         notes="",
     )
-    print(applicant.applicantion_text)
+    print(applicant.application_text)
 
     if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
