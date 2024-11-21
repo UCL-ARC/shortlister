@@ -139,7 +139,6 @@ def load_applicants_from_pdf(file: Path):
         scores={},
         notes="",
     )
-    print(applicant.application_text)
 
     if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
