@@ -105,7 +105,7 @@ class Controller:
 
     def switch_applicants_list_table(self, k=None):
         """Switch between list and table view of applicants"""
-        # when intention is to switch from list to table or vice versa 
+        # when the intention is to switch between list and table
         if k == "t":
             if self.current_applicant_view == "List":
                 # switch to table view if already displaying applicant list
@@ -117,7 +117,6 @@ class Controller:
                 self.current_applicant_view = "List"
         # when going back from applicant detail
         elif k == "q":
-            # could put move this to show_applicant_list
             if self.current_applicant_view == "List":
                 self.view.view_applicants_list(self.shortlist)
             else:
