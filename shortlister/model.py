@@ -26,7 +26,7 @@ class Applicant:
     country_region: str
     right_to_work: bool
     visa_requirement: str
-    application_text: Tuple[str]
+    application_text: str
     scores: Dict[Criterion, str]
     notes: str
 
@@ -116,7 +116,7 @@ def load_applicants_from_pdf(file: Path):
     cover = doc[0]
     rest_of_pages = doc[1:]
     # extract the remaining pdf pages 
-    remaining_pdf = tuple([page.get_text(sort=True) for page in rest_of_pages])
+    remaining_pdf = "\n".join([page.get_text(sort=True) for page in rest_of_pages])
     # extract text in reading order
     text = cover.get_text(sort=True)
     # turns text into a list of string representing each extracted line
