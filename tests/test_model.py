@@ -1,3 +1,4 @@
+from typing import List
 import pytest
 from shortlister import model
 from pathlib import Path
@@ -25,7 +26,7 @@ def test_load_criteria():
 @pytest.mark.parametrize(
     "folder_path,expected",
     [
-        (path, ["Emma Jones", "Michael Davis", "Sarah Thompson"]),
+        (path, ["Emma Jones", "Sarah Thompson"]),
         (Path("non_existing_folder"), []),
     ],
 )
@@ -58,7 +59,6 @@ def test_load_role():
 
 
 def test_save_load():
-    s = ("1", "2", "3", "4")
     c = [
         model.Criterion(name="c1", description="d1"),
         model.Criterion(name="c2", description="d2"),
@@ -69,12 +69,24 @@ def test_save_load():
         model.Applicant(
             name="a1",
             cv="c1",
+            email="e1",
+            phone="p1",
+            postcode="po1",
+            country_region="r1",
+            right_to_work=True,
+            visa_requirement=None,
             scores={c[0]: SCORES[3], c[1]: SCORES[2], c[2]: SCORES[0]},
             notes="n1",
         ),
         model.Applicant(
             name="a2",
             cv="c2",
+            email="e2",
+            phone="p2",
+            postcode="po2",
+            country_region="r2",
+            right_to_work=False,
+            visa_requirement="text",
             scores={c[0]: SCORES[1], c[1]: SCORES[0]},
             notes="n2",
         ),
@@ -101,3 +113,14 @@ def test_save_load():
     assert result.applicants == a
     assert result.applicants[0].name == "a1"
     assert result.applicants[1].name == "a2"
+
+
+def test_load_applicant_from_pdf():
+    applicant: model.Applicant = model.load_applicants_from_pdf(
+        Path("test_role\Emma_Jones_16743_Candidate_Pack.pdf")
+    )
+    assert applicant.name == "Emma Jones"
+    assert applicant.email == "emmaj@outlook.com"
+    assert applicant.phone == "+44 07871235436"
+    assert applicant.postcode == "UB4 4RW"
+    assert applicant.country_region == "United Kingdom, London"

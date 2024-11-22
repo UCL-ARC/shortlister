@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 import csv
 import pickle
+import pymupdf
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,13 @@ class Applicant:
 
     name: str
     cv: str  # path to cv
+    email: str
+    phone: str
+    postcode: str
+    country_region: str
+    right_to_work: bool
+    visa_requirement: str
+    application_text: str
     scores: Dict[Criterion, str]
     notes: str
 
@@ -93,13 +101,53 @@ def load_applicants(path: Path):
     files = path.glob("*.pdf")
     applicants = []
     for file in files:
-        name_parts = file.stem.split("_")
-        applicant = Applicant(
-            name=" ".join(name_parts[0:2]), cv=file, scores={}, notes=""
-        )
+        applicant = load_applicants_from_pdf(file)
         applicants.append(applicant)
+        
     sort_alpha(applicants)
     return applicants
+
+
+def load_applicants_from_pdf(file: Path):
+    """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
+    doc = pymupdf.open(file)
+
+    # takes the first page of the pdf (the candidate pack)   
+    cover = doc[0]
+    rest_of_pages = doc[1:]
+    # extract the remaining pdf pages 
+    remaining_pdf = "\n".join([page.get_text(sort=True) for page in rest_of_pages])
+    # extract text in reading order
+    text = cover.get_text(sort=True)
+    # turns text into a list of string representing each extracted line
+    lines = text.splitlines()
+    # remove empty line from list
+    cleaned = [line.strip() for line in lines if len(line.strip())]
+
+    # sets the value of each field
+    info = extract_info_from_text(cleaned)
+
+    applicant = Applicant(
+        name=f"{info["First Name"]} {info["Last Name"]}",
+        cv=file,
+        email=info["Email Address"],
+        phone=info["Preferred Phone Number"],
+        postcode=info["Postcode"],
+        country_region=info["Country & Region"],
+        right_to_work=info["Right To Work"],
+        visa_requirement=info["Visa Requirements"],
+        application_text=remaining_pdf,
+        scores={},
+        notes="",
+    )
+
+    # if either of the name field can't be extracted, get applicant's name from their cv filename
+    if "<unretrievable>" in applicant.name:
+        name_parts = file.stem.split("_")
+        applicant.name = " ".join(name_parts[0:2])
+        print(f"Couldn't retrieve applicant data from: {file}")
+
+    return applicant
 
 
 def load_criteria(csv_file):
@@ -159,6 +207,63 @@ def clear_score(applicant: Applicant, criterion: Criterion):
     """Removes criterion from Applicant's scores dictionary."""
     if criterion in applicant.scores:
         del applicant.scores[criterion]
+
+
+# text extraction
+
+
+def extract_info_from_text(lines: List[str]):
+    """gets the section containing applicant information from extracted text"""
+
+    # fields names to get related applicant information
+    fields = dict.fromkeys(
+        [
+            "First Name",
+            "Last Name",
+            "Email Address",
+            "Preferred Phone Number",
+            "Postcode",
+            "Country & Region",
+            "Right To Work",
+            "Visa Requirements",
+        ],
+        "<unretrievable>",
+    )
+
+    # removes header/footer and other irrelevant info
+    applicant_info = lines[1:-5]
+    right_to_work = lines[-5:-1]
+
+    # filter out the field name and retain only the info to applicant
+    for field in fields:
+        for line in applicant_info:
+            if line.startswith(field):
+                data = line.removeprefix(
+                    field
+                )  # removes the field and leaves only the information
+                fields[field] = data.strip()  # removes whitespaces
+                break
+        else:
+            continue
+
+    # finds where the question is and checks the next index which contains the answer to the question
+    if "Do you have the unrestricted right to work in the UK?" in right_to_work:
+        i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
+        if right_to_work[i + 1] == "No":
+            j = right_to_work.index(
+                "If no, please give details of your VISA requirements"
+            )
+            applicant_right_to_work = False
+            visa_req_text = right_to_work[j + 1]
+
+        elif right_to_work[i + 1] == "Yes":
+            applicant_right_to_work = True
+            visa_req_text = None
+
+        fields["Right To Work"] = applicant_right_to_work
+        fields["Visa Requirements"] = visa_req_text
+
+    return fields
 
 
 # creating tabular data
