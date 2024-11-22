@@ -87,6 +87,7 @@ class View:
         applicant_data = applicant_table(applicants, criteria)
 
         # displays table
+        # left align only for applicant names and center aligns all other strings(rest of applicant scores) 
         pydoc.pager(tabulate(applicant_data, headers=header,stralign="center",colalign=("center","left")))
         print()
 
