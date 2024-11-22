@@ -50,6 +50,11 @@ class View:
         """Prints details of applicant to console."""
         print(f"** {applicant_number}/{total_applicant} {applicant.name} **")
         print(f"CV Path: {applicant.cv}")
+        print(f"Email:{applicant.email}")
+        print(f"Phone:{applicant.phone}")
+        print(f"Postcode:{applicant.postcode}")
+        print(f"Country/Region:{applicant.country_region}")
+        print(f"Right to work: {applicant.right_to_work}- {applicant.visa_requirement}")
 
         if applicant.scores:
             print(f"Scores: ({total_score})")
@@ -70,13 +75,13 @@ class View:
             print(f"{index+1}. {applicant.name}")
         print()
 
-    def view_applicant_table(self, applicants:List[Applicant], criteria:List[Criterion]):
+    def view_applicant_table(
+        self, applicants: List[Applicant], criteria: List[Criterion]
+    ):
         """Prints a table summary of applicants and their scores"""
 
         # creates heading
-        criteria_headings = abbreviate(
-            [criterion.name for criterion in criteria]
-        )
+        criteria_headings = abbreviate([criterion.name for criterion in criteria])
         header = ["No.", "Name"] + criteria_headings
 
         # creates applicant and score data

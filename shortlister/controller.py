@@ -104,7 +104,9 @@ class Controller:
 
     def show_applicant_table(self, k=None):
         """View condensed table of applicant information"""
-        self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+        self.view.view_applicant_table(
+            self.shortlist.applicants, self.shortlist.role.criteria
+        )
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
