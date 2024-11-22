@@ -150,7 +150,7 @@ class Controller:
             }
             self.options["c"] = (
                 self.clear_score,
-                f"clear score",
+                "clear score",
             )
             # returns to criterion selection
             self.options["q"] = (self.edit_score_start,"return to criterion selection")

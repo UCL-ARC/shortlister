@@ -5,7 +5,6 @@ from shortlister.model import (
     Shortlist,
     applicant_table,
     abbreviate,
-    RANK_AND_SCORE,
 )
 from tabulate import tabulate
 import pydoc

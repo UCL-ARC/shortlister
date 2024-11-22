@@ -1,4 +1,3 @@
-from typing import List
 import pytest
 from shortlister import model
 from pathlib import Path
