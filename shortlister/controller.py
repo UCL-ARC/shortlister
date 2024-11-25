@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 from shortlister.view import View
 from shortlister.model import (
@@ -207,6 +208,12 @@ class Controller:
             sort_descending_score(self.selected_applicants)
 
         self.show_applicants_list_table()
+
+    def filter_applicants(self,applicants:List[Applicant],k=None):
+        """Allows user to filter applicants"""
+        filter = input("Filter:")
+        selected_applicants = eval(f"[applicant for applicant in applicants if {filter}]")
+        self.selected_applicants = selected_applicants
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
