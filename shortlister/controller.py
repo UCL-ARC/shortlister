@@ -38,6 +38,7 @@ class Controller:
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
+            "f":(self.filter_applicants,"filter"),
             "t": (self.show_applicants_list_table, "applicant table"),
             "q": (self.show_home_message, "home"),
         }
@@ -92,7 +93,7 @@ class Controller:
     def show_applicants(self):
         """Show applicants in either list or table view."""
         if self.current_applicant_view == "List":
-            self.view.view_applicants_list(self.shortlist)
+            self.view.view_applicants_list(self.selected_applicants)
         else:
             self.view.view_applicant_table(self.selected_applicants,self.shortlist.role.criteria)
 
@@ -209,11 +210,12 @@ class Controller:
 
         self.show_applicants_list_table()
 
-    def filter_applicants(self,applicants:List[Applicant],k=None):
+    def filter_applicants(self,k=None):
         """Allows user to filter applicants"""
         filter = input("Filter:")
-        selected_applicants = eval(f"[applicant for applicant in applicants if {filter}]")
+        selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
         self.selected_applicants = selected_applicants
+        self.show_applicants_list_table()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
