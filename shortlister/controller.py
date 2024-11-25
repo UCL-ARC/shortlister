@@ -208,6 +208,15 @@ class Controller:
 
         self.show_applicants_list_table()
 
+    def filter_applicants(self, applicants):
+        # ** in applicant attribute (e.g. Tim in applicant.name)
+        keyword = input("Keyword to search for:")
+
+        self.selected_applicants = [applicant for applicant in applicants if keyword in applicants]
+            
+
+        ...
+
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""
