@@ -26,6 +26,7 @@ class Controller:
         self.applicant_index: int = 0
         self.current_criterion = None
         self.current_applicant_view = "List"
+        self.selected_applicants = self.shortlist.applicants
         self.view = View()
         self.options = None
         self.options_home = {
@@ -92,7 +93,7 @@ class Controller:
         if self.current_applicant_view == "List":
             self.view.view_applicants_list(self.shortlist)
         else:
-            self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
+            self.view.view_applicant_table(self.selected_applicants,self.shortlist.role.criteria)
 
     def show_applicant_details(self, k=None):
         """Select an applicant via input and view details."""
@@ -168,7 +169,7 @@ class Controller:
         """Move to next or previous applicant"""
 
         # if next applicant, and not already at last
-        if k == "n" and (self.applicant_index < len(self.shortlist.applicants) - 1):
+        if k == "n" and (self.applicant_index < len(self.selected_applicants) - 1):
             self.applicant_index += 1
         # if previous and not already at first
         elif k == "p" and (self.applicant_index > 0):
@@ -199,24 +200,24 @@ class Controller:
             self.options = self.options_sort
             return
         elif k == "a":
-            sort_alpha(self.shortlist.applicants)
+            sort_alpha(self.selected_applicants)
         elif k == "s":
-            sort_ascending_score(self.shortlist.applicants)
+            sort_ascending_score(self.selected_applicants)
         elif k == "d":
-            sort_descending_score(self.shortlist.applicants)
+            sort_descending_score(self.selected_applicants)
 
         self.show_applicants_list_table()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""
-        return self.shortlist.applicants[index]
+        return self.selected_applicants[index]
 
     def view_applicant_details(self):
         applicant: Applicant = self.applicant(self.applicant_index)
         total = total_score(applicant.scores)
         applicant_number = self.applicant_index + 1
-        total_applicant = len(self.shortlist.applicants)
+        total_applicant = len(self.selected_applicants)
         self.view.view_applicant_details(
             applicant,
             self.shortlist.role.criteria,
