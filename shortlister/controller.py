@@ -39,6 +39,7 @@ class Controller:
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
             "f":(self.filter_applicants,"filter"),
+            "c":(self.clear_filter,"remove all filter"),
             "t": (self.show_applicants_list_table, "applicant table"),
             "q": (self.show_home_message, "home"),
         }
@@ -211,12 +212,16 @@ class Controller:
         self.show_applicants_list_table()
 
     def filter_applicants(self,k=None):
-        """Allows user to filter applicants"""
+        """Allows user to filter applicants by with condition statement"""
         filter = input("Filter:")
         selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
         self.selected_applicants = selected_applicants
         self.show_applicants_list_table()
-
+    
+    def clear_filter(self,k=None):
+        self.selected_applicants = self.shortlist.applicants
+        self.show_applicants_list_table()
+        
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""
