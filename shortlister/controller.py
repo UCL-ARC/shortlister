@@ -25,17 +25,18 @@ class Controller:
         self.shortlist = load_shortlist(path)
         self.applicant_index: int = 0
         self.current_criterion = None
+        self.current_applicant_view = "List"
         self.view = View()
         self.options = None
         self.options_home = {
-            "a": (self.show_applicants_list, "applicants"),
+            "a": (self.show_applicants_list_table, "applicants"),
             "r": (self.show_role_info, "role"),
             "q": (self.quit, "quit"),
         }
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "applicant"),
             "S": (self.sort, "sort"),
-            "t": (self.show_applicant_table, "applicant table"),
+            "t": (self.show_applicants_list_table, "applicant table"),
             "q": (self.show_home_message, "home"),
         }
         self.options_sort = {
@@ -49,7 +50,7 @@ class Controller:
             "O": (self.open_applicant_pdf, "open CV"),
             "n": (self.switch_applicant, "next"),
             "p": (self.switch_applicant, "previous"),
-            "q": (self.show_applicants_list, "applicants"),
+            "q": (self.show_applicants_list_table, "applicants"),
         }
 
     def quit(self, k=None):
@@ -86,10 +87,12 @@ class Controller:
         """Display role information."""
         self.view.view_role(self.shortlist.role)
 
-    def show_applicants_list(self, k=None):
-        """List all applicants."""
-        self.view.view_applicants_list(self.shortlist)
-        self.options = self.options_applicant_list
+    def show_applicants(self):
+        """Show applicants in either list or table view."""
+        if self.current_applicant_view == "List":
+            self.view.view_applicants_list(self.shortlist)
+        else:
+            self.view.view_applicant_table(self.shortlist.applicants,self.shortlist.role.criteria)
 
     def show_applicant_details(self, k=None):
         """Select an applicant via input and view details."""
@@ -102,11 +105,21 @@ class Controller:
         except (ValueError, IndexError):
             pass
 
-    def show_applicant_table(self, k=None):
-        """View condensed table of applicant information"""
-        self.view.view_applicant_table(
-            self.shortlist.applicants, self.shortlist.role.criteria
-        )
+    def switch_applicants_list_table(self):
+        """Switch between list and table view of applicants"""
+        if self.current_applicant_view == "List":
+            # switch to table view if already displaying applicant list
+            self.current_applicant_view = "Table"
+        else:
+            # display applicant list if the above doesn't apply
+            self.current_applicant_view = "List"
+
+    def show_applicants_list_table(self,k=None):
+        """Switches view only if already displaying applicants list or table"""
+        if k == "t":
+            self.switch_applicants_list_table()
+        self.show_applicants()
+        self.options = self.options_applicant_list
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
@@ -135,7 +148,7 @@ class Controller:
             }
             self.options["c"] = (
                 self.clear_score,
-                f"clear score",
+                "clear score",
             )
             # returns to criterion selection
             self.options["q"] = (self.edit_score_start,"return to criterion selection")
@@ -192,7 +205,7 @@ class Controller:
         elif k == "d":
             sort_descending_score(self.shortlist.applicants)
 
-        self.show_applicants_list()
+        self.show_applicants_list_table()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:

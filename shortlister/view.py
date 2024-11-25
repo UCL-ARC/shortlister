@@ -5,7 +5,6 @@ from shortlister.model import (
     Shortlist,
     applicant_table,
     abbreviate,
-    RANK_AND_SCORE,
 )
 from tabulate import tabulate
 import pydoc
@@ -88,7 +87,9 @@ class View:
         applicant_data = applicant_table(applicants, criteria)
 
         # displays table
-        pydoc.pager(tabulate(applicant_data, headers=header))
+        # left align only for applicant names and center aligns all other strings(rest of applicant scores) 
+        pydoc.pager(tabulate(applicant_data, headers=header,stralign="center",colalign=("center","left")))
+        print()
 
     def view_criteria(self, role: Role, criteria: list[Criterion]):
         """Prints list of all criterion for the role to console."""
