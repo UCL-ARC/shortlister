@@ -205,7 +205,7 @@ class Controller:
         elif k == "d":
             sort_descending_score(self.shortlist.applicants)
 
-        self.show_applicants_list()
+        self.show_applicants_list_table()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
