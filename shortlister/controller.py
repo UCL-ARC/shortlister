@@ -214,9 +214,13 @@ class Controller:
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
         filter = input("Filter:")
-        selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
-        self.selected_applicants = selected_applicants
-        self.show_applicants_list_table()
+        try:
+            selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
+            self.selected_applicants = selected_applicants
+            self.show_applicants_list_table()
+        except Exception as e:
+            print(e)
+            pass
     
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
@@ -260,3 +264,8 @@ class Controller:
                 if action is not None:
                     # print(action)
                     action[0](k=k)
+
+
+def name(name:str):
+    filter = name + ' in applicant.name'
+    return filter
