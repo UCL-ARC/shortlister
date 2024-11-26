@@ -136,7 +136,7 @@ def load_applicants_from_pdf(file: Path):
         country_region=info["Country & Region"],
         right_to_work=info["Right To Work"],
         visa_requirement=info["Visa Requirements"],
-        application_text=remaining_pdf,
+        application_text=remaining_pdf.lower(),
         scores={},
         notes="",
     )

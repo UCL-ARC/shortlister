@@ -279,4 +279,4 @@ def rtw():
     return "applicant.right_to_work"
 
 def cv(keyword):
-    return f"'{keyword}' in applicant.application_text"
+    return f"'{keyword.lower()}' in applicant.application_text"
