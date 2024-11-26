@@ -68,9 +68,9 @@ class View:
 
         print()
 
-    def view_applicants_list(self, shortlist: Shortlist):
+    def view_applicants_list(self, applicants:List[Applicant]):
         """Prints list of all applicants to console."""
-        for index, applicant in enumerate(shortlist.applicants):
+        for index, applicant in enumerate(applicants):
             print(f"{index+1}. {applicant.name}")
         print()
 
