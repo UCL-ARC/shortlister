@@ -213,12 +213,12 @@ class Controller:
 
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
-        filter = input("Filter:")
-        name = eval(filter)
+        string = input("Filter:")
+        filter = eval(string)
 
-        print(f"[applicant for applicant in self.shortlist.applicants if {name}]")
+        print(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
         try:
-            selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {name}]")
+            selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
             self.selected_applicants = selected_applicants
             self.show_applicants_list_table()
         except Exception as e:
@@ -268,6 +268,15 @@ class Controller:
                     # print(action)
                     action[0](k=k)
 
+# filter functions
 def name(name:str):
-    filter = f"'{name}' in applicant.name"
-    return filter
+    return f"'{name}' in applicant.name"
+
+def score(criterion,score):
+    return f"applicant.scores['{criterion}'] == '{score}'"
+
+def rtw():
+    return "applicant.right_to_work"
+
+def cv(keyword):
+    return f"'{keyword}' in applicant.application_text"
