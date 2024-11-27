@@ -214,13 +214,18 @@ class Controller:
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
         filter = input("Filter:")
-        
+
         try:
             selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
-            self.selected_applicants = selected_applicants
-            self.show_applicants_list_table()
         except Exception as e:
             print(f"ERROR: {e}")
+            selected_applicants = []
+        
+        if selected_applicants:
+            self.selected_applicants = selected_applicants
+        else:
+            print("No matches found")
+        self.show_applicants_list_table()
     
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
