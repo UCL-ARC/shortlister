@@ -320,11 +320,19 @@ def name(applicant:Applicant, name:str):
 def score(applicant:Applicant,name,score):
     """Filter by matching applicant score.
     Example usage:  score(applicant,"PhD","Excellent")"""
+
+    # checks that (criterion) name does not match any criterion in applicant scores
+    if score == None:
+        return name.lower() not in [getattr(criterion,"name").lower() for criterion in applicant.scores]
+    
+    # checks if (criterion) name and score matches the saved applicant scores
     for criterion in applicant.scores:
         if getattr(criterion,"name").lower() == name.lower():
             return applicant.scores[criterion].lower() == score.lower()
         else:
             continue
+    # handles bad inputs
+    return False
 
 def rtw(applicant:Applicant):
     """Filter out applicants without the right to work.
