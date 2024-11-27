@@ -269,18 +269,19 @@ class Controller:
 
 # filter functions
 def name(applicant:Applicant, name:str):
-    return name in applicant.name
+    """Filter by applicant name"""
+    return name.lower() in applicant.name.lower()
 
 def score(applicant:Applicant,name,score):
     for criterion in applicant.scores:
-        if getattr(criterion,"name") == name:
-            return applicant.scores[criterion] == score
+        if getattr(criterion,"name").lower() == name.lower():
+            return applicant.scores[criterion].lower() == score.lower()
 
 def rtw(applicant:Applicant):
     return applicant.right_to_work
 
 def cv(applicant:Applicant,keyword:str):
-    return keyword in applicant.application_text
+    return keyword.lower() in applicant.application_text.lower()
 
 def notes(applicant:Applicant,keyword):
-    return keyword in applicant.notes
+    return keyword.lower() in applicant.notes.lower()
