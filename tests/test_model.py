@@ -123,3 +123,30 @@ def test_load_applicant_from_pdf():
     assert applicant.phone == "+44 07871235436"
     assert applicant.postcode == "UB4 4RW"
     assert applicant.country_region == "United Kingdom, London"
+
+c = [
+        model.Criterion(name="c1", description="d1"),
+        model.Criterion(name="c2", description="d2"),
+        model.Criterion(name="c3", description="d3"),
+    ]
+
+applicant = model.Applicant(name="a1",
+            cv="c1",
+            email="e1",
+            phone="p1",
+            postcode="po1",
+            country_region="r1",
+            right_to_work=True,
+            visa_requirement=None,
+            application_text="ap1",
+            scores={c[0]: SCORES[3],
+                     c[1]: SCORES[2], 
+                     c[2]: SCORES[0]},
+            notes="n1",)
+
+@pytest.mark.parametrize("applicant,criterion,score,expected",[(applicant,"c1","Excellent",True),
+                                                               (applicant,"c4","Moderate",False)])
+def test_score(applicant,criterion,score,expected):
+    result = model.score(applicant,criterion,score)
+    print(result)
+    assert result == expected
