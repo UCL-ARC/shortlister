@@ -221,8 +221,7 @@ class Controller:
             self.selected_applicants = selected_applicants
             self.show_applicants_list_table()
         except Exception as e:
-            print(e)
-            pass
+            print(f"ERROR: {e}")
     
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
