@@ -213,8 +213,7 @@ class Controller:
 
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
-        string = input("Filter:")
-        filter = eval(string)
+        filter = input("Filter:")
 
         print(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
         try:
@@ -269,14 +268,17 @@ class Controller:
                     action[0](k=k)
 
 # filter functions
-def name(name:str):
-    return f"'{name}' in applicant.name"
+def name(applicant:Applicant, name:str):
+    return name in applicant.name
 
-def score(criterion,score):
-    return f"applicant.scores['{criterion}'] == '{score}'"
+def score(applicant,criterion,score):
+    return score in applicant.scores[criterion]
 
-def rtw():
-    return "applicant.right_to_work"
+def rtw(applicant:Applicant):
+    return applicant.right_to_work
 
-def cv(keyword):
-    return f"'{keyword.lower()}' in applicant.application_text"
+def cv(applicant:Applicant,keyword:str):
+    return keyword in applicant.application_text
+
+def notes(applicant:Applicant,keyword):
+    return keyword in applicant.notes
