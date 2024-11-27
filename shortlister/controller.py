@@ -271,8 +271,10 @@ class Controller:
 def name(applicant:Applicant, name:str):
     return name in applicant.name
 
-def score(applicant,criterion,score):
-    return score in applicant.scores[criterion]
+def score(applicant:Applicant,name,score):
+    for criterion in applicant.scores:
+        if getattr(criterion,"name") == name:
+            return applicant.scores[criterion] == score
 
 def rtw(applicant:Applicant):
     return applicant.right_to_work
