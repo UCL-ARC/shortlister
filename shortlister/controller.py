@@ -279,6 +279,8 @@ def score(applicant:Applicant,name,score):
     for criterion in applicant.scores:
         if getattr(criterion,"name").lower() == name.lower():
             return applicant.scores[criterion].lower() == score.lower()
+        else:
+            return False
 
 def rtw(applicant:Applicant):
     """Filter out applicants without the right to work.
