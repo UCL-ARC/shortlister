@@ -14,6 +14,12 @@ from shortlister.model import (
     sort_alpha,
     sort_ascending_score,
     sort_descending_score,
+    name,
+    score,
+    rtw,
+    cv,
+    notes,
+
 )
 
 from readchar import readkey
