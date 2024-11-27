@@ -146,12 +146,14 @@ applicant = model.Applicant(name="a1",
                      c[2]: SCORES[0]},
             notes="n1",)
 
-@pytest.mark.parametrize("applicant,criterion,score,expected",[(applicant,"c1","Excellent",True),
-                                                               (applicant,"C1","Moderate",False),
-                                                               (applicant,"c2","Satisfactory",True),
-                                                               (applicant,"c2","Excellent",False),
-                                                               (applicant,"c1!",3,False),
-                                                               (applicant,"c3","Unsatisfactory",True),
+@pytest.mark.parametrize("applicant,criterion,score,expected",[(applicant,"c1","Excellent",True), # valid input - match
+                                                               (applicant,"C1","Moderate",False), # valid input - no match
+                                                               (applicant,"c2","Satisfactory",True), # valid input - match
+                                                               (applicant,"c2","Excellent",False), # valid input - no match
+                                                               (applicant,"c3","Unsatisfactory",True), # valid input - match
+                                                               (applicant,"c1!",3,False), # bad input - no match
+                                                               (applicant,"c4",None,True), # unmarked score check - match
+                                                               (applicant,"c1",None,False), # unmarked score check - no match
                                                                ])
 def test_score(applicant,criterion,score,expected):
     result = model.score(applicant,criterion,score)
