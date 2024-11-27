@@ -25,7 +25,7 @@ def test_load_criteria():
 @pytest.mark.parametrize(
     "folder_path,expected",
     [
-        (path, ["Emma Jones", "Sarah Thompson"]),
+        (path, ["Emma Jones", "Michael Davis","Sarah Thompson"]),
         (Path("non_existing_folder"), []),
     ],
 )
@@ -74,6 +74,7 @@ def test_save_load():
             country_region="r1",
             right_to_work=True,
             visa_requirement=None,
+            application_text="ap1",
             scores={c[0]: SCORES[3], c[1]: SCORES[2], c[2]: SCORES[0]},
             notes="n1",
         ),
@@ -86,6 +87,7 @@ def test_save_load():
             country_region="r2",
             right_to_work=False,
             visa_requirement="text",
+            application_text="ap2",
             scores={c[0]: SCORES[1], c[1]: SCORES[0]},
             notes="n2",
         ),
@@ -145,8 +147,12 @@ applicant = model.Applicant(name="a1",
             notes="n1",)
 
 @pytest.mark.parametrize("applicant,criterion,score,expected",[(applicant,"c1","Excellent",True),
-                                                               (applicant,"c4","Moderate",False)])
+                                                               (applicant,"C1","Moderate",False),
+                                                               (applicant,"c2","Satisfactory",True),
+                                                               (applicant,"c2","Excellent",False),
+                                                               (applicant,"c1!",3,False),
+                                                               (applicant,"c3","Unsatisfactory",True),
+                                                               ])
 def test_score(applicant,criterion,score,expected):
     result = model.score(applicant,criterion,score)
-    print(result)
     assert result == expected
