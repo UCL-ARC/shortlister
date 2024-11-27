@@ -269,33 +269,3 @@ class Controller:
                 if action is not None:
                     # print(action)
                     action[0](k=k)
-
-# filter functions
-def name(applicant:Applicant, name:str):
-    """Filter by matching applicant name.
-    Example usage:  name(applicant,"Emma")"""
-    return name.lower() in applicant.name.lower()
-
-def score(applicant:Applicant,name,score):
-    """Filter by matching applicant score.
-    Example usage:  score(applicant,"PhD","Excellent")"""
-    for criterion in applicant.scores:
-        if getattr(criterion,"name").lower() == name.lower():
-            return applicant.scores[criterion].lower() == score.lower()
-        else:
-            return False
-
-def rtw(applicant:Applicant):
-    """Filter out applicants without the right to work.
-    Example usage:  rtw(applicant)"""
-    return applicant.right_to_work
-
-def cv(applicant:Applicant,keyword:str):
-    """Filter by matching keyword in applicant's CV.
-    Example usage:  cv(applicant,"Engineer")"""
-    return keyword.lower() in applicant.application_text.lower()
-
-def notes(applicant:Applicant,keyword):
-    """Filter by matching keyword in applicant note
-    Example usage:  notes(applicant,"Engineer")"""
-    return keyword.lower() in applicant.notes.lower()
