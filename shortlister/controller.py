@@ -214,8 +214,7 @@ class Controller:
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
         filter = input("Filter:")
-
-        print(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
+        
         try:
             selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
             self.selected_applicants = selected_applicants
