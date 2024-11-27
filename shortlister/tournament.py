@@ -3,8 +3,10 @@ from random import choice
 def load_data():
     ...
 
-def comparison():
-    ...
+def comparison(list):
+    pair = get_pair(list)
+    winner = choose(pair)
+    save_results(pair,winner)
 
 
 def get_pair(object_list):
@@ -14,14 +16,13 @@ def get_pair(object_list):
 
 def choose(candidates:tuple):
     choice = input()
-    winner = None
     if choice == "r":
         winner = candidates[0]
     elif choice == "l":
         winner = candidates[1]
-    else:
-        pass
-    save_results(candidates,winner)
+
+    return winner
+        
 
 def save_results(pair,winner):
     ...
