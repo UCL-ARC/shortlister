@@ -1,13 +1,11 @@
 from random import choice
 
-def load_data():
-    ...
+RESULT= {}
 
 def comparison(list):
     pair = get_pair(list)
     winner = choose(pair)
     save_results(pair,winner)
-
 
 def get_pair(object_list):
     object_1 = choice(object_list)
@@ -20,9 +18,7 @@ def choose(candidates:tuple):
         winner = candidates[0]
     elif choice == "l":
         winner = candidates[1]
-
     return winner
-        
 
 def save_results(pair,winner):
-    ...
+    RESULT[set(pair)] = winner
