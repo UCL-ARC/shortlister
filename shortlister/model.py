@@ -329,9 +329,7 @@ def score(applicant:Applicant,name,score):
     for criterion in applicant.scores:
         if getattr(criterion,"name").lower() == name.lower():
             return applicant.scores[criterion].lower() == score.lower()
-        else:
-            continue
-    # handles bad inputs
+    # handles no match cases
     return False
 
 def rtw(applicant:Applicant):
