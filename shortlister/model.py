@@ -4,7 +4,7 @@ from typing import Dict, List
 import csv
 import pickle
 import pymupdf
-
+import re
 
 @dataclass(frozen=True)
 class Criterion:
@@ -310,3 +310,40 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
         else:
             abbreviations.append(string)
     return abbreviations
+
+# filter functions
+def name(applicant:Applicant, name:str):
+    """Filter by matching name pattern applicant name.
+    Example usage:  name(applicant,"Emma")"""
+    return re.search(name,applicant.name)
+
+def score(applicant:Applicant,name,score):
+    """Filter by matching applicant score.
+    Example usage:  score(applicant,"PhD","Excellent")"""
+
+    # checks that (criterion) name does not match any criterion in applicant scores
+    if score == None:
+        return name.lower() not in [getattr(criterion,"name").lower() for criterion in applicant.scores]
+    
+    # checks if (criterion) name and score matches the saved applicant scores
+    for criterion in applicant.scores:
+        if getattr(criterion,"name").lower() == name.lower():
+            return applicant.scores[criterion].lower() == score.lower()
+    # handles no match cases
+    return False
+
+def rtw(applicant:Applicant):
+    """Filter out applicants without the right to work.
+    Example usage:  rtw(applicant)"""
+    return applicant.right_to_work
+
+def cv(applicant:Applicant,pattern:str):
+    """Filter by matching regex pattern in applicant's CV.
+    Example usage:  cv(applicant,"Engineer")"""
+    return re.search(pattern, applicant.application_text)
+
+def notes(applicant:Applicant,pattern:str):
+    """Filter by matching regex pattern in applicant note.
+    Example usage:  notes(applicant,"Engineer")
+    """
+    return re.search(pattern, applicant.notes)

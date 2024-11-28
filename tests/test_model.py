@@ -25,7 +25,7 @@ def test_load_criteria():
 @pytest.mark.parametrize(
     "folder_path,expected",
     [
-        (path, ["Emma Jones", "Sarah Thompson"]),
+        (path, ["Emma Jones", "Michael Davis","Sarah Thompson"]),
         (Path("non_existing_folder"), []),
     ],
 )
@@ -74,6 +74,7 @@ def test_save_load():
             country_region="r1",
             right_to_work=True,
             visa_requirement=None,
+            application_text="ap1",
             scores={c[0]: SCORES[3], c[1]: SCORES[2], c[2]: SCORES[0]},
             notes="n1",
         ),
@@ -86,6 +87,7 @@ def test_save_load():
             country_region="r2",
             right_to_work=False,
             visa_requirement="text",
+            application_text="ap2",
             scores={c[0]: SCORES[1], c[1]: SCORES[0]},
             notes="n2",
         ),
@@ -123,3 +125,36 @@ def test_load_applicant_from_pdf():
     assert applicant.phone == "+44 07871235436"
     assert applicant.postcode == "UB4 4RW"
     assert applicant.country_region == "United Kingdom, London"
+
+c = [
+        model.Criterion(name="c1", description="d1"),
+        model.Criterion(name="c2", description="d2"),
+        model.Criterion(name="c3", description="d3"),
+    ]
+
+applicant = model.Applicant(name="a1",
+            cv="c1",
+            email="e1",
+            phone="p1",
+            postcode="po1",
+            country_region="r1",
+            right_to_work=True,
+            visa_requirement=None,
+            application_text="ap1",
+            scores={c[0]: SCORES[3],
+                     c[1]: SCORES[2], 
+                     c[2]: SCORES[0]},
+            notes="n1",)
+
+@pytest.mark.parametrize("applicant,criterion,score,expected",[(applicant,"c1","Excellent",True), # valid input - match
+                                                               (applicant,"C1","Moderate",False), # valid input - no match
+                                                               (applicant,"c2","Satisfactory",True), # valid input - match
+                                                               (applicant,"c2","Excellent",False), # valid input - no match
+                                                               (applicant,"c3","Unsatisfactory",True), # valid input - match
+                                                               (applicant,"c1!",3,False), # bad input - no match
+                                                               (applicant,"c4",None,True), # unmarked score check - match
+                                                               (applicant,"c1",None,False), # unmarked score check - no match
+                                                               ])
+def test_score(applicant,criterion,score,expected):
+    result = model.score(applicant,criterion,score)
+    assert result == expected
