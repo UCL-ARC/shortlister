@@ -4,7 +4,7 @@ from typing import Dict, List
 import csv
 import pickle
 import pymupdf
-
+import re
 
 @dataclass(frozen=True)
 class Criterion:
@@ -313,9 +313,9 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
 
 # filter functions
 def name(applicant:Applicant, name:str):
-    """Filter by matching applicant name.
+    """Filter by matching name pattern applicant name.
     Example usage:  name(applicant,"Emma")"""
-    return name.lower() in applicant.name.lower()
+    return re.search(name,applicant.name)
 
 def score(applicant:Applicant,name,score):
     """Filter by matching applicant score.
@@ -337,12 +337,13 @@ def rtw(applicant:Applicant):
     Example usage:  rtw(applicant)"""
     return applicant.right_to_work
 
-def cv(applicant:Applicant,keyword:str):
-    """Filter by matching keyword in applicant's CV.
+def cv(applicant:Applicant,pattern:str):
+    """Filter by matching regex pattern in applicant's CV.
     Example usage:  cv(applicant,"Engineer")"""
-    return keyword.lower() in applicant.application_text.lower()
+    return re.search(pattern, applicant.application_text)
 
-def notes(applicant:Applicant,keyword):
-    """Filter by matching keyword in applicant note
-    Example usage:  notes(applicant,"Engineer")"""
-    return keyword.lower() in applicant.notes.lower()
+def notes(applicant:Applicant,pattern:str):
+    """Filter by matching regex pattern in applicant note.
+    Example usage:  notes(applicant,"Engineer")
+    """
+    return re.search(pattern, applicant.notes)
