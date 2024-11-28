@@ -229,9 +229,9 @@ class Controller:
         
         if selected_applicants:
             self.selected_applicants = selected_applicants
+            self.show_applicants_list_table()
         else:
             print("No matches found")
-        self.show_applicants_list_table()
     
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
