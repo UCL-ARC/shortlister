@@ -1,6 +1,34 @@
-from shortlister.tournament import get_pair
+from shortlister.tournament import get_pair, rank
 
-mylist = [1,2,3,4,5,6,7]
+mylist = [
+    "apple", "banana", "bike", "bottle", "book", "car", "cat", "chair", 
+    "door", "dog", "laptop", "moon", "mountain", "pen", "phone", "river", 
+    "sun", "table", "tree", "window"
+]
+
+sample_result = {
+    ("apple", "banana"): "apple",
+    ("car", "bike"): "car",
+    ("cat", "dog"): "dog",
+    ("sun", "moon"): "moon",
+    ("table", "chair"): "chair",
+    ("tree", "river"): "tree",
+    ("mountain", "book"): "book",
+    ("pen", "phone"): "pen",
+    ("laptop", "bottle"): "bottle",
+    ("window", "door"): "door",
+    ("apple", "car"): "apple",
+    ("banana", "dog"): "dog",
+    ("bike", "tree"): "bike",
+    ("cat", "moon"): "moon",
+    ("sun", "mountain"): "sun",
+    ("chair", "river"): "river",
+    ("table", "laptop"): "laptop",
+    ("bottle", "window"): "bottle",
+    ("book", "door"): "book",
+    ("pen", "phone"): "phone",
+}
+
 
 def test_get_pair():
     result = get_pair(mylist)
@@ -8,3 +36,8 @@ def test_get_pair():
     for item in result:
         assert result.count(item) == 1
     assert result == expected
+
+
+
+def test_rank():
+    rank(mylist)
