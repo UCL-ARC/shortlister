@@ -6,7 +6,7 @@ def comparison(mylist,result):
     pairs = get_pair(mylist,result)  # returns a list of pairs that can be used to compare
 
     for pair in pairs:
-        print(pair[0],pair[1])
+        print(pair[0].name,pair[1].name)
         winner = choose(pair)
         save_results(pair, winner,result)
     # goes to the next pair
@@ -45,6 +45,7 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
 
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
+    print([object.name for object in ranked])
     return ranked
 
 
