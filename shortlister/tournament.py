@@ -1,23 +1,21 @@
 from itertools import combinations
 from typing import Dict, List
 
-RESULT = {}
-
-
-def comparison(list):
+def comparison(mylist,result):
     """Starts the comparison process"""
-    pairs = get_pair(list)  # returns a list of pairs that can be used to compare
+    pairs = get_pair(mylist,result)  # returns a list of pairs that can be used to compare
 
     for pair in pairs:
+        print(pair[0],pair[1])
         winner = choose(pair)
-        save_results(pair, winner)
+        save_results(pair, winner,result)
     # goes to the next pair
 
 
-def get_pair(object_list):
+def get_pair(mylist,result):
     """Return every unique item pair in the list"""
-    unique_pairs = list(combinations(object_list, 2))
-    pairs_to_compare = [pair for pair in unique_pairs if pair not in RESULT]
+    unique_pairs = frozenset(combinations(mylist, 2)) # tuple pair is dependent on the list order
+    pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
     # then check against compared pairs in RESULTS
     # return not compared pairs
     return pairs_to_compare
@@ -31,20 +29,18 @@ def choose(candidates: tuple):
         winner = candidates[1]
     return winner
 
-
-def save_results(pair, winner):
-    RESULT[tuple(pair)] = winner
-
+def save_results(pair, winner,result):
+    result[pair] = winner
 
 def rank(mylist: List, result: Dict):
     """Rank applicants"""
     # checking from result where the winners should be placed
 
     wins = {}
+    outcome = list(result.values())
 
     for object in mylist:
         # award 1 point for every win
-        outcome = list(result.values())
         score = outcome.count(object)
         wins[object] = score
 
