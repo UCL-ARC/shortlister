@@ -41,7 +41,7 @@ def rank(list:List):
         score = RESULT.values().count(object)
         wins[object] = score
 
-    ranked = list.sort(key=lambda item:wins[item],reverse=True)
+    ranked = sorted(list, key=lambda item: wins[item], reverse=True)
     return ranked
     
 
