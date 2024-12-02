@@ -22,6 +22,7 @@ from shortlister.model import (
 
 )
 
+from tournament import comparison
 from readchar import readkey
 from startfile import startfile
 
@@ -47,6 +48,7 @@ class Controller:
             "f":(self.filter_applicants,"filter"),
             "c":(self.clear_filter,"remove all filter"),
             "t": (self.show_applicants_list_table, "applicant table"),
+            "r":(self.rank_selected_applicants,"rank applicants"),
             "q": (self.show_home_message, "home"),
         }
         self.options_sort = {
@@ -236,6 +238,15 @@ class Controller:
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
         self.show_applicants_list_table()
+
+    def rank_selected_applicants(self,k=None):
+        result = {}
+        comparison(self.selected_applicants,result)
+        
+        # rank applicant start by comparing the pairs
+        # return the rank once all pairs have been compared?
+        # rank could be partial - store it separate to pickle?
+        # 
         
     # Utilities
     def applicant(self, index: int) -> Applicant:
