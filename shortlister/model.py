@@ -14,7 +14,7 @@ class Criterion:
     description: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
@@ -29,6 +29,9 @@ class Applicant:
     application_text: str
     scores: Dict[Criterion, str]
     notes: str
+
+    def __hash__(self):
+        return hash(frozenset(self.scores.items()))
 
 
 @dataclass
