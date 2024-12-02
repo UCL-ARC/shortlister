@@ -22,7 +22,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison
+from tournament import comparison,rank
 from readchar import readkey
 from startfile import startfile
 
@@ -242,7 +242,10 @@ class Controller:
     def rank_selected_applicants(self,k=None):
         result = {}
         comparison(self.selected_applicants,result)
-        
+        for applicants, value in result.items():
+            print(applicants[0].name,applicants[1].name,value.name)
+        print([applicant.name for applicant in rank(self.selected_applicants,result)])
+
         # rank applicant start by comparing the pairs
         # return the rank once all pairs have been compared?
         # rank could be partial - store it separate to pickle?
