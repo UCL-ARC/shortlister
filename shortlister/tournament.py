@@ -1,5 +1,5 @@
 from itertools import combinations
-from typing import List
+from typing import Dict, List
 
 RESULT= {}
 
@@ -31,18 +31,21 @@ def choose(candidates:tuple):
 def save_results(pair,winner):
     RESULT[set(pair)] = winner
 
-def rank(list:List):
+def rank(mylist:List,result:Dict):
     # checking from result where the winners should be placed
-
+    
     wins = {}
     
-    for object in list:
-        #award 1 point for every win
-        score = RESULT.values().count(object)
+    for object in mylist:
+    #award 1 point for every win
+        outcome = list(result.values())
+        score = outcome.count(object)
         wins[object] = score
 
-    ranked = sorted(list, key=lambda item: wins[item], reverse=True)
+    ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
     return ranked
+
+
     
 
     
@@ -52,4 +55,4 @@ def rank(list:List):
 # elo system?
 # total number of applicants
 # imported list is sorted based on score
-# a vs b, b vs c, c vs
+# a vs b, b vs c, c vs d ect.
