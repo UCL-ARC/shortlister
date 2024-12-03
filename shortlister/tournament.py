@@ -1,4 +1,5 @@
 from itertools import combinations
+import pickle
 from typing import Dict, List
 
 def comparison(mylist,result):
@@ -44,13 +45,14 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
     
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
+    save_rank(wins)
     return ranked
 
 
-def save_rank(ranked_list):
-    """Save result to file"""
-    with open("ranked.csv") as file:
-        file.write(ranked_list)
+def save_rank(match_result):
+    """Save dictionary of the comparison result to file"""
+    with open("ranked.pickle","wb") as file:
+        pickle.dump(match_result,file)
 
 
 # Ranking notes:
