@@ -242,15 +242,9 @@ class Controller:
     def rank_selected_applicants(self,k=None):
         result = {}
         comparison(self.selected_applicants,result)
-        for applicants, value in result.items():
-            print(applicants[0].name,applicants[1].name,value.name)
-        print([applicant.name for applicant in rank(self.selected_applicants,result)])
+        ranked_list = rank(self.selected_applicants,result)
+        print([applicant.name for applicant in ranked_list])
 
-        # rank applicant start by comparing the pairs
-        # return the rank once all pairs have been compared?
-        # rank could be partial - store it separate to pickle?
-        # 
-        
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""
