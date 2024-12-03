@@ -45,7 +45,7 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
     
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
-    save_rank(wins)
+    save_rank(result)
     return ranked
 
 
@@ -54,7 +54,11 @@ def save_rank(match_result):
     with open("ranked.pickle","wb") as file:
         pickle.dump(match_result,file)
 
-
+def open_existing_result():
+    with open("ranked.pickle","rb") as file:
+        return pickle.load(file)
+    
+# save the pickle and then 
 # Ranking notes:
 
 # if object1 is winner, then it should be placed above object2 and all other objects that object2 won against ect.

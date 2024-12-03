@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 from typing import List
 
@@ -22,7 +23,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison,rank
+from tournament import comparison,rank,open_existing_result
 from readchar import readkey
 from startfile import startfile
 
@@ -240,7 +241,10 @@ class Controller:
         self.show_applicants_list_table()
 
     def rank_selected_applicants(self,k=None):
-        result = {}
+        if Path("ranked.pickle").exists():
+            result = open_existing_result()
+        else:
+            result = {}
         comparison(self.selected_applicants,result)
         ranked_list = rank(self.selected_applicants,result)
         print([applicant.name for applicant in ranked_list])
