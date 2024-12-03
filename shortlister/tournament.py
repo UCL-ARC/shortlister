@@ -4,9 +4,8 @@ from typing import Dict, List
 def comparison(mylist,result):
     """Starts the comparison process"""
     pairs = get_pair(mylist,result)  # returns a list of pairs that can be used to compare
-
     for pair in pairs:
-        print(pair[0].name,pair[1].name)
+        print(f"{pair[0].name}[l] : {pair[1].name}[r]")
         winner = choose(pair)
         save_results(pair, winner,result)
     # goes to the next pair
@@ -24,9 +23,9 @@ def get_pair(mylist,result):
 def choose(candidates: tuple):
     choice = input()
     if choice == "r":
-        winner = candidates[0]
-    elif choice == "l":
         winner = candidates[1]
+    elif choice == "l":
+        winner = candidates[0]
     return winner
 
 def save_results(pair, winner,result):
@@ -43,9 +42,8 @@ def rank(mylist: List, result: Dict):
         # award 1 point for every win
         score = outcome.count(object)
         wins[object] = score
-
+    
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
-    print([object.name for object in ranked])
     return ranked
 
 
