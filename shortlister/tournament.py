@@ -1,4 +1,5 @@
 from itertools import combinations
+from pathlib import Path
 import pickle
 from typing import Dict, List
 
@@ -20,14 +21,17 @@ def get_pair(mylist,result):
     # return not compared pairs
     return pairs_to_compare
 
-
 def choose(candidates: tuple):
-    choice = input()
-    if choice == "r":
-        winner = candidates[1]
-    elif choice == "l":
-        winner = candidates[0]
-    return winner
+    while True:
+        try: 
+            choice = input()
+            if choice == "r":
+                winner = candidates[1]
+            elif choice == "l":
+                winner = candidates[0]
+            return winner
+        except Exception:
+            print("selection must be r or l")
 
 def save_results(pair, winner,result):
     result[pair] = winner
@@ -48,17 +52,15 @@ def rank(mylist: List, result: Dict):
     save_rank(result)
     return ranked
 
-
-def save_rank(match_result):
+def save_rank(match_result,file:Path):
     """Save dictionary of the comparison result to file"""
-    with open("ranked.pickle","wb") as file:
-        pickle.dump(match_result,file)
+    with open(file,"wb") as pickle_file:
+        pickle.dump(match_result,pickle_file)
 
-def open_existing_result():
-    with open("ranked.pickle","rb") as file:
-        return pickle.load(file)
+def open_existing_result(file:Path):
+    with open(file,"rb") as pickle_file:
+        return pickle.load(pickle_file)
     
-# save the pickle and then 
 # Ranking notes:
 
 # if object1 is winner, then it should be placed above object2 and all other objects that object2 won against ect.
