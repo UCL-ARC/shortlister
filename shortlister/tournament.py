@@ -86,7 +86,7 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
 
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
-    save_rank(result)
+    save_rank(result,"ranked.pickle")
     return ranked
 
 
