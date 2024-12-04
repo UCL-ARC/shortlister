@@ -242,7 +242,7 @@ class Controller:
 
     def rank_selected_applicants(self,k=None):
         if Path("ranked.pickle").exists():
-            result = open_existing_result()
+            result = open_existing_result("ranked.pickle")
         else:
             result = {}
         comparison(self.selected_applicants,result)
