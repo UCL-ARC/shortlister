@@ -118,7 +118,7 @@ def test_save_load():
 
 def test_load_applicant_from_pdf():
     applicant: model.Applicant = model.load_applicants_from_pdf(
-        Path("test_role\Emma_Jones_16743_Candidate_Pack.pdf")
+        Path("test_role/Emma_Jones_16743_Candidate_Pack.pdf")
     )
     assert applicant.name == "Emma Jones"
     assert applicant.email == "emmaj@outlook.com"
