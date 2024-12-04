@@ -12,14 +12,44 @@ def comparison(mylist,result):
         save_results(pair, winner,result)
     # goes to the next pair
 
-
 def get_pair(mylist,result):
     """Return every unique item pair in the list"""
     unique_pairs = frozenset(combinations(mylist, 2)) # tuple pair is dependent on the list order
     pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
     # then check against compared pairs in RESULTS
-    # return not compared pairs
+    # return uncompared pairs
     return pairs_to_compare
+
+
+def get_pair_ver2(mylist,result):
+    # assume list is ranked by score from high to low, start with the highest scored
+    index = 0
+    pair_index = 1
+
+    # get a pair of first object with the object next in the list
+        # make the comparison, and the next pair will be the one that didnt win, and the next index
+
+    while True:
+        pair = frozenset(mylist[index],mylist[pair_index])
+        try: 
+            choice = input("r or l")
+            if choice == "r":
+                winner = pair[1]
+            elif choice == "l":
+                winner = pair[0]
+        except Exception:
+            print("selection must be r or l")
+        if winner == mylist[index]:
+            index += 1
+            pair_index += 1
+            pair = frozenset(mylist[index],mylist[pair_index])
+        elif winner == mylist[index+1]:
+            pair_index += 1
+            pair = frozenset(mylist[index],mylist[pair_index])
+            return pair
+
+
+
 
 def choose(candidates: tuple):
     while True:
