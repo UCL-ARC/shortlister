@@ -14,7 +14,7 @@ class Criterion:
     description: str
 
 
-@dataclass(frozen=True)
+@dataclass()
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
