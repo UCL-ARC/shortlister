@@ -128,7 +128,7 @@ def load_applicants_from_pdf(file: Path):
     info = extract_info_from_text(cleaned)
 
     applicant = Applicant(
-        name=f"{info["First Name"]} {info["Last Name"]}",
+        name=f'{info["First Name"]} {info["Last Name"]}',
         cv=file,
         email=info["Email Address"],
         phone=info["Preferred Phone Number"],
