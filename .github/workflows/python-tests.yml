@@ -2,6 +2,8 @@ name: Python package
 
 on:
   push:
+    branches:
+      - main
   pull_request:
     types:
       - opened
@@ -11,7 +13,6 @@ on:
 
 jobs: 
   build:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
