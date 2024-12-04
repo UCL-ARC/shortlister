@@ -16,6 +16,8 @@ def comparison(mylist, result):
     # goes to the next pair
 
 
+
+
 def get_pair(mylist, result):
     """Return every unique item pair in the list"""
     unique_pairs = frozenset(
@@ -65,8 +67,8 @@ def choose(candidates: tuple):
             elif choice == "l":
                 winner = candidates[0]
             return winner
-        except Exception:
-            print("selection must be r or l")
+        except Exception as e:
+            print(f"{e}:selection must be r or l")
 
 
 def save_results(pair, winner, result):
@@ -89,6 +91,29 @@ def rank(mylist: List, result: Dict):
     save_rank(result,"ranked.pickle")
     return ranked
 
+def bubble_rank(mylist):
+  
+    # outer loop to iterate through the list n times
+    for n in range(len(mylist)-1,0,-1):
+        
+        # to see if any swaps happens
+        swapped = False  
+
+        # comparing 
+        for i in range(n):
+            print((mylist[i],mylist[i+1]))
+            winner = choose((mylist[i],mylist[i+1]))
+            if winner == mylist[i+1]:
+              
+                # swap elements if next index is better
+                mylist[i], mylist[i+1] = mylist[i+1], mylist[i]
+                # mark that a swap has occurred
+                swapped = True
+            print(mylist)
+
+        # end loop if not swap happens during an iteration
+        if not swapped:
+            break
 
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
@@ -108,3 +133,6 @@ def open_existing_result(file: Path):
 # total number of applicants
 # imported list is sorted based on score
 # a vs b, b vs c, c vs d ect.
+
+# bubblerank:
+# addition of new items to already ranked list
