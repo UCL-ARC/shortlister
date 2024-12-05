@@ -4,8 +4,10 @@ import pickle
 from typing import Dict, List
 from readchar import readkey
 
-def comparison(list_to_rank, result):
-    """Starts the comparison process."""
+
+def comparison(list_to_rank, result: Dict):
+    """Starts pair comparison for a list of items.
+    The result parameter could be dictionary with existing results or empty dictionary"""
     # Queue is a list of pair that has not been compared yet
     queue = get_pair(list_to_rank, result)
 
@@ -14,31 +16,35 @@ def comparison(list_to_rank, result):
         # Remove the first pair in the queue and start the comparison
         pair = tuple(queue.pop(0))
         print(f"{pair[0]}[1] : {pair[1]}[2]")
-        # 
+
+        # Limits key choice to "u","1","2" so there is no need for exception checking
         while True:
             choice = readkey()
-            if choice in ["u","l","r"]:
+            if choice in ["u", "1", "2"]:
                 break
         # if the choice is undo
         if choice == "u" and result:
             # take the key and requeue the pair
             pair = result.popitem()[0]
-            queue.insert(0,pair)
+            queue.insert(0, pair)
             continue
-        # anything else is sent to be evaluated by another function
+        # otherwise it can be evaluate by choose() function to get the winner, and the result is saved
         else:
-            winner = choose(choice,pair)
+            winner = choose(choice, pair)
             save_results(frozenset(pair), winner, result)
 
 
 def get_pair(list_to_rank, result):
     """Return every unique item pair in the list."""
-    unique_pairs = combinations(list_to_rank, 2) # tuple pair is dependent on the list order
-    # will skip pairs that are already compared
+    # Pairs are saved as frozenset here so that if order of list_to_rank is changed there won't be duplication pairs since "A","B" will be same as "B"","A"
+    unique_pairs = frozenset(combinations(list_to_rank, 2))
+
+    # Only provide combinations that are compared yet
     pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
     return pairs_to_compare
 
-def choose(choice,candidates: tuple):
+
+def choose(choice, candidates: tuple):
     """Get user choice of which object out of the pair they prefer."""
     if choice == "1":
         winner = candidates[0]
@@ -60,36 +66,31 @@ def rank(list_to_rank: List, result: Dict):
     outcome = list(result.values())
 
     for object in list_to_rank:
-        # award 1 point for every win
+        # Count how many wins an object got
         score = outcome.count(object)
+        # create an entry in wins dictionary of the object and the score it earned
         wins[object] = score
 
+    # sort the list by highest scored to lowest
     ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
-    save_rank(result,"ranked.pickle")
+
+    # save the result to pickle file
+    save_rank(result, "ranked.pickle")
     return ranked
+
 
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
     with open(file, "wb") as pickle_file:
         pickle.dump(match_result, pickle_file)
 
-def get_existing_result(path:Path):
+
+def get_existing_result(path: Path):
+    # Checks if there is existing result data
     if path.exists():
         with open(path, "rb") as pickle_file:
             result = pickle.load(pickle_file)
+    # If not, start a fresh comparison record
     else:
         result = {}
     return result
-    
-
-# Ranking notes:
-
-# if object1 is winner, then it should be placed above object2 and all other objects that object2 won against ect.
-# elo system?
-# total number of applicants
-# imported list is sorted based on score
-# a vs b, b vs c, c vs d ect.
-
-# bubblerank:
-# addition of new items to already ranked list
-# make a copy of the list, and swap items in that list to make the pair using bubble sort method, without changing the original list
