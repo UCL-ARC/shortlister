@@ -12,6 +12,9 @@ def comparison(mylist, result):
     )  # returns a list of pairs that can be used to compare
     for pair in pairs:
         print(f"{pair[0].name}[l] : {pair[1].name}[r]")
+        print(f"{[(criterion.name,score) for criterion,score in pair[0].scores]}   {[(criterion.name,score) for criterion,score in pair[1].scores]}")
+        print(f"{pair[0].notes}   {pair[1].notes}")
+
         winner = choose(pair)
         save_results(pair, winner, result)
     # goes to the next pair
@@ -39,15 +42,7 @@ def get_pair_ver2(mylist, result):
 
     while True:
         pair = frozenset(mylist[index], mylist[pair_index])
-        winner = None
-        try:
-            choice = input("r or l")
-            if choice == "r":
-                winner = pair[1]
-            elif choice == "l":
-                winner = pair[0]
-        except Exception:
-            print("selection must be r or l")
+        winner = choose(pair,result)
         if winner == mylist[index]:
             index += 1
             pair_index += 1
@@ -87,36 +82,35 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
 
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
-    save_rank(result, "ranked.pickle")
+    save_rank(result,"ranked.pickle")
     return ranked
 
-
-def bubble_rank(original_list, result):
+def bubble_rank(original_list,result):
     mylist = deepcopy(original_list)
     # outer loop to iterate through the list n times
-    for n in range(len(mylist) - 1, 0, -1):
+    for n in range(len(mylist)-1,0,-1):
+        
         # to see if any swaps happens
-        swapped = False
+        swapped = False  
 
         # comparing adjacent items
         for i in range(n):
-            print((mylist[i], mylist[i + 1]))
+            print((mylist[i].name,mylist[i+1].name))
             # user chooses which item is better
-            winner = choose((mylist[i], mylist[i + 1]))
+            winner = choose((mylist[i],mylist[i+1]))
 
-            if winner == mylist[i + 1]:
+            if winner == mylist[i+1]:
                 # swap items if next index is better
-                mylist[i], mylist[i + 1] = mylist[i + 1], mylist[i]
+                mylist[i], mylist[i+1] = mylist[i+1], mylist[i]
                 # mark that a swap has occurred
                 swapped = True
-            save_results((mylist[i], mylist[i + 1]), winner, result)
-            print(mylist)
+            save_results(frozenset((mylist[i],mylist[i+1])),winner,result)
+            print([object.name for object in mylist])
 
-        # end loop if not swap happens during an iteration
+        # end loop if no swap happens during an iteration
         if not swapped:
-            print(mylist)
+            print([object.name for object in mylist])
             break
-
 
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
@@ -139,4 +133,4 @@ def open_existing_result(file: Path):
 
 # bubblerank:
 # addition of new items to already ranked list
-# make a copy of the list, and swap items in that list to make the pair
+# make a copy of the list, and swap items in that list to make the pair using bubble sort method, without changing the original list
