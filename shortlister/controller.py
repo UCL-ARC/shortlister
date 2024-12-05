@@ -246,7 +246,7 @@ class Controller:
 
     def rank_selected_applicants(self,k=None):
 
-        result = get_existing_result("ranked.pickle")
+        result = get_existing_result(Path("ranked.pickle"))
             
         comparison(self.selected_applicants,result)
         ranked_list = rank(self.selected_applicants,result)
