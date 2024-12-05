@@ -3,13 +3,14 @@ from itertools import combinations
 from pathlib import Path
 import pickle
 from typing import Dict, List
+from readchar import readkey
 import tabulate
 
 
-def comparison(mylist, result):
+def comparison(list_to_rank, result):
     """Starts the comparison process.(To be changed)"""
     pairs = get_pair(
-        mylist, result
+        list_to_rank, result
     )  # returns a list of pairs that can be used to compare
     for pair in pairs:
         print(f"{pair[0].name}[l] : {pair[1].name}[r]")
@@ -21,19 +22,16 @@ def comparison(mylist, result):
     # goes to the next pair
 
 
-def get_pair(mylist, result):
+def get_pair(list_to_rank, result):
     """Return every unique item pair in the list."""
-    unique_pairs = frozenset(
-        combinations(mylist, 2)
-    )  # tuple pair is dependent on the list order
+    unique_pairs = combinations(list_to_rank, 2) # tuple pair is dependent on the list order
+    # will skip pairs that are already compared
     pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
-    # then check against compared pairs in RESULTS
-    # return uncompared pairs
     return pairs_to_compare
 
 
 # wip
-def get_pair_ver2(mylist, result):
+def get_pair_ver2(list_to_rank, result):
     # assume list is ranked by score from high to low, start with the highest scored
     index = 0
     pair_index = 1
@@ -42,22 +40,22 @@ def get_pair_ver2(mylist, result):
     # make the comparison, and the next pair will be the one that didnt win plus the next index in the list
 
     while True:
-        pair = frozenset(mylist[index], mylist[pair_index])
+        pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
         winner = choose(pair,result)
-        if winner == mylist[index]:
+        if winner == list_to_rank[index]:
             index += 1
             pair_index += 1
-            pair = frozenset(mylist[index], mylist[pair_index])
-        elif winner == mylist[index + 1]:
+            pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
+        elif winner == list_to_rank[index + 1]:
             pair_index += 1
-            pair = frozenset(mylist[index], mylist[pair_index])
+            pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
 
 
 def choose(candidates: tuple):
     """Get user choice of which object out of the pair they prefer."""
     while True:
         try:
-            choice = input()
+            choice = readkey()
             if choice == "r":
                 winner = candidates[1]
             elif choice == "l":
@@ -72,19 +70,19 @@ def save_results(pair, winner, result):
     result[pair] = winner
 
 
-def rank(mylist: List, result: Dict):
+def rank(list_to_rank: List, result: Dict):
     """Rank applicants.(Basic,inaccurate when there are ties)"""
     # checking from result where the winners should be placed
 
     wins = {}
     outcome = list(result.values())
 
-    for object in mylist:
+    for object in list_to_rank:
         # award 1 point for every win
         score = outcome.count(object)
         wins[object] = score
 
-    ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
+    ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
     save_rank(result,"ranked.pickle")
     return ranked
 
@@ -130,7 +128,7 @@ def save_rank(match_result, file: Path):
         pickle.dump(match_result, pickle_file)
 
 
-def open_existing_result(file: Path):
+def get_existing_result(file: Path):
     with open(file, "rb") as pickle_file:
         return pickle.load(pickle_file)
 
