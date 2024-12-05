@@ -23,7 +23,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison,rank,get_existing_result,bubble_rank
+from tournament import comparison,rank,get_existing_result
 from readchar import readkey
 from startfile import startfile
 
@@ -239,10 +239,6 @@ class Controller:
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
         self.show_applicants_list_table()
-
-    def rank_selected_applicant_bubble(self,k=None):
-        results = {}
-        bubble_rank(self.selected_applicants,results)
 
     def rank_selected_applicants(self,k=None):
 

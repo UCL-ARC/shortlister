@@ -1,25 +1,34 @@
-import copy
 from itertools import combinations
 from pathlib import Path
 import pickle
 from typing import Dict, List
 from readchar import readkey
-import tabulate
-
 
 def comparison(list_to_rank, result):
-    """Starts the comparison process.(To be changed)"""
-    pairs = get_pair(
-        list_to_rank, result
-    )  # returns a list of pairs that can be used to compare
-    for pair in pairs:
-        print(f"{pair[0].name}[l] : {pair[1].name}[r]")
-        print(f"{[(criterion.name,score) for criterion,score in pair[0].scores]}   {[(criterion.name,score) for criterion,score in pair[1].scores]}")
-        print(f"{pair[0].notes}   {pair[1].notes}")
+    """Starts the comparison process."""
+    # Queue is a list of pair that has not been compared yet
+    queue = get_pair(list_to_rank, result)
 
-        winner = choose(pair)
-        save_results(frozenset(pair), winner, result)
-    # goes to the next pair
+    # Loop when there are still pairs to be compared in the queue
+    while len(queue) > 0:
+        # Remove the first pair in the queue and start the comparison
+        pair = tuple(queue.pop(0))
+        print(f"{pair[0]}[1] : {pair[1]}[2]")
+        # 
+        while True:
+            choice = readkey()
+            if choice in ["u","l","r"]:
+                break
+        # if the choice is undo
+        if choice == "u" and result:
+            # take the key and requeue the pair
+            pair = result.popitem()[0]
+            queue.insert(0,pair)
+            continue
+        # anything else is sent to be evaluated by another function
+        else:
+            winner = choose(choice,pair)
+            save_results(frozenset(pair), winner, result)
 
 
 def get_pair(list_to_rank, result):
@@ -29,40 +38,13 @@ def get_pair(list_to_rank, result):
     pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
     return pairs_to_compare
 
-
-# wip
-def get_pair_ver2(list_to_rank, result):
-    # assume list is ranked by score from high to low, start with the highest scored
-    index = 0
-    pair_index = 1
-
-    # get a pair of first object with the object next in the list
-    # make the comparison, and the next pair will be the one that didnt win plus the next index in the list
-
-    while True:
-        pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
-        winner = choose(pair,result)
-        if winner == list_to_rank[index]:
-            index += 1
-            pair_index += 1
-            pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
-        elif winner == list_to_rank[index + 1]:
-            pair_index += 1
-            pair = frozenset(list_to_rank[index], list_to_rank[pair_index])
-
-
-def choose(candidates: tuple):
+def choose(choice,candidates: tuple):
     """Get user choice of which object out of the pair they prefer."""
-    while True:
-        try:
-            choice = readkey()
-            if choice == "r":
-                winner = candidates[1]
-            elif choice == "l":
-                winner = candidates[0]
-            return winner
-        except Exception as e:
-            print(f"{e}:selection must be r or l")
+    if choice == "1":
+        winner = candidates[0]
+    elif choice == "2":
+        winner = candidates[1]
+    return winner
 
 
 def save_results(pair, winner, result):
@@ -86,47 +68,10 @@ def rank(list_to_rank: List, result: Dict):
     save_rank(result,"ranked.pickle")
     return ranked
 
-def bubble_rank(original_list,result):
-    """Order applicant in a similar way to bubble sort method."""
-    mylist = copy.copy(original_list)
-    # outer loop to iterate through the list n times
-    for n in range(len(mylist)-1,0,-1):
-        
-        # to see if any swaps happens
-        swapped = False  
-
-        # comparing adjacent items
-        for i in range(n):
-            print((mylist[i].name,mylist[i+1].name))
-
-            # if the pair has been compared before, use the past result
-            if frozenset((mylist[i],mylist[i+1])) in result:
-                winner = result[(mylist[i],mylist[i+1])]
-            else:
-                # if that is not the case, then user chooses which item is better
-                winner = choose((mylist[i],mylist[i+1]))
-
-            if winner == mylist[i+1]:
-                # swap items if next index is better
-                mylist[i], mylist[i+1] = mylist[i+1], mylist[i]
-                # mark that a swap has occurred
-                swapped = True
-            save_results(frozenset((mylist[i],mylist[i+1])),winner,result)
-            print([object.name for object in mylist])
-
-        # end loop if no swap happens during an iteration
-        if not swapped:
-            print([object.name for object in mylist])
-            break
-
-def partial_rank():
-    ...
-
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
     with open(file, "wb") as pickle_file:
         pickle.dump(match_result, pickle_file)
-
 
 def get_existing_result(path:Path):
     if path.exists():
