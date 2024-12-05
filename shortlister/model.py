@@ -31,7 +31,7 @@ class Applicant:
     notes: str
 
     def __hash__(self):
-        return hash(frozenset(self.scores.items()))
+        return hash(self.cv)
 
 
 @dataclass
