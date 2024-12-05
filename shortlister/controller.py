@@ -240,11 +240,11 @@ class Controller:
         self.selected_applicants = self.shortlist.applicants
         self.show_applicants_list_table()
 
-    def rank_selected_applicants(self,k=None):
+    def rank_selected_applicant_bubble(self,k=None):
         results = {}
         bubble_rank(self.selected_applicants,results)
 
-    def rank_selected_applicant(self,k=None):
+    def rank_selected_applicants(self,k=None):
         if Path("ranked.pickle").exists():
             result = open_existing_result("ranked.pickle")
         else:
