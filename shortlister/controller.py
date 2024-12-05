@@ -23,7 +23,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison,rank,open_existing_result,bubble_rank
+from tournament import comparison,rank,get_existing_result,bubble_rank
 from readchar import readkey
 from startfile import startfile
 
@@ -245,10 +245,9 @@ class Controller:
         bubble_rank(self.selected_applicants,results)
 
     def rank_selected_applicants(self,k=None):
-        if Path("ranked.pickle").exists():
-            result = open_existing_result("ranked.pickle")
-        else:
-            result = {}
+
+        result = get_existing_result("ranked.pickle")
+            
         comparison(self.selected_applicants,result)
         ranked_list = rank(self.selected_applicants,result)
         print([applicant.name for applicant in ranked_list])

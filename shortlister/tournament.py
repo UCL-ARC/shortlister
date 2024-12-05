@@ -128,10 +128,14 @@ def save_rank(match_result, file: Path):
         pickle.dump(match_result, pickle_file)
 
 
-def get_existing_result(file: Path):
-    with open(file, "rb") as pickle_file:
-        return pickle.load(pickle_file)
-
+def get_existing_result(path:Path):
+    if path.exists():
+        with open(path, "rb") as pickle_file:
+            result = pickle.load(pickle_file)
+    else:
+        result = {}
+    return result
+    
 
 # Ranking notes:
 
