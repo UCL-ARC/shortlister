@@ -18,7 +18,7 @@ def comparison(list_to_rank, result):
         print(f"{pair[0].notes}   {pair[1].notes}")
 
         winner = choose(pair)
-        save_results(pair, winner, result)
+        save_results(frozenset(pair), winner, result)
     # goes to the next pair
 
 
