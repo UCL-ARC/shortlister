@@ -1,3 +1,4 @@
+from copy import deepcopy
 from itertools import combinations
 from pathlib import Path
 import pickle
@@ -14,8 +15,6 @@ def comparison(mylist, result):
         winner = choose(pair)
         save_results(pair, winner, result)
     # goes to the next pair
-
-
 
 
 def get_pair(mylist, result):
@@ -88,32 +87,36 @@ def rank(mylist: List, result: Dict):
         wins[object] = score
 
     ranked = sorted(mylist, key=lambda item: wins[item], reverse=True)
-    save_rank(result,"ranked.pickle")
+    save_rank(result, "ranked.pickle")
     return ranked
 
-def bubble_rank(mylist):
-  
-    # outer loop to iterate through the list n times
-    for n in range(len(mylist)-1,0,-1):
-        
-        # to see if any swaps happens
-        swapped = False  
 
-        # comparing 
+def bubble_rank(original_list, result):
+    mylist = deepcopy(original_list)
+    # outer loop to iterate through the list n times
+    for n in range(len(mylist) - 1, 0, -1):
+        # to see if any swaps happens
+        swapped = False
+
+        # comparing adjacent items
         for i in range(n):
-            print((mylist[i],mylist[i+1]))
-            winner = choose((mylist[i],mylist[i+1]))
-            if winner == mylist[i+1]:
-              
-                # swap elements if next index is better
-                mylist[i], mylist[i+1] = mylist[i+1], mylist[i]
+            print((mylist[i], mylist[i + 1]))
+            # user chooses which item is better
+            winner = choose((mylist[i], mylist[i + 1]))
+
+            if winner == mylist[i + 1]:
+                # swap items if next index is better
+                mylist[i], mylist[i + 1] = mylist[i + 1], mylist[i]
                 # mark that a swap has occurred
                 swapped = True
+            save_results((mylist[i], mylist[i + 1]), winner, result)
             print(mylist)
 
         # end loop if not swap happens during an iteration
         if not swapped:
+            print(mylist)
             break
+
 
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
@@ -136,3 +139,4 @@ def open_existing_result(file: Path):
 
 # bubblerank:
 # addition of new items to already ranked list
+# make a copy of the list, and swap items in that list to make the pair
