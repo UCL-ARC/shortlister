@@ -96,8 +96,13 @@ def bubble_rank(original_list,result):
         # comparing adjacent items
         for i in range(n):
             print((mylist[i].name,mylist[i+1].name))
-            # user chooses which item is better
-            winner = choose((mylist[i],mylist[i+1]))
+
+            # if the pair has been compared before, use the past result
+            if frozenset((mylist[i],mylist[i+1])) in result:
+                winner = result[frozenset((mylist[i],mylist[i+1]))]
+            else:
+                # if that is not the case, then user chooses which item is better
+                winner = choose((mylist[i],mylist[i+1]))
 
             if winner == mylist[i+1]:
                 # swap items if next index is better
