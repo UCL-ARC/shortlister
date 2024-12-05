@@ -1,12 +1,13 @@
-from copy import deepcopy
+import copy
 from itertools import combinations
 from pathlib import Path
 import pickle
 from typing import Dict, List
+import tabulate
 
 
 def comparison(mylist, result):
-    """Starts the comparison process"""
+    """Starts the comparison process.(To be changed)"""
     pairs = get_pair(
         mylist, result
     )  # returns a list of pairs that can be used to compare
@@ -21,7 +22,7 @@ def comparison(mylist, result):
 
 
 def get_pair(mylist, result):
-    """Return every unique item pair in the list"""
+    """Return every unique item pair in the list."""
     unique_pairs = frozenset(
         combinations(mylist, 2)
     )  # tuple pair is dependent on the list order
@@ -53,6 +54,7 @@ def get_pair_ver2(mylist, result):
 
 
 def choose(candidates: tuple):
+    """Get user choice of which object out of the pair they prefer."""
     while True:
         try:
             choice = input()
@@ -66,11 +68,12 @@ def choose(candidates: tuple):
 
 
 def save_results(pair, winner, result):
+    """Save the pair comparison result to dictionary."""
     result[pair] = winner
 
 
 def rank(mylist: List, result: Dict):
-    """Rank applicants"""
+    """Rank applicants.(Basic,inaccurate when there are ties)"""
     # checking from result where the winners should be placed
 
     wins = {}
@@ -86,7 +89,8 @@ def rank(mylist: List, result: Dict):
     return ranked
 
 def bubble_rank(original_list,result):
-    mylist = deepcopy(original_list)
+    """Order applicant in a similar way to bubble sort method."""
+    mylist = copy.copy(original_list)
     # outer loop to iterate through the list n times
     for n in range(len(mylist)-1,0,-1):
         
@@ -99,7 +103,7 @@ def bubble_rank(original_list,result):
 
             # if the pair has been compared before, use the past result
             if frozenset((mylist[i],mylist[i+1])) in result:
-                winner = result[frozenset((mylist[i],mylist[i+1]))]
+                winner = result[(mylist[i],mylist[i+1])]
             else:
                 # if that is not the case, then user chooses which item is better
                 winner = choose((mylist[i],mylist[i+1]))
@@ -116,6 +120,9 @@ def bubble_rank(original_list,result):
         if not swapped:
             print([object.name for object in mylist])
             break
+
+def partial_rank():
+    ...
 
 def save_rank(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
