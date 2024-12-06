@@ -33,7 +33,7 @@ class Applicant:
     notes: str
 
     def __repr__(self):
-        return f"{self.name}\n{self.scores}\n{self.notes}"
+        return f"Applicant(name={self.name}, scores={self.scores}, notes={self.notes})"
     def __hash__(self):
         return hash(self.cv)
 
