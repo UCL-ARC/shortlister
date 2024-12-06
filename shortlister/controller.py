@@ -259,10 +259,9 @@ class Controller:
         self.show_applicants_list_table()
 
     def rank_selected_applicants(self,k=None):
-
         result = get_existing_result(Path(COMPARISON_RESULT_FILE_NAME))
-            
-        comparison(self.selected_applicants,result)
+        result = comparison(self.selected_applicants, result)
+
         ranked_list = rank(self.selected_applicants,result)
         print([applicant.name for applicant in ranked_list])
 
