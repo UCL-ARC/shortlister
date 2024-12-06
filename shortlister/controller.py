@@ -1,3 +1,4 @@
+import string
 from pathlib import Path
 import sys
 from typing import List
@@ -34,56 +35,58 @@ class Controller:
         self.shortlist = load_shortlist(path)
         self.applicant_index: int = 0
         self.current_criterion = None
-        self.current_applicant_view = "List"
+        self.current_applicant_view = "Table"
         self.selected_applicants = self.shortlist.applicants
         self.view = View()
         self.options = None
+        self.available_keys = string.digits + string.ascii_letters
+
         self.options_home = {
-            "a": (self.show_applicants_list_table, "applicants"),
-            "r": (self.show_role_info, "role"),
-            "q": (self.quit, "quit"),
+            "a": (self.show_applicants_list_table, "APPLICANTS"),
+            "r": (self.show_role_info, "ROLE"),
+            "q": (self.quit, "QUIT"),
         }
         self.options_applicant_list = {
-            "d": (self.show_applicant_details, "applicant"),
-            "S": (self.sort, "sort"),
-            "f":(self.filter_applicants,"filter"),
-            "c":(self.clear_filter,"remove all filter"),
-            "t": (self.show_applicants_list_table, "applicant table"),
-            "r":(self.rank_selected_applicants,"rank applicants"),
-            "q": (self.show_home_message, "home"),
+            "d": (self.show_applicant_details, "CHOOSE APPLICANT"),
+            "s": (self.sort, "SORT"),
+            "f": (self.filter_applicants,"FILTER"),
+            "c": (self.clear_filter,"CLEAR FILTER"),
+            "t": (self.show_applicants_list_table, "SWITCH TABLE"),
+            "r": (self.rank_selected_applicants,"RANK"),
+            "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
-            "a": (self.sort, "alphabetically"),
-            "s": (self.sort, "sort (ascending)"),
-            "d": (self.sort, "sort (descending)"),
+            "a": (self.sort, "ALPHABETICAL"),
+            "s": (self.sort, "SCORE ASCENDING"),
+            "d": (self.sort, "SCORE DESCENDING"),
         }
         self.options_applicant_detail = {
-            "e": (self.edit_score_start, "score"),
-            "N": (self.create_applicant_note, "add note"),
-            "O": (self.open_applicant_pdf, "open CV"),
-            "n": (self.switch_applicant, "next"),
-            "p": (self.switch_applicant, "previous"),
-            "q": (self.show_applicants_list_table, "applicants"),
+            "e": (self.edit_score_start, "SCORE"),
+            "N": (self.create_applicant_note, "NOTE"),
+            "O": (self.open_applicant_pdf, "OPEN CV"),
+            "n": (self.switch_applicant, "NEXT"),
+            "p": (self.switch_applicant, "PREVIOUS"),
+            "q": (self.show_applicants_list_table, "APPLICANTS"),
         }
 
     def quit(self, k=None):
         # if we've activated quit
         if k == "q":
             # ask for confirmation
-            print("Are you sure? (y/n)")
+            print("ARE YOU SURE?")
             print()
             self.options = {
-                "n": (self.quit, "no"),
-                "y": (self.quit, "yes"),
+                "n": (self.quit, "NO"),
+                "y": (self.quit, "YES"),
             }
         elif k == "y":
             # quit confirmed - save and exit
             save_shortlist(self.path, self.shortlist)
-            print("Goodbye.")
+            print("GOODBYE.")
             sys.exit(0)
         else:
             # quit cancelled - back to home
-            print("Quit aborted")
+            print("QUIT CANCELLED")
             print()
             self.options = self.options_home
 
@@ -91,10 +94,6 @@ class Controller:
         """Display an overview of Shortlist."""
         self.view.home_message(self.path, len(self.shortlist.applicants))
         self.options = self.options_home
-
-    def show_criteria(self, k=None):
-        """Display criteria information."""
-        self.view.view_criteria(self.shortlist.role, self.shortlist.role.criteria)
 
     def show_role_info(self, k=None):
         """Display role information."""
@@ -110,7 +109,7 @@ class Controller:
     def show_applicant_details(self, k=None):
         """Select an applicant via input and view details."""
         try:
-            i = int(input("#"))
+            i = int(input("№> "))
             print()
             self.applicant_index = i - 1  # Compensates for index
             self.view_applicant_details()
@@ -140,13 +139,15 @@ class Controller:
 
     def edit_score_start(self, k=None):
         """select a criteria to edit score for."""
-        self.view.view_criteria(self.shortlist.role, self.shortlist.role.criteria)
+
         self.options = {
-            str(i): (self.edit_criteria_select, c.name)
+            str(self.available_keys[i]): (self.edit_criteria_select, c.name)
             for i, c in enumerate(self.shortlist.role.criteria)
         }
+        scored_criteria = [c.name for c in self.applicant(self.applicant_index).scores]
+        self.view.view_criteria(self.options, scored_criteria)
         # press q to quit at next step
-        self.options["q"] = (self.edit_criteria_select,"applicant detail")
+        self.options["q"] = (self.edit_criteria_select, "APPLICANT")
 
     def edit_criteria_select(self, k=None):
         """Select score to change to for previously selected criteria."""
@@ -155,27 +156,27 @@ class Controller:
             self.view_applicant_details()
             self.options = self.options_applicant_detail
         else:
-            self.current_criterion = self.shortlist.role.criteria[int(k)]
+            offset = self.available_keys.index(k)
+            self.current_criterion = self.shortlist.role.criteria[offset]
             self.options = {
                 str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
             }
             self.options["c"] = (
                 self.clear_score,
-                "clear score",
+                "CLEAR",
             )
             # returns to criterion selection
-            self.options["q"] = (self.edit_score_start,"return to criterion selection")
+            self.options["q"] = (self.edit_score_start, "CRITERION")
             self.view.view_selection_options(self.current_criterion,self.options)
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
-        self.view.view_update(self.current_criterion.name, list(RANK_AND_SCORE)[int(k)])
         update_applicant_score(
             self.applicant(self.applicant_index), self.current_criterion, int(k)
         )
 
-        self.view_applicant_details()
         self.options = self.options_applicant_detail
+        self.view_applicant_details()
 
     def switch_applicant(self, k=None):
         """Move to next or previous applicant"""
@@ -194,22 +195,22 @@ class Controller:
 
     def create_applicant_note(self, k=None):
         """Adds a new note to applicant's note section."""
-        note = input("Add note: ")
+        note = input("ADD NOTE> ")
+        print()
         update_applicant_notes(self.applicant(self.applicant_index), note)
         self.view_applicant_details()
 
     def clear_score(self, k=None):
         clear_score(self.applicant(self.applicant_index), self.current_criterion)
-        self.view_applicant_details()
         self.options = self.options_applicant_detail
-
         self.view_applicant_details()
 
     def sort(self, k=None):
         """Activates sort"""
-        if k == "S":  # activate sort
-            print("Sort applicants")
+        if k == "s":  # activate sort
+            print("SORT> ", end="")
             self.options = self.options_sort
+            self.print_options(self.options)
             return
         elif k == "a":
             sort_alpha(self.selected_applicants)
@@ -222,19 +223,23 @@ class Controller:
 
     def filter_applicants(self,k=None):
         """Allows user to filter applicants by with condition statement"""
-        filter = input("Filter:")
+        filter = input("FILTER> ")
 
         try:
             selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
         except Exception as e:
-            print(f"ERROR: {e}")
-            selected_applicants = []
+            print(f"ERROR: {str(e).upper()}")
+            print()
+            return
         
         if selected_applicants:
             self.selected_applicants = selected_applicants
+
+            print()
             self.show_applicants_list_table()
         else:
-            print("No matches found")
+            print("NO MATCHES")
+        print()
     
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
@@ -266,6 +271,13 @@ class Controller:
             total_applicant,
         )
 
+    def print_options(self, options):
+        # show available keypress options
+        for keypress, func in options.items():
+            print(f"{keypress}:{func[1]}  ", end="")
+        print()
+        print()
+
     def run(self):
         """Start the program and accepts keypress as argument for calling other functions."""
         self.view.title()
@@ -276,10 +288,7 @@ class Controller:
             # print(k)
 
             if k == "?":
-                # show available keypress options
-                for keypress, func in self.options.items():
-                    print(f"{keypress}: {func[1]}")
-                print()
+                self.print_options(self.options)
             else:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
