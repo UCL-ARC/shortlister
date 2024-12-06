@@ -23,7 +23,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison,rank,get_existing_result
+from tournament import comparison,rank,get_existing_result,COMPARISON_RESULT_FILE_NAME
 from readchar import readkey
 from startfile import startfile
 
@@ -242,7 +242,7 @@ class Controller:
 
     def rank_selected_applicants(self,k=None):
 
-        result = get_existing_result(Path("ranked.pickle"))
+        result = get_existing_result(Path(COMPARISON_RESULT_FILE_NAME))
             
         comparison(self.selected_applicants,result)
         ranked_list = rank(self.selected_applicants,result)

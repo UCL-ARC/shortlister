@@ -4,6 +4,7 @@ import pickle
 from typing import Dict, List
 from readchar import readkey
 
+COMPARISON_RESULT_FILE_NAME = "ranked.pickle"
 
 def comparison(list_to_rank, result: Dict):
     """Starts pair comparison for a list of items.
@@ -76,7 +77,7 @@ def rank(list_to_rank: List, result: Dict):
     ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
 
     # save the result to pickle file
-    save_rank(result, "ranked.pickle")
+    save_rank(result, Path(COMPARISON_RESULT_FILE_NAME))
     return ranked
 
 
