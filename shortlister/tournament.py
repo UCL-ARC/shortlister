@@ -22,10 +22,10 @@ def comparison(list_to_rank, result: Dict):
         # Limits key choice to "u","1","2" so there is no need for exception checking
         while True:
             choice = readkey()
-            if choice in ["u", "1", "2"]:
+            if choice in ["1", "2"] or choice == "u" and result:
                 break
         # if the choice is undo
-        if choice == "u" and result:
+        if choice == "u":
             # take the key and requeue the pair
             pair = result.popitem()[0]
             queue.insert(0, pair)
