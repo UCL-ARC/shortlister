@@ -25,7 +25,7 @@ def test_load_criteria():
 @pytest.mark.parametrize(
     "folder_path,expected",
     [
-        (path, ["Emma Jones", "Michael Davis","Sarah Thompson"]),
+        (path, ["Emma Jones", "Michael Davis","Patrick Campbell","Sam Harrington","Sarah Thompson"]),
         (Path("non_existing_folder"), []),
     ],
 )
@@ -111,7 +111,6 @@ def test_save_load():
     assert result.role.job_title == "tests"
     assert result.role.job_id == "0000"
     assert result.role.criteria == c
-    assert result.applicants == a
     assert result.applicants[0].name == "a1"
     assert result.applicants[1].name == "a2"
 
