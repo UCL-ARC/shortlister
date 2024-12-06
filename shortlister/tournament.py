@@ -6,7 +6,8 @@ from readchar import readkey
 
 COMPARISON_RESULT_FILE_NAME = "ranked.pickle"
 
-def comparison(list_to_rank, result: Dict=None):
+
+def comparison(list_to_rank, result: Dict = None):
     """Starts pair comparison for a list of items.
     The result parameter could be dictionary with existing results or empty dictionary"""
     print("TOURNAMENT COMPARISON")

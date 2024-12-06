@@ -6,6 +6,7 @@ import pickle
 import pymupdf
 import re
 
+
 @dataclass(frozen=True)
 class Criterion:
     """A property of Role - contained within the attribute criteria(list of Criterion objects)."""
@@ -16,13 +17,14 @@ class Criterion:
     def __repr__(self) -> str:
         return self.name
 
-@dataclass (eq=False)
+
+@dataclass(eq=False)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
-    name: str =field(compare=True) 
-    cv: str # path to cv
-    email: str 
+    name: str = field(compare=True)
+    cv: str  # path to cv
+    email: str
     phone: str
     postcode: str
     country_region: str
@@ -34,6 +36,7 @@ class Applicant:
 
     def __repr__(self):
         return f"Applicant(name={self.name}, scores={self.scores}, notes={self.notes})"
+
     def __hash__(self):
         return hash(self.cv)
 
@@ -110,7 +113,7 @@ def load_applicants(path: Path):
     for file in files:
         applicant = load_applicants_from_pdf(file)
         applicants.append(applicant)
-        
+
     sort_alpha(applicants)
     return applicants
 
@@ -119,10 +122,10 @@ def load_applicants_from_pdf(file: Path):
     """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
     doc = pymupdf.open(file)
 
-    # takes the first page of the pdf (the candidate pack)   
+    # takes the first page of the pdf (the candidate pack)
     cover = doc[0]
     rest_of_pages = doc[1:]
-    # extract the remaining pdf pages 
+    # extract the remaining pdf pages
     remaining_pdf = "\n".join([page.get_text(sort=True) for page in rest_of_pages])
     # extract text in reading order
     text = cover.get_text(sort=True)
@@ -288,7 +291,7 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> L
         applicant_info.append(i)  # applicant number
         # truncate name of applicant if name is more than 15 chars long
         if len(applicant.name) > 15:
-            applicant_info.append(applicant.name[0:15]+"...")
+            applicant_info.append(applicant.name[0:15] + "...")
         else:
             applicant_info.append(applicant.name)
         # append criterion score in the order criteria
@@ -318,38 +321,45 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
             abbreviations.append(string)
     return abbreviations
 
+
 # filter functions
-def name(applicant:Applicant, name:str):
+def name(applicant: Applicant, name: str):
     """Filter by matching name pattern applicant name.
     Example usage:  name(applicant,"Emma")"""
-    return re.search(name,applicant.name)
+    return re.search(name, applicant.name)
 
-def score(applicant:Applicant,name,score):
+
+def score(applicant: Applicant, name, score):
     """Filter by matching applicant score.
     Example usage:  score(applicant,"PhD","Excellent")"""
 
     # checks that (criterion) name does not match any criterion in applicant scores
     if score == None:
-        return name.lower() not in [getattr(criterion,"name").lower() for criterion in applicant.scores]
-    
+        return name.lower() not in [
+            getattr(criterion, "name").lower() for criterion in applicant.scores
+        ]
+
     # checks if (criterion) name and score matches the saved applicant scores
     for criterion in applicant.scores:
-        if getattr(criterion,"name").lower() == name.lower():
+        if getattr(criterion, "name").lower() == name.lower():
             return applicant.scores[criterion].lower() == score.lower()
     # handles no match cases
     return False
 
-def rtw(applicant:Applicant):
+
+def rtw(applicant: Applicant):
     """Filter out applicants without the right to work.
     Example usage:  rtw(applicant)"""
     return applicant.right_to_work
 
-def cv(applicant:Applicant,pattern:str):
+
+def cv(applicant: Applicant, pattern: str):
     """Filter by matching regex pattern in applicant's CV.
     Example usage:  cv(applicant,"Engineer")"""
     return re.search(pattern, applicant.application_text)
 
-def notes(applicant:Applicant,pattern:str):
+
+def notes(applicant: Applicant, pattern: str):
     """Filter by matching regex pattern in applicant note.
     Example usage:  notes(applicant,"Engineer")
     """

@@ -41,9 +41,9 @@ class Controller:
         self.available_keys = string.digits + string.ascii_letters
 
         # add common filtering commands to readline history for easy access
-        readline.add_history("score(applicant, \"criterion-name\", \"score\")")
-        readline.add_history("cv(applicant, \"regex\")")
-        readline.add_history("name(applicant, \"name\"")
+        readline.add_history('score(applicant, "criterion-name", "score")')
+        readline.add_history('cv(applicant, "regex")')
+        readline.add_history('name(applicant, "name"')
 
         self.options_home = {
             "a": (self.show_applicants_list_table, "APPLICANTS"),
@@ -54,10 +54,10 @@ class Controller:
         self.options_applicant_list = {
             "d": (self.show_applicant_details, "CHOOSE APPLICANT"),
             "s": (self.sort, "SORT"),
-            "f": (self.filter_applicants,"FILTER"),
-            "c": (self.clear_filter,"CLEAR FILTER"),
+            "f": (self.filter_applicants, "FILTER"),
+            "c": (self.clear_filter, "CLEAR FILTER"),
             "t": (self.show_applicants_list_table, "SWITCH TABLE"),
-            "r": (self.rank_selected_applicants,"RANK"),
+            "r": (self.rank_selected_applicants, "RANK"),
             "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
@@ -77,7 +77,12 @@ class Controller:
     def repl(self, k=None):
         banner = "VARIABLES:\n  shortlist\n  controller"
         import code
-        code.interact(banner=banner, local={"shortlist": self.shortlist, "controller": self}, exitmsg="EXITING")
+
+        code.interact(
+            banner=banner,
+            local={"shortlist": self.shortlist, "controller": self},
+            exitmsg="EXITING",
+        )
         print()
 
     def quit(self, k=None):
@@ -115,7 +120,9 @@ class Controller:
         if self.current_applicant_view == "List":
             self.view.view_applicants_list(self.selected_applicants)
         else:
-            self.view.view_applicant_table(self.selected_applicants,self.shortlist.role.criteria)
+            self.view.view_applicant_table(
+                self.selected_applicants, self.shortlist.role.criteria
+            )
 
     def show_applicant_details(self, k=None):
         """Select an applicant via input and view details."""
@@ -137,7 +144,7 @@ class Controller:
             # display applicant list if the above doesn't apply
             self.current_applicant_view = "List"
 
-    def show_applicants_list_table(self,k=None):
+    def show_applicants_list_table(self, k=None):
         """Switches view only if already displaying applicants list or table"""
         if k == "t":
             self.switch_applicants_list_table()
@@ -170,7 +177,8 @@ class Controller:
             offset = self.available_keys.index(k)
             self.current_criterion = self.shortlist.role.criteria[offset]
             self.options = {
-                str(i): (self.edit_score_confirm, s) for i, s in enumerate(RANK_AND_SCORE)
+                str(i): (self.edit_score_confirm, s)
+                for i, s in enumerate(RANK_AND_SCORE)
             }
             self.options["c"] = (
                 self.clear_score,
@@ -178,7 +186,7 @@ class Controller:
             )
             # returns to criterion selection
             self.options["q"] = (self.edit_score_start, "CRITERION")
-            self.view.view_selection_options(self.current_criterion,self.options)
+            self.view.view_selection_options(self.current_criterion, self.options)
 
     def edit_score_confirm(self, k=None):
         """Updates the selected score of previously select criteria."""
@@ -232,17 +240,19 @@ class Controller:
 
         self.show_applicants_list_table()
 
-    def filter_applicants(self,k=None):
+    def filter_applicants(self, k=None):
         """Allows user to filter applicants by with condition statement"""
         filter = input("FILTER> ")
 
         try:
-            selected_applicants = eval(f"[applicant for applicant in self.shortlist.applicants if {filter}]")
+            selected_applicants = eval(
+                f"[applicant for applicant in self.shortlist.applicants if {filter}]"
+            )
         except Exception as e:
             print(f"ERROR: {str(e).upper()}")
             print()
             return
-        
+
         if selected_applicants:
             self.selected_applicants = selected_applicants
 
@@ -251,16 +261,18 @@ class Controller:
         else:
             print("NO MATCHES")
         print()
-    
-    def clear_filter(self,k=None):
+
+    def clear_filter(self, k=None):
         self.selected_applicants = self.shortlist.applicants
         self.show_applicants_list_table()
 
-    def rank_selected_applicants(self,k=None):
-        result = tournament.get_existing_result(Path(tournament.COMPARISON_RESULT_FILE_NAME))
+    def rank_selected_applicants(self, k=None):
+        result = tournament.get_existing_result(
+            Path(tournament.COMPARISON_RESULT_FILE_NAME)
+        )
         result = tournament.comparison(self.selected_applicants, result)
 
-        ranked_list = tournament.rank(self.selected_applicants,result)
+        ranked_list = tournament.rank(self.selected_applicants, result)
         print("RESULT:", [applicant.name for applicant in ranked_list])
         print()
 

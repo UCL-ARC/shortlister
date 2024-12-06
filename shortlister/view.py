@@ -62,7 +62,7 @@ class View:
 
         print()
 
-    def view_applicants_list(self, applicants:List[Applicant]):
+    def view_applicants_list(self, applicants: List[Applicant]):
         """Prints list of all applicants to console."""
         for index, applicant in enumerate(applicants):
             print(f"{index+1}. {applicant.name}")
@@ -81,8 +81,15 @@ class View:
         applicant_data = applicant_table(applicants, criteria)
 
         # displays table
-        # left align only for applicant names and center aligns all other strings(rest of applicant scores) 
-        pydoc.pager(tabulate(applicant_data, headers=header,stralign="center",colalign=("center","left")))
+        # left align only for applicant names and center aligns all other strings(rest of applicant scores)
+        pydoc.pager(
+            tabulate(
+                applicant_data,
+                headers=header,
+                stralign="center",
+                colalign=("center", "left"),
+            )
+        )
         print()
         print()
 
@@ -96,11 +103,7 @@ class View:
         print()
         print()
 
-    def view_selection_options(
-        self,
-        criterion: Criterion,
-        options: Dict[str,tuple]
-    ):
+    def view_selection_options(self, criterion: Criterion, options: Dict[str, tuple]):
         """Prints list of avaliable scoring option for selected criterion to console."""
         # prints all of the available options
         for index, action in options.items():
