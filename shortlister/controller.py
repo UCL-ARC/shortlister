@@ -23,7 +23,7 @@ from shortlister.model import (
 
 )
 
-from tournament import comparison,rank,get_existing_result,COMPARISON_RESULT_FILE_NAME
+from shortlister.tournament import comparison,rank,get_existing_result,COMPARISON_RESULT_FILE_NAME
 from readchar import readkey
 from startfile import startfile
 
