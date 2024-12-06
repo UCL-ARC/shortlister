@@ -29,7 +29,6 @@ def comparison(list_to_rank, result: Dict):
             # take the key and requeue the pair
             pair = result.popitem()[0]
             queue.insert(0, pair)
-            continue
         # otherwise it can be evaluate by choose() function to get the winner, and the result is saved
         else:
             winner = choose(choice, pair)
