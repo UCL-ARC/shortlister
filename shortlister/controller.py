@@ -44,6 +44,7 @@ class Controller:
         self.options_home = {
             "a": (self.show_applicants_list_table, "APPLICANTS"),
             "r": (self.show_role_info, "ROLE"),
+            "R": (self.repl, "REPL"),
             "q": (self.quit, "QUIT"),
         }
         self.options_applicant_list = {
@@ -68,6 +69,12 @@ class Controller:
             "p": (self.switch_applicant, "PREVIOUS"),
             "q": (self.show_applicants_list_table, "APPLICANTS"),
         }
+
+    def repl(self, k=None):
+        banner = "VARIABLES:\n  shortlist\n  controller"
+        import code
+        code.interact(banner=banner, local={"shortlist": self.shortlist, "controller": self}, exitmsg="EXITING")
+        print()
 
     def quit(self, k=None):
         # if we've activated quit
@@ -285,7 +292,6 @@ class Controller:
 
         while True:
             k = readkey()
-            # print(k)
 
             if k == "?":
                 self.print_options(self.options)
@@ -293,5 +299,4 @@ class Controller:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
                 if action is not None:
-                    # print(action)
                     action[0](k=k)
