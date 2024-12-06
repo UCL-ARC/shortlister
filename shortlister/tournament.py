@@ -70,7 +70,7 @@ def choose(choice, candidates: tuple):
     """Get user choice of which object out of the pair they prefer."""
     if choice == "1":
         winner = candidates[0]
-    elif choice == "2":
+    else:
         winner = candidates[1]
     return winner
 

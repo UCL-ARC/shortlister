@@ -2,7 +2,6 @@ import string
 from pathlib import Path
 import readline
 import sys
-from typing import List
 
 from shortlister.view import View
 from shortlister.model import (
@@ -22,10 +21,9 @@ from shortlister.model import (
     rtw,
     cv,
     notes,
-
 )
 
-from shortlister.tournament import comparison,rank,get_existing_result,COMPARISON_RESULT_FILE_NAME
+import shortlister.tournament as tournament
 from readchar import readkey
 from startfile import startfile
 
@@ -87,7 +85,6 @@ class Controller:
         if k == "q":
             # ask for confirmation
             print("ARE YOU SURE?")
-            print()
             self.options = {
                 "n": (self.quit, "NO"),
                 "y": (self.quit, "YES"),
@@ -96,6 +93,7 @@ class Controller:
             # quit confirmed - save and exit
             save_shortlist(self.path, self.shortlist)
             print("GOODBYE")
+            print()
             sys.exit(0)
         else:
             # quit cancelled - back to home
@@ -259,11 +257,12 @@ class Controller:
         self.show_applicants_list_table()
 
     def rank_selected_applicants(self,k=None):
-        result = get_existing_result(Path(COMPARISON_RESULT_FILE_NAME))
-        result = comparison(self.selected_applicants, result)
+        result = tournament.get_existing_result(Path(tournament.COMPARISON_RESULT_FILE_NAME))
+        result = tournament.comparison(self.selected_applicants, result)
 
-        ranked_list = rank(self.selected_applicants,result)
-        print([applicant.name for applicant in ranked_list])
+        ranked_list = tournament.rank(self.selected_applicants,result)
+        print("RESULT:", [applicant.name for applicant in ranked_list])
+        print()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
