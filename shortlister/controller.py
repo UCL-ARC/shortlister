@@ -89,7 +89,7 @@ class Controller:
         elif k == "y":
             # quit confirmed - save and exit
             save_shortlist(self.path, self.shortlist)
-            print("GOODBYE.")
+            print("GOODBYE")
             sys.exit(0)
         else:
             # quit cancelled - back to home
@@ -214,7 +214,7 @@ class Controller:
 
     def sort(self, k=None):
         """Activates sort"""
-        if k == "s":  # activate sort
+        if self.options != self.options_sort and k == "s":  # activate sort
             print("SORT> ", end="")
             self.options = self.options_sort
             self.print_options(self.options)
