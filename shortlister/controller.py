@@ -1,5 +1,6 @@
 import string
 from pathlib import Path
+import readline
 import sys
 from typing import List
 
@@ -40,6 +41,11 @@ class Controller:
         self.view = View()
         self.options = None
         self.available_keys = string.digits + string.ascii_letters
+
+        # add common filtering commands to readline history for easy access
+        readline.add_history("score(applicant, \"criterion-name\", \"score\")")
+        readline.add_history("cv(applicant, \"regex\")")
+        readline.add_history("name(applicant, \"name\"")
 
         self.options_home = {
             "a": (self.show_applicants_list_table, "APPLICANTS"),
