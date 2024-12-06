@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 import csv
@@ -13,14 +13,16 @@ class Criterion:
     name: str
     description: str
 
+    def __repr__(self) -> str:
+        return self.name
 
-@dataclass
+@dataclass (eq=False)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
-    name: str
-    cv: str  # path to cv
-    email: str
+    name: str =field(compare=True) 
+    cv: str # path to cv
+    email: str 
     phone: str
     postcode: str
     country_region: str
@@ -29,6 +31,11 @@ class Applicant:
     application_text: str
     scores: Dict[Criterion, str]
     notes: str
+
+    def __repr__(self):
+        return f"Applicant(name={self.name}, scores={self.scores}, notes={self.notes})"
+    def __hash__(self):
+        return hash(self.cv)
 
 
 @dataclass

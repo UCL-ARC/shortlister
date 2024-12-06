@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 from typing import List
 
@@ -22,6 +23,7 @@ from shortlister.model import (
 
 )
 
+from tournament import comparison,rank,get_existing_result,COMPARISON_RESULT_FILE_NAME
 from readchar import readkey
 from startfile import startfile
 
@@ -47,6 +49,7 @@ class Controller:
             "f":(self.filter_applicants,"filter"),
             "c":(self.clear_filter,"remove all filter"),
             "t": (self.show_applicants_list_table, "applicant table"),
+            "r":(self.rank_selected_applicants,"rank applicants"),
             "q": (self.show_home_message, "home"),
         }
         self.options_sort = {
@@ -236,7 +239,15 @@ class Controller:
     def clear_filter(self,k=None):
         self.selected_applicants = self.shortlist.applicants
         self.show_applicants_list_table()
-        
+
+    def rank_selected_applicants(self,k=None):
+
+        result = get_existing_result(Path(COMPARISON_RESULT_FILE_NAME))
+            
+        comparison(self.selected_applicants,result)
+        ranked_list = rank(self.selected_applicants,result)
+        print([applicant.name for applicant in ranked_list])
+
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""

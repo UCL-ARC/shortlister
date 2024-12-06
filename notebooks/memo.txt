@@ -1,0 +1,4 @@
+update the comparison view to display more than names
+a way to save past results - done
+a way to check if past pairs have been ranked already - done
+more tests

@@ -6,3 +6,4 @@ tests/shortlist.pickle
 .pytest_cache/
 .ruff_cache/
 shortlister/*.ipynb
+ranked.pickle
