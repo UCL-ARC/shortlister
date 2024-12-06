@@ -48,7 +48,8 @@ sample_result = {
 
 
 def test_get_pair():
-    result = get_pair(mylist)
+    no_existing_comparison_data = {}
+    result = get_pair(mylist, no_existing_comparison_data)
     for item in result:
         assert result.count(item) == 1
 
