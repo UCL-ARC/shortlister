@@ -38,10 +38,10 @@ def comparison(list_to_rank, result: Dict):
 def get_pair(list_to_rank, result):
     """Return every unique item pair in the list."""
     # Pairs are saved as frozenset here so that if order of list_to_rank is changed there won't be duplication pairs since "A","B" will be same as "B"","A"
-    unique_pairs = combinations(list_to_rank, 2)
+    unique_pairs = [frozenset(pair) for pair in combinations(list_to_rank, 2)]
 
-    # Only provide combinations that are compared yet
-    pairs_to_compare = [pair for pair in unique_pairs if frozenset(pair) not in result]
+    # Only provide combinations that are not compared yet
+    pairs_to_compare = [pair for pair in unique_pairs if pair not in result]
     return pairs_to_compare
 
 
