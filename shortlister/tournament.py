@@ -15,7 +15,8 @@ def comparison(list_to_rank, result: Dict):
     while len(queue) > 0:
         # Remove the first pair in the queue and start the comparison
         pair = tuple(queue.pop(0))
-        print(f"{pair[0]}[1] : {pair[1]}[2]")
+        print(f"1. {pair[0]}")
+        print(f"2. {pair[1]}")
 
         # Limits key choice to "u","1","2" so there is no need for exception checking
         while True:
