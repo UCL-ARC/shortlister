@@ -1,4 +1,5 @@
 import string
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 import readline
@@ -32,13 +33,15 @@ from startfile import startfile  # noqa - universal-startfile
 class ViewWidth(Enum):
     NARROW, WIDE = 1, 2
 
+@dataclass
 class Context:
-    applicants: list[Applicant]
-    applicant_index: int
-    criterion: Criterion
-    table_view: ViewWidth
+    applicants: list[Applicant]  # selected applicants
+    applicant_index: int  # selected applicant
+    criterion: Criterion | None  # selected criterion to score
+    table_view: ViewWidth  # selected applicants' table view
 
 class Controller:
+
     def __init__(self, path):
         self.path = path
         self.shortlist, msg = load_shortlist(path)
@@ -50,11 +53,12 @@ class Controller:
         self.available_keys = string.digits + string.ascii_letters
 
         # application context
-        self.ctx = Context()
-        self.ctx.applicants = self.shortlist.applicants
-        self.ctx.applicant_index: int = 0
-        self.ctx.criterion = None
-        self.ctx.table_view = ViewWidth.WIDE
+        self.ctx = Context(
+            self.shortlist.applicants,
+            0,
+            None,
+            ViewWidth.WIDE
+        )
 
         # add common filtering commands to readline history for easy access
         readline.add_history('score(applicant, "criterion-name", "score")')
