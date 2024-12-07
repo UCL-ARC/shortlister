@@ -6,6 +6,8 @@ import pickle
 import pymupdf
 import re
 
+from tabulate import tabulate
+
 
 @dataclass(frozen=True)
 class Criterion:
@@ -275,30 +277,51 @@ def extract_info_from_text(lines: List[str]):
 # creating tabular data
 
 
-def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> List:
+def applicant_table(applicants: List[Applicant], criteria: List[Criterion], table_type="wide") -> (List, List):
     """Generates applicant and score data for summary table"""
     # tab is a list of lists:
     # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
     tab = []
+
+    # creates heading
+    header = ["№", "NAME", "Σ"]
+    if table_type == "wide":
+        criteria_headings = abbreviate([criterion.name for criterion in criteria])
+        header = header + criteria_headings
+    else:
+        header = header + ["SCORES"]
+
     i = 0  # sets the applicant number
     for applicant in applicants:
         i += 1
-        applicant_info = []  # list with correct information format for each row
-        applicant_info.append(i)  # applicant number
-        # truncate name of applicant if name is more than 15 chars long
+        row = [i]
         if len(applicant.name) > 15:
-            applicant_info.append(applicant.name[0:15] + "...")
+            row.append(applicant.name[0:15] + "...")
         else:
-            applicant_info.append(applicant.name)
-        # append criterion score in the order criteria
+            row.append(applicant.name)
+
+        row.append(total_score(applicant.scores))
+
+        scores = []
         for criterion in criteria:
             if criterion in applicant.scores:
-                applicant_info.append(applicant.scores.get(criterion)[0])
+                scores.append(applicant.scores.get(criterion)[0])
             else:
-                # placeholder for unmarked criterion
-                applicant_info.append("·")
-        tab.append(applicant_info)
-    return tab
+                scores.append("·")
+
+        if table_type == "wide":
+            row += scores
+        else:
+            row += ["".join(scores)]
+        tab.append(row)
+
+    table = tabulate(
+        tab,
+        headers=header,
+        stralign="center",
+        colalign=("center", "left"),
+    )
+    return table
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:

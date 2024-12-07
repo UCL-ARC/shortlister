@@ -68,28 +68,9 @@ class View:
             print(f"{index+1}. {applicant.name}")
         print()
 
-    def view_applicant_table(
-        self, applicants: List[Applicant], criteria: List[Criterion]
-    ):
+    def view_applicant_table(self, table: str):
         """Prints a table summary of applicants and their scores"""
-
-        # creates heading
-        criteria_headings = abbreviate([criterion.name for criterion in criteria])
-        header = ["№", "NAME"] + criteria_headings
-
-        # creates applicant and score data
-        applicant_data = applicant_table(applicants, criteria)
-
-        # displays table
-        # left align only for applicant names and center aligns all other strings(rest of applicant scores)
-        pydoc.pager(
-            tabulate(
-                applicant_data,
-                headers=header,
-                stralign="center",
-                colalign=("center", "left"),
-            )
-        )
+        pydoc.pager(table)
         print()
         print()
 

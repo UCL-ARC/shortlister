@@ -17,11 +17,11 @@ from shortlister.model import (
     sort_alpha,
     sort_ascending_score,
     sort_descending_score,
-    name,    # noqa
-    score,   # noqa
-    rtw,     # noqa
-    cv,      # noqa
-    notes,   # noqa
+    name,  # noqa
+    score,  # noqa
+    rtw,  # noqa
+    cv,  # noqa
+    notes, applicant_table, Criterion,  # noqa
 )
 
 import shortlister.tournament as tournament
@@ -29,8 +29,14 @@ from readchar import readkey
 from startfile import startfile  # noqa - universal-startfile
 
 
-class ApplicantsView(Enum):
-    LIST, TABLE = 1, 2
+class ViewWidth(Enum):
+    NARROW, WIDE = 1, 2
+
+class Context:
+    applicants: list[Applicant]
+    applicant_index: int
+    criterion: Criterion
+    table_view: ViewWidth
 
 class Controller:
     def __init__(self, path):
@@ -44,10 +50,11 @@ class Controller:
         self.available_keys = string.digits + string.ascii_letters
 
         # application context
-        self.selected_applicants = self.shortlist.applicants
-        self.selected_applicant_index: int = 0
-        self.selected_criterion = None
-        self.selected_applicant_view = ApplicantsView.TABLE
+        self.ctx = Context()
+        self.ctx.applicants = self.shortlist.applicants
+        self.ctx.applicant_index: int = 0
+        self.ctx.criterion = None
+        self.ctx.table_view = ViewWidth.WIDE
 
         # add common filtering commands to readline history for easy access
         readline.add_history('score(applicant, "criterion-name", "score")')
@@ -55,17 +62,17 @@ class Controller:
         readline.add_history('name(applicant, "name"')
 
         self.options_home = {
-            "a": (self.show_applicants_list_table, "APPLICANTS"),
+            "a": (self.show_applicants_table, "APPLICANTS"),
             "r": (self.show_role_info, "ROLE"),
             "R": (self.repl, "REPL"),
             "q": (self.quit, "QUIT"),
         }
-        self.options_applicant_list = {
+        self.options_applicant_table = {
             "d": (self.show_applicant_details, "CHOOSE APPLICANT"),
             "s": (self.sort, "SORT"),
             "f": (self.filter_applicants, "FILTER"),
             "c": (self.clear_filter, "CLEAR FILTER"),
-            "t": (self.show_applicants_list_table, "SWITCH TABLE"),
+            "t": (self.show_applicants_table, "SWITCH TABLE"),
             "r": (self.rank_selected_applicants, "RANK"),
             "q": (self.show_home_message, "HOME"),
         }
@@ -80,7 +87,7 @@ class Controller:
             "O": (self.open_applicant_pdf, "OPEN CV"),
             "n": (self.switch_applicant, "NEXT"),
             "p": (self.switch_applicant, "PREVIOUS"),
-            "q": (self.show_applicants_list_table, "APPLICANTS"),
+            "q": (self.show_applicants_table, "APPLICANTS"),
         }
 
     def repl(self, k=None):
@@ -124,45 +131,39 @@ class Controller:
         """Display role information."""
         self.view.view_role(self.shortlist.role)
 
-    def show_applicants(self):
-        """Show applicants in either list or table view."""
-        if self.selected_applicant_view == ApplicantsView.LIST:
-            self.view.view_applicants_list(self.selected_applicants)
-        else:
-            self.view.view_applicant_table(
-                self.selected_applicants, self.shortlist.role.criteria
-            )
-
     def show_applicant_details(self, k=None):
         """Select an applicant via input and view details."""
         try:
             i = int(input("№> "))
             print()
-            self.selected_applicant_index = i - 1  # Compensates for index
+            self.ctx.applicant_index = i - 1  # Compensates for index
             self.view_applicant_details()
             self.options = self.options_applicant_detail
         except (ValueError, IndexError):
             pass
 
-    def switch_applicants_list_table(self):
-        """Switch between list and table view of applicants"""
-        if self.selected_applicant_view == ApplicantsView.LIST:
-            # switch to table view if already displaying applicant list
-            self.selected_applicant_view = ApplicantsView.TABLE
-        else:
-            # display applicant list if the above doesn't apply
-            self.selected_applicant_view = ApplicantsView.LIST
-
-    def show_applicants_list_table(self, k=None):
+    def show_applicants_table(self, k=None):
         """Switches view only if already displaying applicants list or table"""
+
+        # toggle the table view width, if requested
         if k == "t":
-            self.switch_applicants_list_table()
-        self.show_applicants()
-        self.options = self.options_applicant_list
+            if self.ctx.table_view == ViewWidth.WIDE:
+                self.ctx.table_view = ViewWidth.NARROW
+            else:
+                self.ctx.table_view = ViewWidth.WIDE
+
+        table = applicant_table(
+            self.ctx.applicants,
+            self.shortlist.role.criteria,
+            "wide" if self.ctx.table_view == ViewWidth.WIDE else "narrow"
+        )
+
+        self.view.view_applicant_table(table)
+        self.options = self.options_applicant_table
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
-        startfile(self.applicant(self.selected_applicant_index).cv)
+        startfile(self.applicant(self.ctx.applicant_index).cv)
 
     def score_applicant_step_1(self, k=None):
         """Select a criteria to edit score for."""
@@ -170,7 +171,7 @@ class Controller:
             str(self.available_keys[i]): (self.score_applicant_step_2, c.name)
             for i, c in enumerate(self.shortlist.role.criteria)
         }
-        scored_criteria = [c.name for c in self.applicant(self.selected_applicant_index).scores]
+        scored_criteria = [c.name for c in self.applicant(self.ctx.applicant_index).scores]
         self.view.view_criteria(self.options, scored_criteria)
         # press q to quit at next step
         self.options["q"] = (self.score_applicant_step_2, "APPLICANT")
@@ -183,7 +184,7 @@ class Controller:
             self.options = self.options_applicant_detail
         else:
             offset = self.available_keys.index(k)
-            self.selected_criterion = self.shortlist.role.criteria[offset]
+            self.ctx.criterion = self.shortlist.role.criteria[offset]
             self.options = {
                 str(i): (self.score_applicant_step_3, s)
                 for i, s in enumerate(RANK_AND_SCORE)
@@ -194,15 +195,15 @@ class Controller:
             )
             # returns to criterion selection
             self.options["q"] = (self.score_applicant_step_1, "CRITERION")
-            self.view.view_selection_options(self.selected_criterion, self.options)
+            self.view.view_selection_options(self.ctx.criterion, self.options)
 
     def score_applicant_step_3(self, k=None):
         """Updates the selected score of previously select criteria."""
         if k == "c":
-            clear_score(self.applicant(self.selected_applicant_index), self.selected_criterion)
+            clear_score(self.applicant(self.ctx.applicant_index), self.ctx.criterion)
         else:
             update_applicant_score(
-                self.applicant(self.selected_applicant_index), self.selected_criterion, int(k)
+                self.applicant(self.ctx.applicant_index), self.ctx.criterion, int(k)
             )
 
         self.options = self.options_applicant_detail
@@ -212,11 +213,11 @@ class Controller:
         """Move to next or previous applicant"""
 
         # if next applicant, and not already at last
-        if k == "n" and (self.selected_applicant_index < len(self.selected_applicants) - 1):
-            self.selected_applicant_index += 1
+        if k == "n" and (self.ctx.applicant_index < len(self.ctx.applicants) - 1):
+            self.ctx.applicant_index += 1
         # if previous and not already at first
-        elif k == "p" and (self.selected_applicant_index > 0):
-            self.selected_applicant_index -= 1
+        elif k == "p" and (self.ctx.applicant_index > 0):
+            self.ctx.applicant_index -= 1
         # otherwise do nothing
         else:
             return
@@ -227,7 +228,7 @@ class Controller:
         """Adds a new note to applicant's note section."""
         note = input("ADD NOTE> ")
         print()
-        update_applicant_notes(self.applicant(self.selected_applicant_index), note)
+        update_applicant_notes(self.applicant(self.ctx.applicant_index), note)
         self.view_applicant_details()
 
     def sort(self, k=None):
@@ -238,13 +239,13 @@ class Controller:
             self.print_options(self.options)
             return
         elif k == "a":
-            sort_alpha(self.selected_applicants)
+            sort_alpha(self.ctx.applicants)
         elif k == "s":
-            sort_ascending_score(self.selected_applicants)
+            sort_ascending_score(self.ctx.applicants)
         elif k == "d":
-            sort_descending_score(self.selected_applicants)
+            sort_descending_score(self.ctx.applicants)
 
-        self.show_applicants_list_table()
+        self.show_applicants_table()
 
     def filter_applicants(self, k=None):
         """Allows user to filter applicants by with condition statement"""
@@ -260,38 +261,38 @@ class Controller:
             return
 
         if selected_applicants:
-            self.selected_applicants = selected_applicants
+            self.ctx.applicants = selected_applicants
 
             print()
-            self.show_applicants_list_table()
+            self.show_applicants_table()
         else:
             print("NO MATCHES")
         print()
 
     def clear_filter(self, k=None):
-        self.selected_applicants = self.shortlist.applicants
-        self.show_applicants_list_table()
+        self.ctx.applicants = self.shortlist.applicants
+        self.show_applicants_table()
 
     def rank_selected_applicants(self, k=None):
         result = tournament.get_existing_result(
             Path(tournament.COMPARISON_RESULT_FILE_NAME)
         )
-        result = tournament.comparison(self.selected_applicants, result)
+        result = tournament.comparison(self.ctx.applicants, result)
 
-        ranked_list = tournament.rank(self.selected_applicants, result)
+        ranked_list = tournament.rank(self.ctx.applicants, result)
         print("RESULT:", [applicant.name for applicant in ranked_list])
         print()
 
     # Utilities
     def applicant(self, index: int) -> Applicant:
         """Returns applicant using its index in applicants."""
-        return self.selected_applicants[index]
+        return self.ctx.applicants[index]
 
     def view_applicant_details(self):
-        applicant: Applicant = self.applicant(self.selected_applicant_index)
+        applicant: Applicant = self.applicant(self.ctx.applicant_index)
         total = total_score(applicant.scores)
-        applicant_number = self.selected_applicant_index + 1
-        total_applicant = len(self.selected_applicants)
+        applicant_number = self.ctx.applicant_index + 1
+        total_applicant = len(self.ctx.applicants)
         self.view.view_applicant_details(
             applicant,
             self.shortlist.role.criteria,
