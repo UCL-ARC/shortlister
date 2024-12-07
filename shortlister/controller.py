@@ -17,16 +17,16 @@ from shortlister.model import (
     sort_alpha,
     sort_ascending_score,
     sort_descending_score,
-    name,
-    score,
-    rtw,
-    cv,
-    notes,
+    name,    # noqa
+    score,   # noqa
+    rtw,     # noqa
+    cv,      # noqa
+    notes,   # noqa
 )
 
 import shortlister.tournament as tournament
 from readchar import readkey
-from startfile import startfile
+from startfile import startfile  # noqa - universal-startfile
 
 
 class ApplicantsView(Enum):
@@ -247,11 +247,11 @@ class Controller:
 
     def filter_applicants(self, k=None):
         """Allows user to filter applicants by with condition statement"""
-        filter = input("FILTER> ")
+        condition = input("FILTER> ")
 
         try:
             selected_applicants = eval(
-                f"[applicant for applicant in self.shortlist.applicants if {filter}]"
+                f"[applicant for applicant in self.shortlist.applicants if {condition}]"
             )
         except Exception as e:
             print(f"ERROR: {str(e).upper()}")
@@ -299,7 +299,8 @@ class Controller:
             total_applicant,
         )
 
-    def print_options(self, options):
+    @staticmethod
+    def print_options(options):
         # show available keypress options
         for keypress, func in options.items():
             print(f"{keypress}:{func[1]}  ", end="")
