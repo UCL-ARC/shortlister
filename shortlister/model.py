@@ -10,7 +10,6 @@ import re
 @dataclass(frozen=True)
 class Criterion:
     """A property of Role - contained within the attribute criteria(list of Criterion objects)."""
-
     name: str
     description: str
 
@@ -21,9 +20,8 @@ class Criterion:
 @dataclass(eq=False)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
-
     name: str = field(compare=True)
-    cv: str  # path to cv
+    cv: Path
     email: str
     phone: str
     postcode: str
@@ -44,7 +42,6 @@ class Applicant:
 @dataclass
 class Role:
     """A property of Shortlist."""
-
     job_title: str
     job_id: str
     criteria: List[Criterion]
@@ -53,7 +50,6 @@ class Role:
 @dataclass
 class Shortlist:
     """Major class object containing all relevant role, applicant, criteria information for shortlisting."""
-
     role: Role
     applicants: List[Applicant]
 
@@ -70,7 +66,6 @@ RANK_AND_SCORE = {
 }
 
 # Functions
-
 
 def load_pickle(file_path):
     """Load shortlist from existing pickle file."""
@@ -90,7 +85,6 @@ def load_shortlist(path: Path):
     file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
-
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
@@ -144,7 +138,7 @@ def load_applicants_from_pdf(file: Path):
         phone=info["Preferred Phone Number"],
         postcode=info["Postcode"],
         country_region=info["Country & Region"],
-        right_to_work=info["Right To Work"],
+        right_to_work=bool(info["Right To Work"]),
         visa_requirement=info["Visa Requirements"],
         application_text=remaining_pdf,
         scores={},
