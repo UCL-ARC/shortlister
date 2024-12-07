@@ -80,18 +80,20 @@ def save_shortlist(path, shortlist):
         pickle.dump(shortlist, f)
 
 
-def load_shortlist(path: Path):
+def load_shortlist(path: Path) -> (Shortlist, str):
     """Import shortlist data from either: 1. Pickle file or 2. Role directory (when there is no existing pickle data)."""
     file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
+        msg = f"SHORTLIST RESTORED FROM FILE"
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
         applicants = load_applicants(path)
         shortlist = Shortlist(role, applicants)
+        msg = f"SHORTLIST CREATED FROM PACKS"
 
-    return shortlist
+    return shortlist, msg
 
 
 def load_role(path, criteria):

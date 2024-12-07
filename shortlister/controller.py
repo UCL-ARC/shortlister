@@ -35,7 +35,8 @@ class ApplicantsView(Enum):
 class Controller:
     def __init__(self, path):
         self.path = path
-        self.shortlist = load_shortlist(path)
+        self.shortlist, msg = load_shortlist(path)
+        print(msg)
 
         # basic setup
         self.view = View()
