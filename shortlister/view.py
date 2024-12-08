@@ -107,9 +107,11 @@ class View:
             cv(applicant, "<python regex>")
             score(applicant, "<criterion name>", "<score>")
             rtw(applicant, "<True|False>") [right to work]
+            total_score(applicant.scores)
 
         EXAMPLES:
             cv(applicant, "(?i)nvidia")
+            total_score(applicant.scores) >= 50
             score(applicant, "Professional experience", "Excellent")
             score(applicant, "Cover letter", None)
             i < 10 and not rtw(applicant)
