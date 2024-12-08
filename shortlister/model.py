@@ -383,3 +383,30 @@ def notes(applicant: Applicant, pattern: str):
     Example usage:  notes(applicant,"Engineer")
     """
     return re.search(pattern, applicant.notes)
+
+
+class InteractiveSorter:
+    def __init__(self):
+        self.selected = None
+        self.sorted = None
+
+    def sort(self, items):
+        """Insertion sort, but yields the items to compare. The caller says which is greater."""
+
+        # We sort the items inplace, so don't change the input
+        self.sorted = items.copy()
+
+        # Insertion sort from https://www.w3schools.com/dsa/dsa_algo_insertionsort.php
+        for i in range(1, len(self.sorted)):
+            insert_index = i
+            value = self.sorted[i]
+            for j in range(i - 1, -1, -1):
+                # self.selected is set by the caller for the yielded pair
+                self.selected = None
+                yield self.sorted[j], value
+                if self.selected == self.sorted[j]:
+                    self.sorted[j + 1] = self.sorted[j]
+                    insert_index = j
+                else:
+                    break
+            self.sorted[insert_index] = value

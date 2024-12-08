@@ -4,6 +4,7 @@ from enum import Enum
 from pathlib import Path
 import readline
 import sys
+from typing import List
 
 from shortlister.view import View
 from shortlister.model import (
@@ -23,6 +24,7 @@ from shortlister.model import (
     rtw,  # noqa
     cv,  # noqa
     notes, applicant_table, Criterion,  # noqa
+    InteractiveSorter
 )
 
 import shortlister.tournament as tournament
@@ -84,6 +86,7 @@ class Controller:
             "a": (self.sort, "ALPHABETICAL"),
             "s": (self.sort, "SCORE ASCENDING"),
             "d": (self.sort, "SCORE DESCENDING"),
+            "c": (self.sort, "COMPARISON"),
         }
         self.options_applicant_detail = {
             "e": (self.score_applicant_step_1, "SCORE"),
@@ -248,6 +251,33 @@ class Controller:
             sort_ascending_score(self.ctx.applicants)
         elif k == "d":
             sort_descending_score(self.ctx.applicants)
+        elif k == "c":
+            sorter = InteractiveSorter()
+
+            print("FOR EACH PAIR, SELECT 1 OR 2")
+            print()
+
+            for first, second in sorter.sort(self.ctx.applicants):
+                print(f"(1) {first.name} or (2) {second.name}?")
+
+                choice = None
+                while choice not in ["1", "2", "q"]:
+                    choice = readkey()
+
+                if choice == "1":
+                    sorter.selected = first
+                elif choice == "2":
+                    sorter.selected = second
+                elif choice == "q":
+                    print("CANCELED")
+                    print()
+                    self.show_applicants_table()
+                    return
+
+            result: List = sorter.sorted
+            result.reverse()
+            self.ctx.applicants = result
+            print()
 
         self.show_applicants_table()
 
