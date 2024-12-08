@@ -255,6 +255,10 @@ class Controller:
         """Allows user to filter applicants by with condition statement"""
         condition = input("FILTER> ")
 
+        if condition == "?":
+            self.view.view_filter_help()
+            return
+
         try:
             selected_applicants = eval(
                 f"[applicant for i, applicant in enumerate(self.shortlist.applicants) if {condition}]"

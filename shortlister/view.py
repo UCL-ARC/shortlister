@@ -95,3 +95,22 @@ class View:
     def view_update(self, attribute, change):
         print(f"Updated: {attribute} to: {change}\n")
         print()
+
+    def view_filter_help(self):
+        print("""
+        VARIABLES:
+            applicant  # APPLICANT OBJECT
+            i          # APPLICANT INDEX
+
+        FUNCTIONS:
+            name(applicant, "<contains>")
+            cv(applicant, "<python regex>")
+            score(applicant, "<criterion name>", "<score>")
+            rtw(applicant, "<True|False>") [right to work]
+
+        EXAMPLES:
+            cv(applicant, "(?i)nvidia")
+            score(applicant, "Professional experience", "Excellent")
+            score(applicant, "Cover letter", None)
+            i < 10 and not rtw(applicant)
+        """)
