@@ -257,7 +257,7 @@ class Controller:
 
         try:
             selected_applicants = eval(
-                f"[applicant for applicant in self.shortlist.applicants if {condition}]"
+                f"[applicant for i, applicant in enumerate(self.shortlist.applicants) if {condition}]"
             )
         except Exception as e:
             print(f"ERROR: {str(e).upper()}")
