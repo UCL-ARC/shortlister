@@ -38,14 +38,7 @@ class View:
         print(f"  ID: {role.job_id}")
         print()
 
-    def view_applicant_details(
-        self,
-        applicant: Applicant,
-        criteria: List[Criterion],
-        total_score,
-        applicant_number,
-        total_applicant,
-    ):
+    def view_applicant_details(self, applicant: Applicant, criteria: List[Criterion], applicant_number):
         """Prints details of applicant to console."""
         print(f"{applicant_number: >2}  {applicant.name}")
         if not applicant.right_to_work:

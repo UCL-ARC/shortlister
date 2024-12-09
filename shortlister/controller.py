@@ -259,25 +259,35 @@ class Controller:
         elif k == "c":
             sorter = InteractiveSorter()
 
-            print("FOR EACH PAIR, SELECT 1 OR 2")
+            print("FOR EACH PAIR, CHOOSE 1 OR 2")
             print()
 
+            criteria = self.shortlist.role.criteria
+
             for first, second in sorter.sort(self.ctx.applicants):
-                print(f"(1) {first.name} or (2) {second.name}?")
+                self.view.view_applicant_details(first, criteria, 1)
+                self.view.view_applicant_details(second, criteria, 2)
+                print("CHOICE> ", end="", flush=True)
 
                 choice = None
-                while choice not in ["1", "2", "q"]:
+                while choice not in ["1", "2"]:
                     choice = readkey()
+                    if choice == "O":
+                        print("DISPLAY CVs")
+                        choice = None  # user still needs to choose applicant
+                    elif choice == "q":
+                        print("CANCELED")
+                        print()
+                        self.show_applicants_table()
+                        return
 
                 if choice == "1":
                     sorter.selected = first
                 elif choice == "2":
                     sorter.selected = second
-                elif choice == "q":
-                    print("CANCELED")
-                    print()
-                    self.show_applicants_table()
-                    return
+
+                print(sorter.selected.name)
+                print()
 
             result: List = sorter.sorted
             result.reverse()
@@ -336,13 +346,7 @@ class Controller:
         total = total_score(applicant.scores)
         applicant_number = self.ctx.applicant_index + 1
         total_applicant = len(self.ctx.applicants)
-        self.view.view_applicant_details(
-            applicant,
-            self.shortlist.role.criteria,
-            total,
-            applicant_number,
-            total_applicant,
-        )
+        self.view.view_applicant_details(applicant, self.shortlist.role.criteria, applicant_number)
 
     @staticmethod
     def print_options(options):
