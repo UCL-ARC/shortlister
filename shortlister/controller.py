@@ -78,8 +78,10 @@ class Controller:
             "s": (self.sort, "SORT"),
             "f": (self.filter_applicants, "FILTER"),
             "c": (self.clear_filter, "CLEAR FILTER"),
-            "t": (self.show_applicants_table, "SWITCH TABLE"),
             "r": (self.rank_selected_applicants, "RANK"),
+            "t": (self.show_applicants_table, "SWITCH TABLE"),
+            "l": (self.show_table_legend, "LEGEND"),
+            "a": (self.show_applicants_table, "APPLICANTS"),
             "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
@@ -167,6 +169,9 @@ class Controller:
 
         self.view.view_applicant_table(table)
         self.options = self.options_applicant_table
+
+    def show_table_legend(self, k=None):
+        self.view.view_table_legend(self.shortlist.role.criteria)
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""

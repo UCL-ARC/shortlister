@@ -106,7 +106,7 @@ class View:
             name(applicant, "<contains>")
             cv(applicant, "<python regex>")
             score(applicant, "<criterion name>", "<score>")
-            rtw(applicant, "<True|False>") [right to work]
+            rtw(applicant) [has right to work]
             total_score(applicant.scores)
 
         EXAMPLES:
@@ -116,3 +116,14 @@ class View:
             score(applicant, "Cover letter", None)
             i < 10 and not rtw(applicant)
         """)
+
+    def view_table_legend(self, criteria):
+        criteria_names = [criteria.name for criteria in criteria]
+        abbreviations = abbreviate(criteria_names)
+        legend = dict(zip(abbreviations, criteria_names))
+        legend = dict(sorted(legend.items()))
+        for line in legend.items():
+            print(f"{line[0]}: {line[1]}")
+        print()
+
+

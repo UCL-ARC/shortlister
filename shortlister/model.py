@@ -153,7 +153,7 @@ def load_applicants_from_pdf(file: Path):
     if "<unretrievable>" in applicant.name:
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
-        print(f"Couldn't retrieve applicant data from: {file}")
+        print(f"ERROR READING: {file.name}")
 
     return applicant
 
