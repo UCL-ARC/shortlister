@@ -3,13 +3,11 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 import readline
-import sys
 from typing import List
 
 from shortlister.view import View
 from shortlister.model import (
     Applicant,
-    total_score,
     load_shortlist,
     save_shortlist,
     update_applicant_score,
@@ -44,7 +42,7 @@ class Context:
 
 class Controller:
 
-    def __init__(self, path):
+    def __init__(self, path, wv_window=None):
         self.path = path
         self.shortlist, msg = load_shortlist(path)
         print(msg)
@@ -61,6 +59,9 @@ class Controller:
             None,
             ViewWidth.WIDE
         )
+
+        # a window from pywebview to display PDFs
+        self.wv_window = wv_window
 
         # add common filtering commands to readline history for easy access
         readline.add_history('score(applicant, "criterion-name", "score")')
@@ -124,7 +125,7 @@ class Controller:
             save_shortlist(self.path, self.shortlist)
             print("GOODBYE")
             print()
-            sys.exit(0)
+            return True
         else:
             # quit cancelled - back to home
             print("QUIT CANCELLED")
@@ -175,7 +176,12 @@ class Controller:
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
-        startfile(self.applicant(self.ctx.applicant_index).cv)
+        url = self.applicant(self.ctx.applicant_index).cv
+        if self.wv_window is not None:
+            url = f"file://{url}"
+            self.wv_window.load_url(url)
+        else:
+            startfile(self.applicant(self.ctx.applicant_index).cv)
 
     def score_applicant_step_1(self, k=None):
         """Select a criteria to edit score for."""
@@ -273,7 +279,8 @@ class Controller:
                 while choice not in ["1", "2"]:
                     choice = readkey()
                     if choice == "O":
-                        print("DISPLAY CVs")
+                        startfile(first.cv)
+                        startfile(second.cv)
                         choice = None  # user still needs to choose applicant
                     elif choice == "q":
                         print("CANCELED")
@@ -343,10 +350,14 @@ class Controller:
 
     def view_applicant_details(self):
         applicant: Applicant = self.applicant(self.ctx.applicant_index)
-        total = total_score(applicant.scores)
         applicant_number = self.ctx.applicant_index + 1
-        total_applicant = len(self.ctx.applicants)
         self.view.view_applicant_details(applicant, self.shortlist.role.criteria, applicant_number)
+
+        if self.wv_window is not None:
+            url = self.applicant(self.ctx.applicant_index).cv
+            url = f"file://{url}"
+            if self.wv_window.get_current_url() != url:
+                self.wv_window.load_url(url)
 
     @staticmethod
     def print_options(options):
@@ -370,4 +381,6 @@ class Controller:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
                 if action is not None:
-                    action[0](k=k)
+                    quit_request = action[0](k=k)
+                    if quit_request:
+                        break
