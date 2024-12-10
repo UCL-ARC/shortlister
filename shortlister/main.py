@@ -1,10 +1,8 @@
 import argparse
-import http
-from http.server import HTTPServer
 from pathlib import Path
-from threading import Thread
 
 from shortlister.controller import Controller
+from shortlister.web import start_httpd
 
 try:
     import webview
@@ -22,24 +20,10 @@ parser.add_argument("-w", "--webview", action="store_true")
 cli_args = parser.parse_args()
 
 
-def start_httpd():
-    def serve_forever():
-        class Handler(http.server.SimpleHTTPRequestHandler):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, directory="/Users/tamuri/", **kwargs)
-
-        httpd = HTTPServer(("localhost", 8000), Handler)
-        httpd.serve_forever()
-
-    http_thread = Thread(target=serve_forever)
-    http_thread.daemon = True
-    http_thread.start()
-
-
 def run_controller(wv_window=None):
     if cli_args.rolepath.is_dir():
         if wv_window is not None:
-            start_httpd()
+            start_httpd(cli_args.rolepath)
 
         control = Controller(cli_args.rolepath, wv_window)
         control.run()

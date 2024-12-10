@@ -29,6 +29,8 @@ import shortlister.tournament as tournament
 from readchar import readkey
 from startfile import startfile  # noqa - universal-startfile
 
+from shortlister.web import get_url_for_cv
+
 
 class ViewWidth(Enum):
     NARROW, WIDE = 1, 2
@@ -176,9 +178,9 @@ class Controller:
 
     def open_applicant_pdf(self, k=None):
         """Open selected applicant's CV."""
-        url = self.applicant(self.ctx.applicant_index).cv
+        path = self.applicant(self.ctx.applicant_index).cv
         if self.wv_window is not None:
-            url = f"file://{url}"
+            url = get_url_for_cv(path.name)
             self.wv_window.load_url(url)
         else:
             startfile(self.applicant(self.ctx.applicant_index).cv)
@@ -354,8 +356,8 @@ class Controller:
         self.view.view_applicant_details(applicant, self.shortlist.role.criteria, applicant_number)
 
         if self.wv_window is not None:
-            url = self.applicant(self.ctx.applicant_index).cv
-            url = f"file://{url}"
+            path = self.applicant(self.ctx.applicant_index).cv
+            url = get_url_for_cv(path.name)
             if self.wv_window.get_current_url() != url:
                 self.wv_window.load_url(url)
 
