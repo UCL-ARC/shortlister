@@ -210,7 +210,7 @@ class Controller:
             )
             # returns to criterion selection
             self.options["q"] = (self.score_applicant_step_1, "CRITERION")
-            self.view.view_selection_options(self.ctx.criterion, self.options)
+            self.view.view_selection_options(self.options)
 
     def score_applicant_step_3(self, k=None):
         """Updates the selected score of previously select criteria."""

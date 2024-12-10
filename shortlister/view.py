@@ -78,7 +78,7 @@ class View:
         print()
         print()
 
-    def view_selection_options(self, criterion: Criterion, options: Dict[str, tuple]):
+    def view_selection_options(self, options: Dict[str, tuple]):
         """Prints list of avaliable scoring option for selected criterion to console."""
         # prints all of the available options
         for index, action in options.items():
