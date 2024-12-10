@@ -63,7 +63,7 @@ def start_httpd(path_to_pdfs: Path):
         def get_pdf(file_name):
             return send_file(f"{path_to_pdfs / file_name}", mimetype="application/pdf")
 
-        app.run(host="0.0.0.0", port=8000, debug=False, use_reloader=False)
+        app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
 
     http_thread = Thread(target=serve_forever)
     http_thread.daemon = True
