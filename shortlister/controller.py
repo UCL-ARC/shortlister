@@ -299,7 +299,7 @@ class Controller:
             selected_applicants = eval(
                 f"[applicant for i, applicant in enumerate(self.shortlist.applicants) if {condition}]"
             )
-        except Exception as e:
+        except (NameError, SyntaxError) as e:
             print(f"ERROR: {str(e).upper()}")
             print()
             return
