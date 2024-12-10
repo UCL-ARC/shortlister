@@ -177,13 +177,8 @@ class Controller:
         self.view.view_table_legend(self.shortlist.role.criteria)
 
     def open_applicant_pdf(self, k=None):
-        """Open selected applicant's CV."""
-        path = self.applicant(self.ctx.applicant_index).cv
-        if self.wv_window is not None:
-            url = get_url_for_cv(path.name)
-            self.wv_window.load_url(url)
-        else:
-            startfile(self.applicant(self.ctx.applicant_index).cv)
+        """Open selected applicant's CV in default viewer."""
+        startfile(self.applicant(self.ctx.applicant_index).cv)
 
     def score_applicant_step_1(self, k=None):
         """Select a criteria to edit score for."""
