@@ -87,13 +87,13 @@ def load_shortlist(path: Path) -> (Shortlist, str):
     file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
-        msg = f"SHORTLIST RESTORED FROM FILE"
+        msg = "SHORTLIST RESTORED FROM FILE"
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
         applicants = load_applicants(path)
         shortlist = Shortlist(role, applicants)
-        msg = f"SHORTLIST CREATED FROM PACKS"
+        msg = "SHORTLIST CREATED FROM PACKS"
 
     return shortlist, msg
 
@@ -161,7 +161,7 @@ def load_applicants_from_pdf(file: Path):
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
     criteria = []
-    with open(csv_file) as file:
+    with open(csv_file, "r", encoding="UTF-8") as file:
         reader = csv.reader(file)
         next(reader)
 
@@ -223,8 +223,8 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 def extract_info_from_text(lines: List[str]):
     """gets the section containing applicant information from extracted text"""
 
-    # fields names to get related applicant information
-    fields = dict.fromkeys(
+    # fields labels to get related applicant information
+    labels: Dict[str, str|bool] = dict.fromkeys(
         [
             "First Name",
             "Last Name",
@@ -243,18 +243,20 @@ def extract_info_from_text(lines: List[str]):
     right_to_work = lines[-5:-1]
 
     # filter out the field name and retain only the info to applicant
-    for field in fields:
+    for label in labels:
         for line in applicant_info:
-            if line.startswith(field):
+            if line.startswith(label):
                 data = line.removeprefix(
-                    field
+                    label
                 )  # removes the field and leaves only the information
-                fields[field] = data.strip()  # removes whitespaces
+                labels[label] = data.strip()  # removes whitespaces
                 break
         else:
             continue
 
     # finds where the question is and checks the next index which contains the answer to the question
+    applicant_right_to_work = None
+    visa_req_text = None
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
         if right_to_work[i + 1] == "No":
@@ -268,10 +270,10 @@ def extract_info_from_text(lines: List[str]):
             applicant_right_to_work = True
             visa_req_text = None
 
-        fields["Right To Work"] = applicant_right_to_work
-        fields["Visa Requirements"] = visa_req_text
+        labels["Right To Work"] = applicant_right_to_work
+        labels["Visa Requirements"] = visa_req_text
 
-    return fields
+    return labels
 
 
 # creating tabular data
@@ -342,26 +344,26 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
 
 
 # filter functions
-def name(applicant: Applicant, name: str):
+def name(applicant: Applicant, _name: str):
     """Filter by matching name pattern applicant name.
     Example usage:  name(applicant,"Emma")"""
-    return re.search(name, applicant.name)
+    return re.search(_name, applicant.name)
 
 
-def score(applicant: Applicant, name, score):
+def score(applicant: Applicant, _name, _score):
     """Filter by matching applicant score.
     Example usage:  score(applicant,"PhD","Excellent")"""
 
     # checks that (criterion) name does not match any criterion in applicant scores
-    if score == None:
-        return name.lower() not in [
+    if _score is None:
+        return _name.lower() not in [
             getattr(criterion, "name").lower() for criterion in applicant.scores
         ]
 
     # checks if (criterion) name and score matches the saved applicant scores
     for criterion in applicant.scores:
-        if getattr(criterion, "name").lower() == name.lower():
-            return applicant.scores[criterion].lower() == score.lower()
+        if getattr(criterion, "name").lower() == _name.lower():
+            return applicant.scores[criterion].lower() == _score.lower()
     # handles no match cases
     return False
 
