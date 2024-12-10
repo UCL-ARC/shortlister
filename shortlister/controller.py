@@ -1,34 +1,21 @@
+import readline
 import string
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-import readline
 from typing import List
 
-from shortlister.view import View
-from shortlister.model import (
-    Applicant,
-    load_shortlist,
-    save_shortlist,
-    update_applicant_score,
-    update_applicant_notes,
-    clear_score,
-    RANK_AND_SCORE,
-    sort_alpha,
-    sort_ascending_score,
-    sort_descending_score,
-    name,  # noqa
-    score,  # noqa
-    rtw,  # noqa
-    cv,  # noqa
-    notes, applicant_table, Criterion,  # noqa
-    InteractiveSorter
-)
+from readchar import readkey
+from startfile import startfile  # noqa - package name: universal-startfile
 
 import shortlister.tournament as tournament
-from readchar import readkey
-from startfile import startfile  # noqa - universal-startfile
-
+from shortlister.model import (RANK_AND_SCORE, Applicant, Criterion,  # noqa
+                               InteractiveSorter, applicant_table, clear_score,
+                               cv, load_shortlist, name, notes, rtw,
+                               save_shortlist, score, sort_alpha,
+                               sort_ascending_score, sort_descending_score,
+                               update_applicant_notes, update_applicant_score)
+from shortlister.view import View
 from shortlister.web import get_url_for_cv
 
 

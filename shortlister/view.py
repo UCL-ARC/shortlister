@@ -1,14 +1,7 @@
-from shortlister.model import (
-    Applicant,
-    Role,
-    Criterion,
-    Shortlist,
-    applicant_table,
-    abbreviate,
-)
-from tabulate import tabulate
 import pydoc
 from typing import Dict, List
+
+from shortlister.model import Applicant, Criterion, Role, abbreviate
 
 BANNER = r"""
      _                _   _ _     _            
