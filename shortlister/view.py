@@ -10,20 +10,21 @@ from tabulate import tabulate
 import pydoc
 from typing import Dict, List
 
-
-class View:
-    def __init__(self):
-        return
-
-    def title(self):
-        print(r"""
+BANNER = r"""
      _                _   _ _     _            
  ___| |__   ___  _ __| |_| (_)___| |_ ___ _ __ 
 / __| '_ \ / _ \| '__| __| | / __| __/ _ \ '__|
 \__ \ | | | (_) | |  | |_| | \__ \ ||  __/ |   
 |___/_| |_|\___/|_|   \__|_|_|___/\__\___|_|
 
-""")
+"""
+
+class View:
+    def __init__(self):
+        return
+
+    def title(self):
+        print(BANNER)
 
     def home_message(self, role, num_applicants):
         """Prints overview of shortlist to console."""

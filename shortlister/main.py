@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 from shortlister.controller import Controller
-from shortlister.web import start_httpd
+from shortlister.web import start_httpd, setup_webview
 
 try:
     import webview
@@ -20,7 +20,7 @@ parser.add_argument("-w", "--webview", action="store_true")
 cli_args = parser.parse_args()
 
 
-def run_controller(wv_window=None):
+def run_controller(wv_window: webview.Window=None):
     if cli_args.rolepath.is_dir():
         if wv_window is not None:
             start_httpd(cli_args.rolepath)
@@ -35,13 +35,7 @@ def run_controller(wv_window=None):
 
 
 if cli_args.webview and webview is not None:
-
-    def on_closing():
-        """Disable closing of the webview window"""
-        return False
-
-    window = webview.create_window("Shortlister", html="<h1>Shortlister<h1>")
-    window.events.closing += on_closing
+    window = setup_webview()
     webview.start(run_controller, args=[window])
 else:
     run_controller(None)
