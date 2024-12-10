@@ -19,7 +19,12 @@ ABS_PATH_PDFJS = "../pdfjs-4.6.82-dist/"
 PDFJS_VIEWER_URL = f"{ORIGIN}/{ROUTE_PDFJS}/web/viewer.html"
 CVS_URL = f"{ORIGIN}/{ROUTE_CVS}"
 
-BANNER_HTML = f"<html><body><pre>{BANNER}</pre></body></html>"
+BANNER_HTML = f"""
+<html>
+  <head><style>body {{background-color: #e6e6e6}}</style></head>
+  <body><pre>{BANNER}</pre></body>
+</html>
+"""
 
 
 def setup_webview():
