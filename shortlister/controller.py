@@ -43,10 +43,10 @@ class Controller:
 
         # application context
         self.ctx = Context(
-            self.shortlist.applicants,
-            0,
-            None,
-            ViewWidth.WIDE
+            applicants=self.shortlist.applicants,
+            applicant_index=0,
+            criterion=None,
+            table_view=ViewWidth.WIDE
         )
 
         # a window from pywebview to display PDFs
