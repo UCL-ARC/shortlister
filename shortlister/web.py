@@ -1,3 +1,8 @@
+"""
+Functions to work with pywebview and pdf.js to present applicant CVs. This
+is an optional feature, and can be activated with the "-w" option when starting
+shortlister.
+"""
 import urllib
 from pathlib import Path
 from threading import Thread
