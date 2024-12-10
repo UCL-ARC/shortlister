@@ -88,11 +88,11 @@ def rank(list_to_rank: List, result: Dict):
     wins = {}
     outcome = list(result.values())
 
-    for object in list_to_rank:
+    for obj in list_to_rank:
         # Count how many wins an object got
-        score = outcome.count(object)
+        score = outcome.count(obj)
         # create an entry in wins dictionary of the object and the score it earned
-        wins[object] = score
+        wins[obj] = score
 
     # sort the list by highest scored to lowest
     ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
