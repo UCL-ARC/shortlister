@@ -16,7 +16,14 @@ from shortlister.model import (RANK_AND_SCORE, Applicant, Criterion,  # noqa
                                sort_ascending_score, sort_descending_score,
                                update_applicant_notes, update_applicant_score)
 from shortlister.view import View
-from shortlister.web import get_url_for_cv
+
+try:
+    import webview
+
+    from shortlister.web import get_url_for_cv
+except ImportError:
+    webview = None
+    get_url_for_cv = None
 
 
 class ViewWidth(Enum):
