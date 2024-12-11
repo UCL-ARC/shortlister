@@ -150,7 +150,7 @@ def load_applicants_from_pdf(file: Path):
     )
 
     # if either of the name field can't be extracted, get applicant's name from their cv filename
-    if "<unretrievable>" in applicant.name:
+    if "<missing>" in applicant.name:
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
         print(f"ERROR READING: {file.name}")
@@ -235,7 +235,7 @@ def extract_info_from_text(lines: List[str]):
             "Right To Work",
             "Visa Requirements",
         ],
-        "<unretrievable>",
+        "<missing>",
     )
 
     # removes header/footer and other irrelevant info
