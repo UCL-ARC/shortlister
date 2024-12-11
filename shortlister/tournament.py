@@ -6,33 +6,55 @@ from readchar import readkey
 
 COMPARISON_RESULT_FILE_NAME = "ranked.pickle"
 
-def comparison(list_to_rank, result: Dict):
+
+def comparison(list_to_rank, result: Dict = None):
     """Starts pair comparison for a list of items.
     The result parameter could be dictionary with existing results or empty dictionary"""
-    # Queue is a list of pair that has not been compared yet
+    print("TOURNAMENT COMPARISON")
+    print()
+
+    # start with an empty dict if we don't have existing results
+    if result is None:
+        result = {}
+
+    # Queue is a list of pairs that have not been compared yet
     queue = get_pair(list_to_rank, result)
 
-    # Loop when there are still pairs to be compared in the queue
+    # Loop while there are still pairs to be compared in the queue
     while len(queue) > 0:
         # Remove the first pair in the queue and start the comparison
-        pair = tuple(queue.pop(0))
-        print(f"1. {pair[0]}")
-        print(f"2. {pair[1]}")
+        pair = queue.pop(0)
+        first, second = tuple(pair)
 
-        # Limits key choice to "u","1","2" so there is no need for exception checking
+        print(f"1. {first}")
+        print(f"2. {second}")
+        print()
+
+        print("1 OR 2?")
+        print()
+
+        # Limits key choice to "u", "1", "2" so there is no need for exception checking
         while True:
             choice = readkey()
-            if choice in ["1", "2"] or choice == "u" and result:
+            if choice in ["1", "2", "q"] or choice == "u" and result:
                 break
-        # if the choice is undo
-        if choice == "u":
+
+        if choice == "q":
+            print("EXITING TOURNAMENT COMPARISON")
+            print()
+            return
+        # if undo last choice
+        elif choice == "u":
             # take the key and requeue the pair
             pair = result.popitem()[0]
             queue.insert(0, pair)
         # otherwise it can be evaluate by choose() function to get the winner, and the result is saved
         else:
-            winner = choose(choice, pair)
-            save_results(frozenset(pair), winner, result)
+            winner = choose(choice, (first, second))
+            save_results(pair, winner, result)
+
+    # all comparisons done
+    return result
 
 
 def get_pair(list_to_rank, result):
@@ -49,7 +71,7 @@ def choose(choice, candidates: tuple):
     """Get user choice of which object out of the pair they prefer."""
     if choice == "1":
         winner = candidates[0]
-    elif choice == "2":
+    else:
         winner = candidates[1]
     return winner
 
@@ -66,11 +88,11 @@ def rank(list_to_rank: List, result: Dict):
     wins = {}
     outcome = list(result.values())
 
-    for object in list_to_rank:
+    for obj in list_to_rank:
         # Count how many wins an object got
-        score = outcome.count(object)
+        score = outcome.count(obj)
         # create an entry in wins dictionary of the object and the score it earned
-        wins[object] = score
+        wins[obj] = score
 
     # sort the list by highest scored to lowest
     ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
