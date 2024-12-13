@@ -15,7 +15,7 @@ from shortlister.view import BANNER
 ORIGIN = "http://localhost:8000"
 ROUTE_PDFJS = "pdfjs"
 ROUTE_CVS = "cvs"
-ABS_PATH_PDFJS = "../pdfjs-4.6.82-dist/"
+ABS_PATH_PDFJS = "../pdfjs/"
 PDFJS_VIEWER_URL = f"{ORIGIN}/{ROUTE_PDFJS}/web/viewer.html"
 CVS_URL = f"{ORIGIN}/{ROUTE_CVS}"
 
