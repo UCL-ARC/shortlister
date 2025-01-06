@@ -330,8 +330,10 @@ class Controller:
         )
         result = tournament.comparison(self.ctx.applicants, result)
 
-        ranked_list = tournament.rank(self.ctx.applicants, result)
-        print("RESULT:", [applicant.name for applicant in ranked_list])
+        # Condition to avoid exception (caused by empty result when quitting comparison with "q")    
+        if result:
+            ranked_list = tournament.rank(self.ctx.applicants, result)
+            print("RESULT:", [applicant.name for applicant in ranked_list])
         print()
 
     # Utilities
