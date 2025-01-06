@@ -6,23 +6,25 @@ import pickle
 import pymupdf
 import re
 
+from tabulate import tabulate
+
+
 @dataclass(frozen=True)
 class Criterion:
     """A property of Role - contained within the attribute criteria(list of Criterion objects)."""
-
     name: str
     description: str
 
     def __repr__(self) -> str:
         return self.name
 
-@dataclass (eq=False)
+
+@dataclass(eq=False)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
-
-    name: str =field(compare=True) 
-    cv: str # path to cv
-    email: str 
+    name: str = field(compare=True)
+    cv: Path
+    email: str
     phone: str
     postcode: str
     country_region: str
@@ -34,6 +36,7 @@ class Applicant:
 
     def __repr__(self):
         return f"Applicant(name={self.name}, scores={self.scores}, notes={self.notes})"
+
     def __hash__(self):
         return hash(self.cv)
 
@@ -41,7 +44,6 @@ class Applicant:
 @dataclass
 class Role:
     """A property of Shortlist."""
-
     job_title: str
     job_id: str
     criteria: List[Criterion]
@@ -50,7 +52,6 @@ class Role:
 @dataclass
 class Shortlist:
     """Major class object containing all relevant role, applicant, criteria information for shortlisting."""
-
     role: Role
     applicants: List[Applicant]
 
@@ -68,7 +69,6 @@ RANK_AND_SCORE = {
 
 # Functions
 
-
 def load_pickle(file_path):
     """Load shortlist from existing pickle file."""
     with open(file_path, "rb") as f:
@@ -82,19 +82,20 @@ def save_shortlist(path, shortlist):
         pickle.dump(shortlist, f)
 
 
-def load_shortlist(path: Path):
+def load_shortlist(path: Path) -> (Shortlist, str):
     """Import shortlist data from either: 1. Pickle file or 2. Role directory (when there is no existing pickle data)."""
     file = path / PICKLE_FILE_NAME
     if file.exists():
         shortlist = load_pickle(file)
-
+        msg = "SHORTLIST RESTORED FROM FILE"
     else:
         criteria = load_criteria(path / CRITERIA_FILE_NAME)
         role = load_role(path, criteria)
         applicants = load_applicants(path)
         shortlist = Shortlist(role, applicants)
+        msg = "SHORTLIST CREATED FROM PACKS"
 
-    return shortlist
+    return shortlist, msg
 
 
 def load_role(path, criteria):
@@ -110,7 +111,7 @@ def load_applicants(path: Path):
     for file in files:
         applicant = load_applicants_from_pdf(file)
         applicants.append(applicant)
-        
+
     sort_alpha(applicants)
     return applicants
 
@@ -119,10 +120,10 @@ def load_applicants_from_pdf(file: Path):
     """Create a single Applicant instance from candidate pack within the parsed in PDF file"""
     doc = pymupdf.open(file)
 
-    # takes the first page of the pdf (the candidate pack)   
+    # takes the first page of the pdf (the candidate pack)
     cover = doc[0]
     rest_of_pages = doc[1:]
-    # extract the remaining pdf pages 
+    # extract the remaining pdf pages
     remaining_pdf = "\n".join([page.get_text(sort=True) for page in rest_of_pages])
     # extract text in reading order
     text = cover.get_text(sort=True)
@@ -141,7 +142,7 @@ def load_applicants_from_pdf(file: Path):
         phone=info["Preferred Phone Number"],
         postcode=info["Postcode"],
         country_region=info["Country & Region"],
-        right_to_work=info["Right To Work"],
+        right_to_work=bool(info["Right To Work"]),
         visa_requirement=info["Visa Requirements"],
         application_text=remaining_pdf,
         scores={},
@@ -149,10 +150,10 @@ def load_applicants_from_pdf(file: Path):
     )
 
     # if either of the name field can't be extracted, get applicant's name from their cv filename
-    if "<unretrievable>" in applicant.name:
+    if "<missing>" in applicant.name:
         name_parts = file.stem.split("_")
         applicant.name = " ".join(name_parts[0:2])
-        print(f"Couldn't retrieve applicant data from: {file}")
+        print(f"ERROR READING: {file.name}")
 
     return applicant
 
@@ -160,7 +161,7 @@ def load_applicants_from_pdf(file: Path):
 def load_criteria(csv_file):
     """Generate criteria(list of criterion instances) from csv file."""
     criteria = []
-    with open(csv_file) as file:
+    with open(csv_file, "r", encoding="UTF-8") as file:
         reader = csv.reader(file)
         next(reader)
 
@@ -222,8 +223,8 @@ def clear_score(applicant: Applicant, criterion: Criterion):
 def extract_info_from_text(lines: List[str]):
     """gets the section containing applicant information from extracted text"""
 
-    # fields names to get related applicant information
-    fields = dict.fromkeys(
+    # fields labels to get related applicant information
+    labels: Dict[str, str|bool] = dict.fromkeys(
         [
             "First Name",
             "Last Name",
@@ -234,7 +235,7 @@ def extract_info_from_text(lines: List[str]):
             "Right To Work",
             "Visa Requirements",
         ],
-        "<unretrievable>",
+        "<missing>",
     )
 
     # removes header/footer and other irrelevant info
@@ -242,18 +243,20 @@ def extract_info_from_text(lines: List[str]):
     right_to_work = lines[-5:-1]
 
     # filter out the field name and retain only the info to applicant
-    for field in fields:
+    for label in labels:
         for line in applicant_info:
-            if line.startswith(field):
+            if line.startswith(label):
                 data = line.removeprefix(
-                    field
+                    label
                 )  # removes the field and leaves only the information
-                fields[field] = data.strip()  # removes whitespaces
+                labels[label] = data.strip()  # removes whitespaces
                 break
         else:
             continue
 
     # finds where the question is and checks the next index which contains the answer to the question
+    applicant_right_to_work = None
+    visa_req_text = None
     if "Do you have the unrestricted right to work in the UK?" in right_to_work:
         i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
         if right_to_work[i + 1] == "No":
@@ -267,39 +270,60 @@ def extract_info_from_text(lines: List[str]):
             applicant_right_to_work = True
             visa_req_text = None
 
-        fields["Right To Work"] = applicant_right_to_work
-        fields["Visa Requirements"] = visa_req_text
+        labels["Right To Work"] = applicant_right_to_work
+        labels["Visa Requirements"] = visa_req_text
 
-    return fields
+    return labels
 
 
 # creating tabular data
 
 
-def applicant_table(applicants: List[Applicant], criteria: List[Criterion]) -> List:
+def applicant_table(applicants: List[Applicant], criteria: List[Criterion], table_type="wide") -> (List, List):
     """Generates applicant and score data for summary table"""
     # tab is a list of lists:
     # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
     tab = []
+
+    # creates heading
+    header = ["№", "NAME", "Σ"]
+    if table_type == "wide":
+        criteria_headings = abbreviate([criterion.name for criterion in criteria])
+        header = header + criteria_headings
+    else:
+        header = header + ["SCORES"]
+
     i = 0  # sets the applicant number
     for applicant in applicants:
         i += 1
-        applicant_info = []  # list with correct information format for each row
-        applicant_info.append(i)  # applicant number
-        # truncate name of applicant if name is more than 15 chars long
+        row = [i]
         if len(applicant.name) > 15:
-            applicant_info.append(applicant.name[0:15]+"...")
+            row.append(applicant.name[0:15] + "...")
         else:
-            applicant_info.append(applicant.name)
-        # append criterion score in the order criteria
+            row.append(applicant.name)
+
+        row.append(total_score(applicant.scores))
+
+        scores = []
         for criterion in criteria:
             if criterion in applicant.scores:
-                applicant_info.append(applicant.scores.get(criterion)[0])
+                scores.append(applicant.scores.get(criterion)[0])
             else:
-                # placeholder for unmarked criterion
-                applicant_info.append("·")
-        tab.append(applicant_info)
-    return tab
+                scores.append("·")
+
+        if table_type == "wide":
+            row += scores
+        else:
+            row += ["".join(scores)]
+        tab.append(row)
+
+    table = tabulate(
+        tab,
+        headers=header,
+        stralign="center",
+        colalign=("center", "left"),
+    )
+    return table
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
@@ -318,39 +342,73 @@ def abbreviate(list_of_strings: List[str]) -> list[str]:
             abbreviations.append(string)
     return abbreviations
 
+
 # filter functions
-def name(applicant:Applicant, name:str):
+def name(applicant: Applicant, _name: str):
     """Filter by matching name pattern applicant name.
     Example usage:  name(applicant,"Emma")"""
-    return re.search(name,applicant.name)
+    return re.search(_name, applicant.name)
 
-def score(applicant:Applicant,name,score):
+
+def score(applicant: Applicant, _name, _score):
     """Filter by matching applicant score.
     Example usage:  score(applicant,"PhD","Excellent")"""
 
     # checks that (criterion) name does not match any criterion in applicant scores
-    if score == None:
-        return name.lower() not in [getattr(criterion,"name").lower() for criterion in applicant.scores]
-    
+    if _score is None:
+        return _name.lower() not in [
+            getattr(criterion, "name").lower() for criterion in applicant.scores
+        ]
+
     # checks if (criterion) name and score matches the saved applicant scores
     for criterion in applicant.scores:
-        if getattr(criterion,"name").lower() == name.lower():
-            return applicant.scores[criterion].lower() == score.lower()
+        if getattr(criterion, "name").lower() == _name.lower():
+            return applicant.scores[criterion].lower() == _score.lower()
     # handles no match cases
     return False
 
-def rtw(applicant:Applicant):
+
+def rtw(applicant: Applicant):
     """Filter out applicants without the right to work.
     Example usage:  rtw(applicant)"""
     return applicant.right_to_work
 
-def cv(applicant:Applicant,pattern:str):
+
+def cv(applicant: Applicant, pattern: str):
     """Filter by matching regex pattern in applicant's CV.
     Example usage:  cv(applicant,"Engineer")"""
     return re.search(pattern, applicant.application_text)
 
-def notes(applicant:Applicant,pattern:str):
+
+def notes(applicant: Applicant, pattern: str):
     """Filter by matching regex pattern in applicant note.
     Example usage:  notes(applicant,"Engineer")
     """
     return re.search(pattern, applicant.notes)
+
+
+class InteractiveSorter:
+    def __init__(self):
+        self.selected = None
+        self.sorted = None
+
+    def sort(self, items):
+        """Insertion sort, but yields the items to compare. The caller says which is greater."""
+
+        # We sort the items inplace, so don't change the input
+        self.sorted = items.copy()
+
+        # Insertion sort from https://www.w3schools.com/dsa/dsa_algo_insertionsort.php
+        for i in range(1, len(self.sorted)):
+            insert_index = i
+            value = self.sorted[i]
+            for j in range(i - 1, -1, -1):
+                # self.selected is set by the caller for the yielded pair
+                self.selected = None
+                yield self.sorted[j], value
+                if self.selected == self.sorted[j]:
+                    self.sorted[j + 1] = self.sorted[j]
+                    insert_index = j
+                else:
+                    break
+            self.sorted[insert_index] = value
