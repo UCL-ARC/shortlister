@@ -1,4 +1,7 @@
 import readline
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
 import string
 from dataclasses import dataclass
 from enum import Enum
@@ -13,7 +16,7 @@ from shortlister.model import (RANK_AND_SCORE, Applicant, Criterion,  # noqa
                                InteractiveSorter, applicant_table, clear_score,
                                cv, load_shortlist, name, notes, rtw,
                                save_shortlist, score, sort_alpha,
-                               sort_ascending_score, sort_descending_score,
+                               sort_ascending_score, sort_descending_score, total_score,
                                update_applicant_notes, update_applicant_score)
 from shortlister.view import View
 
@@ -78,7 +81,8 @@ class Controller:
             "r": (self.rank_selected_applicants, "RANK"),
             "t": (self.show_applicants_table, "SWITCH TABLE"),
             "l": (self.show_table_legend, "LEGEND"),
-            "a": (self.show_applicants_table, "APPLICANTS"),
+            "e":(self.export_excel,"EXPORT EXCEL"),
+            "a": (self.show_applicants_table, "APPLICANTS"), # not sure if this option is needed
             "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
@@ -323,6 +327,38 @@ class Controller:
     def clear_filter(self, k=None):
         self.ctx.applicants = self.shortlist.applicants
         self.show_applicants_table()
+
+    def export_excel(self,k=None):
+        """Export all selected applicants to Excel spreadsheet"""
+        # create an instance of workbook
+        wb = Workbook()
+        # select the first worksheet as active sheet
+        ws = wb.active
+        ws.title = "selected_applicants"
+
+        # header
+        header = ["№", "NAME", "Σ","Right to Work"]
+        criteria_headings = [criterion.name for criterion in self.shortlist.role.criteria]
+        header = header + criteria_headings
+
+        ws.append(header)
+
+        i = 0
+        # rest of applicant information
+        for applicant in self.ctx.applicants:
+            i = i+1
+            row = [i,applicant.name,total_score(applicant.scores),applicant.right_to_work]
+
+            for criterion in self.shortlist.role.criteria:
+                if criterion in applicant.scores:
+                    row.append(applicant.scores.get(criterion)[0])
+                else:
+                    row.append("·")
+            ws.append(row)
+
+        for col in range(1,len(header)):
+            ws[get_column_letter(col)+"1"].font = Font(bold=True)
+        wb.save("spreadsheet.xlsx")
 
     def rank_selected_applicants(self, k=None):
         result = tournament.get_existing_result(
