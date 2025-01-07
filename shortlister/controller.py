@@ -356,8 +356,26 @@ class Controller:
                     row.append("·")
             ws.append(row)
 
-        for col in range(1,len(header)):
+        # Styling
+        # Auto adjust width
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter # Get the column name
+            for cell in col:
+                try: # Necessary to avoid error on empty cells
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = (max_length+1.5) * 1.2
+            ws.column_dimensions[column].width = adjusted_width
+
+        # change header to bold
+        for col in range(1,len(header)+1):
             ws[get_column_letter(col)+"1"].font = Font(bold=True)
+
+        # add colour for cells depending on the score: U(red),M,S,E(green)
+        
         wb.save("spreadsheet.xlsx")
 
     def rank_selected_applicants(self, k=None):
