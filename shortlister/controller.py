@@ -352,7 +352,7 @@ class Controller:
     def export_applicants_excel(self, k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        filename = Path(input("Name to") + ".xlsx")
+        filename = Path(input("Save as (filename):") + ".xlsx")
         if pathvalidate.is_valid_filename(filename=filename, platform="windows"):
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
             print(f"Excel file exported successfully: {os.path.abspath(filename)}")
