@@ -3,6 +3,9 @@ from pathlib import Path
 from typing import Dict, List
 import csv
 import pickle
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Color, PatternFill, Font, Border
 import pymupdf
 import re
 
@@ -278,7 +281,6 @@ def extract_info_from_text(lines: List[str]):
 
 # creating tabular data
 
-
 def applicant_table(applicants: List[Applicant], criteria: List[Criterion], table_type="wide") -> (List, List):
     """Generates applicant and score data for summary table"""
     # tab is a list of lists:
@@ -286,6 +288,7 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion], tabl
     tab = []
 
     # creates heading
+#
     header = ["№", "NAME", "Σ"]
     if table_type == "wide":
         criteria_headings = abbreviate([criterion.name for criterion in criteria])
@@ -324,6 +327,68 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion], tabl
         colalign=("center", "left"),
     )
     return table
+
+def export_excel(applicants: List[Applicant], criteria: List[Criterion]):
+        """Save selected applicant(s) data to Excel spreadsheet"""
+        # create an instance of workbook
+        wb = Workbook()
+        # select the first worksheet as active sheet
+        ws = wb.active
+        ws.title = "selected_applicants"
+
+        # header
+        header = ["№", "NAME", "Σ","Right to Work"]
+        criteria_headings = [criterion.name for criterion in criteria]
+        header = header + criteria_headings
+        ws.append(header)
+
+        i = 0
+        # rest of applicant information
+        for applicant in applicants:
+            i = i+1
+            row = [i,applicant.name,total_score(applicant.scores),applicant.right_to_work]
+
+            for criterion in criteria:
+                if criterion in applicant.scores:
+                    row.append(applicant.scores.get(criterion)[0])
+                else:
+                    row.append("·")
+
+            ws.append(row)
+
+        # Styling
+        # Auto adjust width
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter # Get the column name
+            for cell in col:
+                try: # Necessary to avoid error on empty cells
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = (max_length+1.5) * 1.2
+            ws.column_dimensions[column].width = adjusted_width
+
+        # change header to bold
+        for col in range(1,len(header)+1):
+            ws[get_column_letter(col)+"1"].font = Font(bold=True)
+            ws[get_column_letter(col)+"1"].fill = PatternFill(start_color='B7DEE8', fill_type="solid")
+
+        # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
+        for row in ws.iter_rows(2):
+            for cell in row:
+                if cell.value == "U":
+                    cell.fill = PatternFill(start_color='FF3300', fill_type="solid")
+                elif cell.value == "M":
+                    cell.fill = PatternFill(start_color='FFFF00', fill_type="solid")
+                elif cell.value == "S":
+                    cell.fill = PatternFill(start_color='C4D79B', fill_type="solid")
+                elif cell.value == "E":
+                    cell.fill = PatternFill(start_color='92D050', fill_type="solid")
+                    
+
+        wb.save("spreadsheet.xlsx")
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
