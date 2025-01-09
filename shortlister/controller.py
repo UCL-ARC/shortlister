@@ -1,3 +1,4 @@
+import os
 import readline
 import string
 from dataclasses import dataclass
@@ -5,6 +6,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List
 
+import pathvalidate
 from readchar import readkey
 from startfile import startfile  # noqa - package name: universal-startfile
 
@@ -328,9 +330,12 @@ class Controller:
     def export_applicants_excel(self,k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        export_excel(self.ctx.applicants,self.shortlist.role.criteria)
-
-        print("Excel file exported successfully")
+        filename = Path(input("Name to") +".xlsx")
+        if pathvalidate.is_valid_filename(filename=filename,platform="windows"):
+            export_excel(filename,self.ctx.applicants,self.shortlist.role.criteria)
+            print(f"Excel file exported successfully: {os.path.abspath(filename)}")
+        else:
+            print("Invalid filename!")
 
     def rank_selected_applicants(self, k=None):
         result = tournament.get_existing_result(

@@ -5,7 +5,7 @@ import csv
 import pickle
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import Color, PatternFill, Font, Border
+from openpyxl.styles import PatternFill, Font
 import pymupdf
 import re
 
@@ -328,7 +328,7 @@ def applicant_table(applicants: List[Applicant], criteria: List[Criterion], tabl
     )
     return table
 
-def export_excel(applicants: List[Applicant], criteria: List[Criterion]):
+def export_excel(filename,applicants: List[Applicant], criteria: List[Criterion]):
         """Save selected applicant(s) data to Excel spreadsheet"""
         # create an instance of workbook
         wb = Workbook()
@@ -388,7 +388,7 @@ def export_excel(applicants: List[Applicant], criteria: List[Criterion]):
                     cell.fill = PatternFill(start_color='92D050', fill_type="solid")
                     
 
-        wb.save("spreadsheet.xlsx")
+        wb.save(filename)
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
