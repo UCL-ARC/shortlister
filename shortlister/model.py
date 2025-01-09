@@ -286,12 +286,13 @@ def extract_info_from_text(lines: List[str]):
 
 # creating tabular data
 def get_headings(criteria:List[Criterion]):
+    """Get headings for table"""
     header = ["No.", "NAME", "Σ", "Right to Work"]
     criteria_headings = [criterion.name for criterion in criteria]
     return header,criteria_headings
 
 def get_applicant_information(applicants:List[Applicant],criteria:List[Criterion]):
-
+    """Get applicant detail and scores to display in table"""
     rows = []
     scores =[]
     i = 0
@@ -365,7 +366,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     wb = Workbook()
     # select the first worksheet as active sheet
     ws = wb.active
-    ws.title = "selected_applicants"
+    ws.title = str(filename)
 
     # header
     header,criteria_headings = get_headings(criteria)
