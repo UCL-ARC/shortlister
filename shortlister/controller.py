@@ -11,12 +11,28 @@ from readchar import readkey
 from startfile import startfile  # noqa - package name: universal-startfile
 
 import shortlister.tournament as tournament
-from shortlister.model import (RANK_AND_SCORE, Applicant, Criterion,  # noqa
-                               InteractiveSorter, applicant_table, clear_score,
-                               cv, load_shortlist, name, notes, rtw,
-                               save_shortlist, score, sort_alpha,
-                               sort_ascending_score, sort_descending_score, total_score,
-                               update_applicant_notes, update_applicant_score,export_excel)
+from shortlister.model import (
+    RANK_AND_SCORE,
+    Applicant,
+    Criterion,  # noqa
+    InteractiveSorter,
+    applicant_table,
+    clear_score,
+    cv,
+    load_shortlist,
+    name,
+    notes,
+    rtw,
+    save_shortlist,
+    score,
+    sort_alpha,
+    sort_ascending_score,
+    sort_descending_score,
+    total_score,
+    update_applicant_notes,
+    update_applicant_score,
+    export_excel,
+)
 from shortlister.view import View
 
 try:
@@ -31,6 +47,7 @@ except ImportError:
 class ViewWidth(Enum):
     NARROW, WIDE = 1, 2
 
+
 @dataclass
 class Context:
     applicants: list[Applicant]  # selected applicants
@@ -38,8 +55,8 @@ class Context:
     criterion: Criterion | None  # selected criterion to score
     table_view: ViewWidth  # selected applicants' table view
 
-class Controller:
 
+class Controller:
     def __init__(self, path, wv_window=None):
         self.path = path
         self.shortlist, msg = load_shortlist(path)
@@ -55,7 +72,7 @@ class Controller:
             applicants=self.shortlist.applicants,
             applicant_index=0,
             criterion=None,
-            table_view=ViewWidth.WIDE
+            table_view=ViewWidth.WIDE,
         )
 
         # a window from pywebview to display PDFs
@@ -80,8 +97,11 @@ class Controller:
             "r": (self.rank_selected_applicants, "RANK"),
             "t": (self.show_applicants_table, "SWITCH TABLE"),
             "l": (self.show_table_legend, "LEGEND"),
-            "e":(self.export_applicants_excel,"EXPORT EXCEL"),
-            "a": (self.show_applicants_table, "APPLICANTS"), # not sure if this option is needed
+            "e": (self.export_applicants_excel, "EXPORT EXCEL"),
+            "a": (
+                self.show_applicants_table,
+                "APPLICANTS",
+            ),  # not sure if this option is needed
             "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
@@ -164,7 +184,7 @@ class Controller:
         table = applicant_table(
             self.ctx.applicants,
             self.shortlist.role.criteria,
-            "wide" if self.ctx.table_view == ViewWidth.WIDE else "narrow"
+            "wide" if self.ctx.table_view == ViewWidth.WIDE else "narrow",
         )
 
         self.view.view_applicant_table(table)
@@ -183,7 +203,9 @@ class Controller:
             str(self.available_keys[i]): (self.score_applicant_step_2, c.name)
             for i, c in enumerate(self.shortlist.role.criteria)
         }
-        scored_criteria = [c.name for c in self.applicant(self.ctx.applicant_index).scores]
+        scored_criteria = [
+            c.name for c in self.applicant(self.ctx.applicant_index).scores
+        ]
         self.view.view_criteria(self.options, scored_criteria)
         # press q to quit at next step
         self.options["q"] = (self.score_applicant_step_2, "APPLICANT")
@@ -327,12 +349,12 @@ class Controller:
         self.ctx.applicants = self.shortlist.applicants
         self.show_applicants_table()
 
-    def export_applicants_excel(self,k=None):
+    def export_applicants_excel(self, k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        filename = Path(input("Name to") +".xlsx")
-        if pathvalidate.is_valid_filename(filename=filename,platform="windows"):
-            export_excel(filename,self.ctx.applicants,self.shortlist.role.criteria)
+        filename = Path(input("Name to") + ".xlsx")
+        if pathvalidate.is_valid_filename(filename=filename, platform="windows"):
+            export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
             print(f"Excel file exported successfully: {os.path.abspath(filename)}")
         else:
             print("Invalid filename!")
@@ -343,7 +365,7 @@ class Controller:
         )
         result = tournament.comparison(self.ctx.applicants, result)
 
-        # Condition to avoid exception (caused by empty result when quitting comparison with "q")    
+        # Condition to avoid exception (caused by empty result when quitting comparison with "q")
         if result:
             ranked_list = tournament.rank(self.ctx.applicants, result)
             print("RESULT:", [applicant.name for applicant in ranked_list])
@@ -357,7 +379,9 @@ class Controller:
     def view_applicant_details(self):
         applicant: Applicant = self.applicant(self.ctx.applicant_index)
         applicant_number = self.ctx.applicant_index + 1
-        self.view.view_applicant_details(applicant, self.shortlist.role.criteria, applicant_number)
+        self.view.view_applicant_details(
+            applicant, self.shortlist.role.criteria, applicant_number
+        )
 
         if self.wv_window is not None:
             path = self.applicant(self.ctx.applicant_index).cv
