@@ -6,6 +6,7 @@ import pickle
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill, Font
+from openpyxl.worksheet.table import Table,TableStyleInfo
 import pymupdf
 import re
 
@@ -402,6 +403,19 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         ws[get_column_letter(col) + "1"].fill = PatternFill(
             start_color="B7DEE8", fill_type="solid"
         )
+
+
+    # table styling
+    table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
+
+    table = Table(displayName="DynamicTable", ref=table_range)
+    style = TableStyleInfo(name="TableStyleMedium9",
+                            showFirstColumn=False,
+                            showLastColumn=False,
+                            showRowStripes=True,
+                            showColumnStripes=False,)
+    table.tableStyleInfo = style
+    ws.add_table(table)
 
     # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
     for row in ws.iter_rows(2):
