@@ -285,54 +285,76 @@ def extract_info_from_text(lines: List[str]):
 
 
 # creating tabular data
+def get_headings(criteria:List[Criterion]):
+    header = ["No.", "NAME", "Σ", "Right to Work"]
+    criteria_headings = [criterion.name for criterion in criteria]
+    return header,criteria_headings
 
+def get_applicant_information(applicants:List[Applicant],criteria:List[Criterion]):
+
+    rows = []
+    scores =[]
+    i = 0
+    for applicant in applicants:
+        i = i + 1
+        row = [
+            i,
+            applicant.name,
+            total_score(applicant.scores),
+            applicant.right_to_work,
+        ]
+        score = []
+        for criterion in criteria:
+            if criterion in applicant.scores:
+                score.append(applicant.scores.get(criterion)[0])
+            else:
+                score.append("·")
+        
+        rows.append(row)
+        scores.append(score)
+    return rows,scores
 
 def applicant_table(
     applicants: List[Applicant], criteria: List[Criterion], table_type="wide"
 ) -> (List, List):
     """Generates applicant and score data for summary table"""
-    # tab is a list of lists:
-    # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
-    tab = []
 
     # creates heading
-    #
-    header = ["№", "NAME", "Σ"]
+    header,criteria_headings = get_headings(criteria)
     if table_type == "wide":
         criteria_headings = abbreviate([criterion.name for criterion in criteria])
         header = header + criteria_headings
     else:
         header = header + ["SCORES"]
+    
+    # creates rows of applicant data
 
-    i = 0  # sets the applicant number
-    for applicant in applicants:
-        i += 1
-        row = [i]
-        if len(applicant.name) > 15:
-            row.append(applicant.name[0:15] + "...")
-        else:
-            row.append(applicant.name)
+    rows,scores = get_applicant_information(applicants,criteria)
 
-        row.append(total_score(applicant.scores))
+    # limit name length to 15
+    for row in rows:
+      if len(row[1]) > 15:
+        row[1] = row[1][0:15]+"..."
 
-        scores = []
-        for criterion in criteria:
-            if criterion in applicant.scores:
-                scores.append(applicant.scores.get(criterion)[0])
-            else:
-                scores.append("·")
+    # combine rows with scores to get complete information for each applicant
+    tab = []
 
-        if table_type == "wide":
-            row += scores
-        else:
-            row += ["".join(scores)]
-        tab.append(row)
+    if table_type == "wide":
+        combined = zip(rows,scores)
+        for applicant in combined:
+            flat_list = []
+            for attribute in applicant:
+                flat_list.extend(attribute)
+            tab.append(flat_list)
+    else:
+        joined_scores = ["".join(score) for score in scores]
+        tab = [row+[score] for row,score in zip(rows,joined_scores)]
 
     table = tabulate(
         tab,
         headers=header,
         stralign="center",
-        colalign=("center", "left"),
+        colalign=("center", "left")
     )
     return table
 
@@ -346,29 +368,18 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     ws.title = "selected_applicants"
 
     # header
-    header = ["№", "NAME", "Σ", "Right to Work"]
-    criteria_headings = [criterion.name for criterion in criteria]
-    header = header + criteria_headings
+    header,criteria_headings = get_headings(criteria)
+    header+=criteria_headings
     ws.append(header)
 
-    i = 0
     # rest of applicant information
-    for applicant in applicants:
-        i = i + 1
-        row = [
-            i,
-            applicant.name,
-            total_score(applicant.scores),
-            applicant.right_to_work,
-        ]
-
-        for criterion in criteria:
-            if criterion in applicant.scores:
-                row.append(applicant.scores.get(criterion)[0])
-            else:
-                row.append("·")
-
-        ws.append(row)
+    rows,scores = get_applicant_information(applicants,criteria)
+    tab = zip(rows,scores)
+    for applicant in tab:
+        flat_list = []
+        for attribute in applicant:
+            flat_list.extend(attribute)
+        ws.append(flat_list)
 
     # Styling
     # Auto adjust width
@@ -384,7 +395,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         adjusted_width = (max_length + 1.5) * 1.2
         ws.column_dimensions[column].width = adjusted_width
 
-    # change header to bold
+    # change colour/style of headings
     for col in range(1, len(header) + 1):
         ws[get_column_letter(col) + "1"].font = Font(bold=True)
         ws[get_column_letter(col) + "1"].fill = PatternFill(
