@@ -396,15 +396,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
                 pass
         adjusted_width = (max_length + 1.5) * 1.2
         ws.column_dimensions[column].width = adjusted_width
-
-    # change colour/style of headings
-    for col in range(1, len(header) + 1):
-        ws[get_column_letter(col) + "1"].font = Font(bold=True)
-        ws[get_column_letter(col) + "1"].fill = PatternFill(
-            start_color="B7DEE8", fill_type="solid"
-        )
-
-
+    
     # table styling
     table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
 
@@ -417,6 +409,13 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     table.tableStyleInfo = style
     ws.add_table(table)
 
+    # change colour/style of headings
+    for col in range(1, len(header) + 1):
+        ws[get_column_letter(col) + "1"].font = Font(bold=True)
+        ws[get_column_letter(col) + "1"].fill = PatternFill(
+            start_color="8DB4E2", fill_type="solid"
+        )
+    
     # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
     for row in ws.iter_rows(2):
         for cell in row:
