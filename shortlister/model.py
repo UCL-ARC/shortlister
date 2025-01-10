@@ -5,7 +5,7 @@ import csv
 import pickle
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.worksheet.table import Table,TableStyleInfo
 import pymupdf
 import re
@@ -384,18 +384,18 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         ws.append(flat_list)
 
     # Styling
-    # Auto adjust width
-    for col in ws.columns:
-        max_length = 0
-        column = col[0].column_letter  # Get the column name
-        for cell in col:
-            try:  # Necessary to avoid error on empty cells
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = (max_length + 1.5) * 1.2
-        ws.column_dimensions[column].width = adjusted_width
+    # Auto adjust width - (not sure if still needed now that header are vertically aligned)
+    #for col in ws.columns:
+    #    max_length = 0
+    #    column = col[0].column_letter  # Get the column name
+    #    for cell in col:
+    #        try:  # Necessary to avoid error on empty cells
+    #            if len(str(cell.value)) > max_length:
+    #                max_length = len(str(cell.value))
+    #        except:
+    #            pass
+    #    adjusted_width = (max_length + 1.5) * 1.2
+    #    ws.column_dimensions[column].width = adjusted_width
     
     # table styling
     table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
@@ -410,11 +410,17 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     ws.add_table(table)
 
     # change colour/style of headings
-    for col in range(1, len(header) + 1):
-        ws[get_column_letter(col) + "1"].font = Font(bold=True)
-        ws[get_column_letter(col) + "1"].fill = PatternFill(
+    for col in range(1, ws.max_column+1):
+        heading_cell = ws[get_column_letter(col) + "1"] 
+        heading_cell.font = Font(bold=True)
+        heading_cell.fill = PatternFill(
             start_color="8DB4E2", fill_type="solid"
         )
+    
+    # rotate score headings
+    for col in range(4, ws.max_column+1):
+        heading_score_cell = ws[get_column_letter(col)+"1"]
+        heading_score_cell.alignment = Alignment(textRotation=180)
     
     # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
     for row in ws.iter_rows(2):
