@@ -81,7 +81,7 @@ class Controller:
         # add common filtering commands to readline history for easy access
         readline.add_history('score(applicant, "criterion-name", "score")')
         readline.add_history('cv(applicant, "regex")')
-        readline.add_history('name(applicant, "name"')
+        readline.add_history('name(applicant, "name")')
 
         self.options_home = {
             "a": (self.show_applicants_table, "APPLICANTS"),
