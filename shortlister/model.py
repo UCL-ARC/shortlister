@@ -403,18 +403,16 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         ws.append(flat_list)
 
     # Styling
-    # Auto adjust width - (not sure if still needed now that header are vertically aligned)
-    #for col in ws.columns:
-    #    max_length = 0
-    #    column = col[0].column_letter  # Get the column name
-    #    for cell in col:
-    #        try:  # Necessary to avoid error on empty cells
-    #            if len(str(cell.value)) > max_length:
-    #                max_length = len(str(cell.value))
-    #        except:
-    #            pass
-    #    adjusted_width = (max_length + 1.5) * 1.2
-    #    ws.column_dimensions[column].width = adjusted_width
+    # Auto adjust width for name column
+    max_length = 0
+    for cell in ws["B"]:
+        try:
+            if len(str(cell.value)) > max_length:
+                max_length = len(cell.value)
+        except:
+            pass
+    adjusted_width = (max_length + 1.5) * 1.2
+    ws.column_dimensions["B"].width = adjusted_width
     
     # table styling
     table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
