@@ -1,4 +1,5 @@
 import os
+import datetime
 import readline
 import string
 from dataclasses import dataclass
@@ -97,7 +98,7 @@ class Controller:
             "r": (self.rank_selected_applicants, "RANK"),
             "t": (self.show_applicants_table, "SWITCH TABLE"),
             "l": (self.show_table_legend, "LEGEND"),
-            "e": (self.export_applicants_excel, "EXPORT EXCEL"),
+            "e": (self.export_applicants_excel, "EXPORT"),
             "a": (
                 self.show_applicants_table,
                 "APPLICANTS",
@@ -352,12 +353,19 @@ class Controller:
     def export_applicants_excel(self, k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        filename = Path(input("Save as (filename):") + ".xlsx")
-        if pathvalidate.is_valid_filename(filename=filename, platform="windows"):
+        filename = input("Save as (filename):")
+        if str(filename) == "":
+            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+            filename= Path(f"{self.path}_{timestamp}.xlsx")
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
-            print(f"Excel file exported successfully: {os.path.abspath(filename)}")
+            print(f"Exported: {os.path.abspath(filename)}")
+        elif pathvalidate.is_valid_filename(filename=filename, platform="windows"):
+            filename = Path(f"{filename}.xlsx")
+            export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
+            print(f"Exported: {os.path.abspath(filename)}")
         else:
             print("Invalid filename!")
+        print()
 
     def rank_selected_applicants(self, k=None):
         result = tournament.get_existing_result(
