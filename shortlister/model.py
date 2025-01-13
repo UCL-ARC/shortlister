@@ -75,6 +75,25 @@ RANK_AND_SCORE = {
     "Excellent": 40,
 }
 
+RANK_COLOUR_EXCEL = {
+    "U":{
+        "start_color":"FF3300",
+        "fill_type":"solid"
+        },
+    "M":{
+        "start_color":"FFFF00",
+        "fill_type":"solid"
+        },
+    "S":{
+        "start_color":"C4D79B",
+        "fill_type":"solid"
+        },
+    "E":{
+        "start_color":"92D050",
+        "fill_type":"solid"
+        },
+}
+
 # Functions
 
 
@@ -288,7 +307,7 @@ def extract_info_from_text(lines: List[str]):
 # creating tabular data
 def get_headings(criteria:List[Criterion]):
     """Get headings for table"""
-    header = ["No.", "NAME", "Σ", "Right to Work"]
+    header = ["No.", "NAME", "Σ", "RtW"]
     criteria_headings = [criterion.name for criterion in criteria]
     return header,criteria_headings
 
@@ -303,7 +322,7 @@ def get_applicant_information(applicants:List[Applicant],criteria:List[Criterion
             i,
             applicant.name,
             total_score(applicant.scores),
-            applicant.right_to_work,
+            "Y" if applicant.right_to_work else "N",
         ]
         score = []
         for criterion in criteria:
@@ -401,38 +420,36 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
 
     table = Table(displayName="DynamicTable", ref=table_range)
-    style = TableStyleInfo(name="TableStyleMedium9",
+    table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium9",
                             showFirstColumn=False,
                             showLastColumn=False,
                             showRowStripes=True,
                             showColumnStripes=False,)
-    table.tableStyleInfo = style
     ws.add_table(table)
 
     # change colour/style of headings
     for col in range(1, ws.max_column+1):
         heading_cell = ws[get_column_letter(col) + "1"] 
+        heading_cell.alignment = Alignment(horizontal="center")
         heading_cell.font = Font(bold=True)
         heading_cell.fill = PatternFill(
             start_color="8DB4E2", fill_type="solid"
         )
     
     # rotate score headings
-    for col in range(4, ws.max_column+1):
+    for col in range(5, ws.max_column+1):
         heading_score_cell = ws[get_column_letter(col)+"1"]
-        heading_score_cell.alignment = Alignment(textRotation=180)
+        heading_score_cell.alignment = Alignment(horizontal="center",textRotation=90)
     
     # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
     for row in ws.iter_rows(2):
         for cell in row:
-            if cell.value == "U":
-                cell.fill = PatternFill(start_color="FF3300", fill_type="solid")
-            elif cell.value == "M":
-                cell.fill = PatternFill(start_color="FFFF00", fill_type="solid")
-            elif cell.value == "S":
-                cell.fill = PatternFill(start_color="C4D79B", fill_type="solid")
-            elif cell.value == "E":
-                cell.fill = PatternFill(start_color="92D050", fill_type="solid")
+            cell.alignment = Alignment(horizontal="center")
+            if str(cell.value) in RANK_COLOUR_EXCEL:
+                colour_parameter = RANK_COLOUR_EXCEL.get(cell.value)
+                cell.fill = PatternFill(**colour_parameter)
+            else:
+                pass
 
     wb.save(filename)
 
