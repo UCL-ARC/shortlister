@@ -3,6 +3,10 @@ from pathlib import Path
 from typing import Dict, List
 import csv
 import pickle
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import PatternFill, Font, Alignment
+from openpyxl.worksheet.table import Table,TableStyleInfo
 import pymupdf
 import re
 
@@ -12,6 +16,7 @@ from tabulate import tabulate
 @dataclass(frozen=True)
 class Criterion:
     """A property of Role - contained within the attribute criteria(list of Criterion objects)."""
+
     name: str
     description: str
 
@@ -22,6 +27,7 @@ class Criterion:
 @dataclass(eq=False)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
+
     name: str = field(compare=True)
     cv: Path
     email: str
@@ -44,6 +50,7 @@ class Applicant:
 @dataclass
 class Role:
     """A property of Shortlist."""
+
     job_title: str
     job_id: str
     criteria: List[Criterion]
@@ -52,6 +59,7 @@ class Role:
 @dataclass
 class Shortlist:
     """Major class object containing all relevant role, applicant, criteria information for shortlisting."""
+
     role: Role
     applicants: List[Applicant]
 
@@ -67,7 +75,27 @@ RANK_AND_SCORE = {
     "Excellent": 40,
 }
 
+RANK_COLOUR_EXCEL = {
+    "U":{
+        "start_color":"FF3300",
+        "fill_type":"solid"
+        },
+    "M":{
+        "start_color":"FFFF00",
+        "fill_type":"solid"
+        },
+    "S":{
+        "start_color":"C4D79B",
+        "fill_type":"solid"
+        },
+    "E":{
+        "start_color":"92D050",
+        "fill_type":"solid"
+        },
+}
+
 # Functions
+
 
 def load_pickle(file_path):
     """Load shortlist from existing pickle file."""
@@ -224,7 +252,7 @@ def extract_info_from_text(lines: List[str]):
     """gets the section containing applicant information from extracted text"""
 
     # fields labels to get related applicant information
-    labels: Dict[str, str|bool] = dict.fromkeys(
+    labels: Dict[str, str | bool] = dict.fromkeys(
         [
             "First Name",
             "Last Name",
@@ -277,53 +305,151 @@ def extract_info_from_text(lines: List[str]):
 
 
 # creating tabular data
+def get_headings(criteria:List[Criterion]):
+    """Get headings for table"""
+    header = ["No.", "NAME", "Σ", "RtW"]
+    criteria_headings = [criterion.name for criterion in criteria]
+    return header,criteria_headings
 
+def get_applicant_information(applicants:List[Applicant],criteria:List[Criterion]):
+    """Get applicant detail and scores to display in table"""
+    rows = []
+    scores =[]
+    i = 0
+    for applicant in applicants:
+        i = i + 1
+        row = [
+            i,
+            applicant.name,
+            total_score(applicant.scores),
+            "Y" if applicant.right_to_work else "N",
+        ]
+        score = []
+        for criterion in criteria:
+            if criterion in applicant.scores:
+                score.append(applicant.scores.get(criterion)[0])
+            else:
+                score.append("·")
+        
+        rows.append(row)
+        scores.append(score)
+    return rows,scores
 
-def applicant_table(applicants: List[Applicant], criteria: List[Criterion], table_type="wide") -> (List, List):
+def applicant_table(
+    applicants: List[Applicant], criteria: List[Criterion], table_type="wide"
+) -> (List, List):
     """Generates applicant and score data for summary table"""
-    # tab is a list of lists:
-    # each list in tab has the format of ["1","name1","score1","score2","score3","score*n"]
-    tab = []
 
     # creates heading
-    header = ["№", "NAME", "Σ"]
+    header,criteria_headings = get_headings(criteria)
     if table_type == "wide":
         criteria_headings = abbreviate([criterion.name for criterion in criteria])
         header = header + criteria_headings
     else:
         header = header + ["SCORES"]
+    
+    # creates rows of applicant data
 
-    i = 0  # sets the applicant number
-    for applicant in applicants:
-        i += 1
-        row = [i]
-        if len(applicant.name) > 15:
-            row.append(applicant.name[0:15] + "...")
-        else:
-            row.append(applicant.name)
+    rows,scores = get_applicant_information(applicants,criteria)
 
-        row.append(total_score(applicant.scores))
+    # limit name length to 15
+    for row in rows:
+      if len(row[1]) > 15:
+        row[1] = row[1][0:15]+"..."
 
-        scores = []
-        for criterion in criteria:
-            if criterion in applicant.scores:
-                scores.append(applicant.scores.get(criterion)[0])
-            else:
-                scores.append("·")
+    # combine rows with scores to get complete information for each applicant
+    tab = []
 
-        if table_type == "wide":
-            row += scores
-        else:
-            row += ["".join(scores)]
-        tab.append(row)
+    if table_type == "wide":
+        combined = zip(rows,scores)
+        for applicant in combined:
+            flat_list = []
+            for attribute in applicant:
+                flat_list.extend(attribute)
+            tab.append(flat_list)
+    else:
+        joined_scores = ["".join(score) for score in scores]
+        tab = [row+[score] for row,score in zip(rows,joined_scores)]
 
     table = tabulate(
         tab,
         headers=header,
         stralign="center",
-        colalign=("center", "left"),
+        colalign=("center", "left")
     )
     return table
+
+
+def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion]):
+    """Save selected applicant(s) data to Excel spreadsheet"""
+    # create an instance of workbook
+    wb = Workbook()
+    # select the first worksheet as active sheet
+    ws = wb.active
+    ws.title = str(filename)
+
+    # header
+    header,criteria_headings = get_headings(criteria)
+    header+=criteria_headings
+    ws.append(header)
+
+    # rest of applicant information
+    rows,scores = get_applicant_information(applicants,criteria)
+    tab = zip(rows,scores)
+    for applicant in tab:
+        flat_list = []
+        for attribute in applicant:
+            flat_list.extend(attribute)
+        ws.append(flat_list)
+
+    # Styling
+    # Auto adjust width for name column
+    max_length = 0
+    for cell in ws["B"]:
+        try:
+            if len(str(cell.value)) > max_length:
+                max_length = len(cell.value)
+        except:
+            pass
+    adjusted_width = (max_length + 1.5) * 1.2
+    ws.column_dimensions["B"].width = adjusted_width
+    
+    # table styling
+    table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
+
+    table = Table(displayName="DynamicTable", ref=table_range)
+    table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium9",
+                            showFirstColumn=False,
+                            showLastColumn=False,
+                            showRowStripes=True,
+                            showColumnStripes=False,)
+    ws.add_table(table)
+
+    # change colour/style of headings
+    for col in range(1, ws.max_column+1):
+        heading_cell = ws[get_column_letter(col) + "1"] 
+        heading_cell.alignment = Alignment(horizontal="center")
+        heading_cell.font = Font(bold=True)
+        heading_cell.fill = PatternFill(
+            start_color="8DB4E2", fill_type="solid"
+        )
+    
+    # rotate score headings
+    for col in range(5, ws.max_column+1):
+        heading_score_cell = ws[get_column_letter(col)+"1"]
+        heading_score_cell.alignment = Alignment(horizontal="center",textRotation=90)
+    
+    # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
+    for row in ws.iter_rows(2):
+        for cell in row:
+            cell.alignment = Alignment(horizontal="center")
+            if str(cell.value) in RANK_COLOUR_EXCEL:
+                colour_parameter = RANK_COLOUR_EXCEL.get(cell.value)
+                cell.fill = PatternFill(**colour_parameter)
+            else:
+                pass
+
+    wb.save(filename)
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:

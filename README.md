@@ -1,45 +1,48 @@
 # Shortlister
 
-Imports a directory and shows information of applicants
+Light-weight program that assists with shortlisting candidates in a management setting.  
 
-## Startup
-Accepts an argument (path to your role_folder) when running the script:
+## Quick start
+
+Run the following script from command line:
+
 ```bash
-python main.py test_role
+python shortlister/main.py <role_directory>
+# <role_directory> : the path to your folder containing both:
+# 1.criteria(.csv file) - see test_role folder for formatting examples
+# 2.candidate CVs(.pdf files)
 ``` 
+Optional arguments avaliable which offers additional functionalities:
 
-## Learning notes(misc)
+```bash
+python shortlister/main.py <role_directory> -w
+# deploys webview for pdf files
+```
 
-### Python Modules
+## Functionalities
 
-#### Pickling
-Pickle: python module    
-pickling = converting object into binary files  
-unpickling = the inverse operation of pickling, converts binary file back to object
+```?``` for help (list avaliable key options in the current view)
 
-#### Pathlib
-pathlib = library for working with file paths
-glob = fetches files
+*Note*: keys are case sensitive, ```r``` is different to ```R```
 
-#### readchar
-module for recording and comparing keypresses
+#### Sorting applicants
+- Alphabetical
+- Score (Ascending/Descending)
+- Interactive comparison sort
+#### Filtering
+- allow users to enter their own expressions
+- up/down arrow keys for filtering templates 
+- allow regex expressions
 
-#### universal-startfile
-opens pdf files with system's default application
-crossplatform version of os.startfile
-
-Shell escaping
-(os.system only works with filenames that don't have any spaces or other shell metacharacters in the pathname)
-
-#### subprocess
-used to do tasks that is done via command line or interacting with external programs
-similar to os.system
-
-### Design concepts
-
-MVC design:     
-separate into Model(data/logic),View(output) and Controller(mediator)
-currently controller object contains loads all the data in using functions in model, and using functions in view, it prints out the results.
-
-UML diagram: visualisation of class
-
+#### Mark applicant
+- select a criterion and give an appropiate score
+- create notes on selected applicant
+#### Ranking
+- Quickly compare a list of applicant
+#### Export excel spreadsheet
+- Export the applicant table to an Excel spreadsheet 
+#### PDF Webview
+- Open pdfs automatically in webview if viewing details for a specific applicant 
+#### REPL:
+- Open a Python REPL within the terminal
+- Developer mode (full control to the program)
