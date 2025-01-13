@@ -6,9 +6,20 @@ build-backend = "hatchling.build"
 name = "shortlister"
 description = "Tool to assist with shortlisting applications"
 version = "0.1.0"
+dependencies = ["PyMuPDF==1.24.13",
+"pytest==8.3.3",
+"readchar==4.2.0",
+"ruff==0.7.3",
+"tabulate==0.9.0",
+"universal-startfile==0.2",
+"pyreadline3==3.5.4",
+"pathvalidate==3.2.3",
+"openpyxl==3.1.5"]
 
 [tool.hatch.build.targets.wheel]
 packages = [
   "src/shortlister",
 ]
-[tool.hatch.version]
+
+[project.scripts]
+run = "shortlister.main:run_controller"
