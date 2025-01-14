@@ -7,7 +7,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.worksheet.table import Table,TableStyleInfo
-from openpyxl.formatting.rule import Rule
+from openpyxl.formatting.rule import Rule,IconSetRule
 from openpyxl.styles.differential import DifferentialStyle
 import pymupdf
 import re
@@ -297,7 +297,7 @@ def extract_info_from_text(lines: List[str]):
 # creating tabular data
 def get_headings(criteria:List[Criterion]):
     """Get headings for table"""
-    header = ["No.", "NAME", "Σ", "RtW"]
+    header = ["No.", "NAME", "Σ","%","RtW"]
     criteria_headings = [criterion.name for criterion in criteria]
     return header,criteria_headings
 
@@ -306,12 +306,17 @@ def get_applicant_information(applicants:List[Applicant],criteria:List[Criterion
     rows = []
     scores =[]
     i = 0
+    denominator = RANK_AND_SCORE["Excellent"]*len(criteria)
+
     for applicant in applicants:
         i = i + 1
+        amount_scored = total_score(applicant.scores)
+        percentage_scored = round(amount_scored/denominator,2)*100
         row = [
             i,
             applicant.name,
-            total_score(applicant.scores),
+            amount_scored,
+            percentage_scored,
             "Y" if applicant.right_to_work else "N",
         ]
         score = []
@@ -337,6 +342,8 @@ def applicant_table(
         header = header + criteria_headings
     else:
         header = header + ["SCORES"]
+
+    RANK_AND_SCORE["Excellent"]*len(criteria_headings)
     
     # creates rows of applicant data
 
@@ -420,7 +427,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         )
     
     # rotate score headings
-    for col in range(5, ws.max_column+1):
+    for col in range(6, ws.max_column+1):
         heading_score_cell = ws[get_column_letter(col)+"1"]
         heading_score_cell.alignment = Alignment(horizontal="center",textRotation=90)
     
@@ -443,8 +450,39 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
                             showColumnStripes=False,)
     ws.add_table(table)
 
-    # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
+    # Icon rules
 
+    # right to work column
+    rtw_to_num = {
+    "N": 0,
+    "?": 2,
+    "Y": 1
+    }
+
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=5, max_col=5):
+        for cell in row:
+            if cell.value in rtw_to_num:
+                # map string to value
+                cell.value = rtw_to_num[cell.value]
+
+    rtw_icon_rule = IconSetRule(
+        type="num",
+        icon_style="3Symbols", 
+        showValue=False,   
+        percent=True,         
+        values=[0, 2, 1]
+    )
+
+    # total score column
+    total_score_icon_rule = IconSetRule(
+        type="num",
+        icon_style="3Arrows",
+        showValue=True, 
+        percent=True, 
+        values=[0,50,75]
+    )
+
+    # conditional formatting
     for score in RANK_COLOUR_EXCEL:
         ws.conditional_formatting.add(
             range_string=table_range, 
@@ -456,7 +494,9 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
                 formula=[f'EXACT("{score}",A1)']
                 )
                 )
-        
+    ws.conditional_formatting.add(f"D2:D{ws.max_row}", total_score_icon_rule)
+    ws.conditional_formatting.add(f"E2:E{ws.max_row}", rtw_icon_rule)
+
     wb.save(filename)
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
