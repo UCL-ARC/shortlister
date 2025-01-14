@@ -405,7 +405,8 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     # Styling
     # Auto adjust width for name column
     max_length = 0
-    for cell in ws["B"]:
+    name_column = [ws[f"B{i}"] for i in range(1, ws.max_row + 1)]
+    for cell in name_column:
         try:
             if len(str(cell.value)) > max_length:
                 max_length = len(cell.value)
@@ -427,8 +428,11 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
 
     # change colour/style of headings
     for col in range(1, ws.max_column+1):
-        heading_cell = ws[get_column_letter(col) + "1"] 
-        heading_cell.alignment = Alignment(horizontal="center")
+        heading_cell = ws[get_column_letter(col) + "1"]
+        if heading_cell.column_letter == "B":
+            heading_cell.alignment = Alignment(horizontal="left")
+        else:
+            heading_cell.alignment = Alignment(horizontal="center")
         heading_cell.font = Font(bold=True)
         heading_cell.fill = PatternFill(
             start_color="8DB4E2", fill_type="solid"
@@ -442,7 +446,10 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
     for row in ws.iter_rows(2):
         for cell in row:
-            cell.alignment = Alignment(horizontal="center")
+            if cell.column_letter == "B":
+                cell.alignment = Alignment(horizontal="left")
+            else:
+                cell.alignment = Alignment(horizontal="center")
             if str(cell.value) in RANK_COLOUR_EXCEL:
                 colour_parameter = RANK_COLOUR_EXCEL.get(cell.value)
                 cell.fill = PatternFill(**colour_parameter)
