@@ -7,7 +7,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill, Font, Alignment, Color
 from openpyxl.worksheet.table import Table,TableStyleInfo
-from openpyxl.formatting.rule import ColorScaleRule,  ColorScale, FormatObject, FormulaRule, Rule
+from openpyxl.formatting.rule import ColorScaleRule,  ColorScale, FormatObject, FormulaRule, Rule, IconSet
 from openpyxl.styles.differential import DifferentialStyle
 import pymupdf
 import re
@@ -393,7 +393,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         ws.append(flat_list)
 
     # Styling
-    
+
     # Auto adjust width for name column
     max_length = 0
     name_column = [ws[f"B{i}"] for i in range(1, ws.max_row + 1)]
@@ -456,7 +456,8 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
                 formula=[f'EXACT("{score}",A1)']
                 )
                 )
-
+        
+    wb.save(filename)
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
     """Create abbreviations for all strings in a list."""
