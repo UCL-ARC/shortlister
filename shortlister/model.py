@@ -128,7 +128,8 @@ def load_shortlist(path: Path) -> (Shortlist, str):
 
 def load_role(path, criteria):
     """Generates role object instance."""
-    role = Role(str(path), "0001", criteria)
+    name, id = str(path).rsplit("_",1)
+    role = Role(job_title=name, job_id=id, criteria=criteria)
     return role
 
 
