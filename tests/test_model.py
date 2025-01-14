@@ -1,5 +1,5 @@
 import pytest
-from shortlister import model
+from src.shortlister import model
 from pathlib import Path
 
 SCORES_VALUES = {

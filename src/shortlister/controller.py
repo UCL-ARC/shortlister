@@ -11,30 +11,30 @@ import pathvalidate
 from readchar import readkey
 from startfile import startfile  # noqa - package name: universal-startfile
 
-import shortlister.tournament as tournament
-from shortlister.model import (
+import src.shortlister.tournament as tournament
+from src.shortlister.model import (
     RANK_AND_SCORE,
     Applicant,
     Criterion,  # noqa
     InteractiveSorter,
     applicant_table,
     clear_score,
-    cv,
+    cv, #noqa
     load_shortlist,
-    name,
-    notes,
-    rtw,
+    name, #noqa
+    notes, #noqa
+    rtw, #noqa
     save_shortlist,
-    score,
+    score, #noqa
     sort_alpha,
     sort_ascending_score,
     sort_descending_score,
-    total_score,
+    total_score, #noqa
     update_applicant_notes,
     update_applicant_score,
     export_excel,
 )
-from shortlister.view import View
+from src.shortlister.view import View
 
 try:
     import webview
