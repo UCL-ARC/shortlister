@@ -1,7 +1,7 @@
 .venv/
 *pycache*/
 .vscode/
-test_role/shortlist.pickle
+test-role_0001/shortlist.pickle
 tests/shortlist.pickle
 .pytest_cache/
 .ruff_cache/
