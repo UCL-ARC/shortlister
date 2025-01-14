@@ -5,8 +5,10 @@ import csv
 import pickle
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import PatternFill, Font, Alignment
+from openpyxl.styles import PatternFill, Font, Alignment, Color
 from openpyxl.worksheet.table import Table,TableStyleInfo
+from openpyxl.formatting.rule import ColorScaleRule,  ColorScale, FormatObject, FormulaRule, Rule
+from openpyxl.styles.differential import DifferentialStyle
 import pymupdf
 import re
 
@@ -76,22 +78,10 @@ RANK_AND_SCORE = {
 }
 
 RANK_COLOUR_EXCEL = {
-    "U":{
-        "start_color":"FF3300",
-        "fill_type":"solid"
-        },
-    "M":{
-        "start_color":"FFFF00",
-        "fill_type":"solid"
-        },
-    "S":{
-        "start_color":"C4D79B",
-        "fill_type":"solid"
-        },
-    "E":{
-        "start_color":"92D050",
-        "fill_type":"solid"
-        },
+    "U":DifferentialStyle(font=Font(color="9C0006"), fill=PatternFill(bgColor="FFC7CE",fill_type="solid")),
+    "M": DifferentialStyle(font=Font(color="000000"),fill=PatternFill(bgColor="FFFF00", fill_type="solid")),
+    "S": DifferentialStyle(font=Font(color="000000"),fill=PatternFill(bgColor="C4D79B", fill_type="solid")),
+    "E": DifferentialStyle(font=Font(color="000000"),fill=PatternFill(bgColor="92D050", fill_type="solid")),
 }
 
 # Functions
@@ -403,6 +393,7 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         ws.append(flat_list)
 
     # Styling
+    
     # Auto adjust width for name column
     max_length = 0
     name_column = [ws[f"B{i}"] for i in range(1, ws.max_row + 1)]
@@ -415,16 +406,6 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
     adjusted_width = (max_length + 1.5) * 1.2
     ws.column_dimensions["B"].width = adjusted_width
     
-    # table styling
-    table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}" 
-
-    table = Table(displayName="DynamicTable", ref=table_range)
-    table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium9",
-                            showFirstColumn=False,
-                            showLastColumn=False,
-                            showRowStripes=True,
-                            showColumnStripes=False,)
-    ws.add_table(table)
 
     # change colour/style of headings
     for col in range(1, ws.max_column+1):
@@ -443,20 +424,38 @@ def export_excel(filename, applicants: List[Applicant], criteria: List[Criterion
         heading_score_cell = ws[get_column_letter(col)+"1"]
         heading_score_cell.alignment = Alignment(horizontal="center",textRotation=90)
     
-    # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
+    # alignment
     for row in ws.iter_rows(2):
         for cell in row:
             if cell.column_letter == "B":
                 cell.alignment = Alignment(horizontal="left")
             else:
                 cell.alignment = Alignment(horizontal="center")
-            if str(cell.value) in RANK_COLOUR_EXCEL:
-                colour_parameter = RANK_COLOUR_EXCEL.get(cell.value)
-                cell.fill = PatternFill(**colour_parameter)
-            else:
-                pass
 
-    wb.save(filename)
+    # table styling
+    table_range = f"A1:{get_column_letter(ws.max_column)}{ws.max_row}"
+
+    table = Table(displayName="DynamicTable", ref=table_range)
+    table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium9",
+                            showFirstColumn=False,
+                            showLastColumn=False,
+                            showRowStripes=True,
+                            showColumnStripes=False,)
+    ws.add_table(table)
+
+    # add colour for cells depending on the score: U(red),M(yellow),S,E(green)
+
+    for score in RANK_COLOUR_EXCEL:
+        ws.conditional_formatting.add(
+            range_string=table_range, 
+            cfRule=Rule(
+                type="containsText", 
+                operator="containsText", 
+                text=score, 
+                dxf=RANK_COLOUR_EXCEL[score], 
+                formula=[f'EXACT("{score}",A1)']
+                )
+                )
 
 
 def abbreviate(list_of_strings: List[str]) -> list[str]:
