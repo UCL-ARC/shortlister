@@ -5,9 +5,9 @@ import csv
 import pickle
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import PatternFill, Font, Alignment, Color
+from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.worksheet.table import Table,TableStyleInfo
-from openpyxl.formatting.rule import ColorScaleRule,  ColorScale, FormatObject, FormulaRule, Rule, IconSet
+from openpyxl.formatting.rule import Rule
 from openpyxl.styles.differential import DifferentialStyle
 import pymupdf
 import re
