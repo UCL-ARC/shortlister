@@ -42,7 +42,7 @@ def comparison(list_to_rank, result: Dict = None):
         if choice == "q":
             print("EXITING TOURNAMENT COMPARISON")
             print()
-            return
+            
         # if undo last choice
         elif choice == "u":
             # take the key and requeue the pair
@@ -51,7 +51,7 @@ def comparison(list_to_rank, result: Dict = None):
         # otherwise it can be evaluate by choose() function to get the winner, and the result is saved
         else:
             winner = choose(choice, (first, second))
-            save_results(pair, winner, result)
+            result[pair] = winner
 
     # all comparisons done
     return result
@@ -76,11 +76,6 @@ def choose(choice, candidates: tuple):
     return winner
 
 
-def save_results(pair, winner, result):
-    """Save the pair comparison result to dictionary."""
-    result[pair] = winner
-
-
 def rank(list_to_rank: List, result: Dict):
     """Rank applicants.(Basic,inaccurate when there are ties)"""
     # checking from result where the winners should be placed
@@ -98,18 +93,18 @@ def rank(list_to_rank: List, result: Dict):
     ranked = sorted(list_to_rank, key=lambda item: wins[item], reverse=True)
 
     # save the result to pickle file
-    save_rank(result, Path(COMPARISON_RESULT_FILE_NAME))
+    save_result(result, Path(COMPARISON_RESULT_FILE_NAME))
     return ranked
 
 
-def save_rank(match_result, file: Path):
+def save_result(match_result, file: Path):
     """Save dictionary of the comparison result to file"""
     with open(file, "wb") as pickle_file:
         pickle.dump(match_result, pickle_file)
 
 
 def get_existing_result(path: Path):
-    # Checks if there is existing result data
+    """Get existing match results, if there is no data, start with a fresh record"""
     if path.exists():
         with open(path, "rb") as pickle_file:
             result = pickle.load(pickle_file)
