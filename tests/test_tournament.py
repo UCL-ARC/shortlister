@@ -1,4 +1,4 @@
-from src.shortlister.tournament import get_pair, rank
+from shortlister.tournament import get_pair, rank
 
 mylist = [
     "apple",

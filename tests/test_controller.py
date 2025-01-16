@@ -1,4 +1,4 @@
-from src.shortlister.controller import Controller
+from shortlister.controller import Controller
 from pathlib import Path
 
 controller = Controller(path=Path("test_role"))

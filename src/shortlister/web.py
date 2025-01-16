@@ -10,7 +10,7 @@ from threading import Thread
 import webview
 from flask import Flask, send_file, send_from_directory
 
-from src.shortlister.view import BANNER
+from shortlister.view import BANNER
 
 ORIGIN = "http://localhost:8000"
 ROUTE_PDFJS = "pdfjs"
