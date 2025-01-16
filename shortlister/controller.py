@@ -368,15 +368,15 @@ class Controller:
         print()
 
     def rank_selected_applicants(self, k=None):
-        result = tournament.get_existing_result(
-            Path(tournament.COMPARISON_RESULT_FILE_NAME)
+        existing_result = tournament.get_existing_result(
+            Path(f"{self.path}/"+tournament.COMPARISON_RESULT_FILE_NAME)
         )
-        result = tournament.comparison(self.ctx.applicants, result)
-
+        result = tournament.comparison(self.ctx.applicants, existing_result)
+        tournament.save_result(result,Path(f"{self.path}/"+tournament.COMPARISON_RESULT_FILE_NAME))
         # Condition to avoid exception (caused by empty result when quitting comparison with "q")
-        if result:
-            ranked_list = tournament.rank(self.ctx.applicants, result)
-            print("RESULT:", [applicant.name for applicant in ranked_list])
+        #if result:
+        #    ranked_list = tournament.rank(self.ctx.applicants, result)
+        #    print("RESULT:", [applicant.name for applicant in ranked_list])
         print()
 
     # Utilities

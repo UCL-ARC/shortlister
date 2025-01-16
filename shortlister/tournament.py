@@ -42,7 +42,8 @@ def comparison(list_to_rank, result: Dict = None):
         if choice == "q":
             print("EXITING TOURNAMENT COMPARISON")
             print()
-            
+            return result
+        
         # if undo last choice
         elif choice == "u":
             # take the key and requeue the pair
@@ -106,9 +107,11 @@ def save_result(match_result, file: Path):
 def get_existing_result(path: Path):
     """Get existing match results, if there is no data, start with a fresh record"""
     if path.exists():
+        print(f"result loaded from {path}")
         with open(path, "rb") as pickle_file:
             result = pickle.load(pickle_file)
     # If not, start a fresh comparison record
     else:
+        print("started new ranking")
         result = {}
     return result
