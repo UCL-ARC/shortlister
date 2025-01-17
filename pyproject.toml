@@ -22,4 +22,4 @@ packages = [
 ]
 
 [project.scripts]
-shortlist = "shortlister.main:boot"
+shortlist = "shortlister.main:run"
