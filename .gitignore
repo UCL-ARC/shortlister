@@ -7,3 +7,4 @@ tests/shortlist.pickle
 .ruff_cache/
 shortlister/*.ipynb
 ranked.pickle
+dist/

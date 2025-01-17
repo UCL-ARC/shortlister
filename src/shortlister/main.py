@@ -33,9 +33,9 @@ def run_controller(wv_window: webview.Window=None):
     if wv_window is not None:
         wv_window.destroy()
 
-
-if cli_args.webview and webview is not None:
-    window = setup_webview()
-    webview.start(run_controller, args=[window])
-else:
-    run_controller(None)
+def run():
+    if cli_args.webview and webview is not None:
+        window = setup_webview()
+        webview.start(run_controller, args=[window])
+    else:
+        run_controller(None)
