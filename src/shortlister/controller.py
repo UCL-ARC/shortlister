@@ -88,6 +88,7 @@ class Controller:
             "a": (self.show_applicants_table, "APPLICANTS"),
             "r": (self.show_role_info, "ROLE"),
             "R": (self.repl, "REPL"),
+            "W": (self.save,"SAVE SHORTLIST"),
             "q": (self.quit, "QUIT"),
         }
         self.options_applicant_table = {
@@ -99,10 +100,7 @@ class Controller:
             "t": (self.show_applicants_table, "SWITCH TABLE"),
             "l": (self.show_table_legend, "LEGEND"),
             "e": (self.export_applicants_excel, "EXPORT"),
-            "a": (
-                self.show_applicants_table,
-                "APPLICANTS",
-            ),  # not sure if this option is needed
+            "W": (self.save,"SAVE SHORTLIST"),
             "q": (self.show_home_message, "HOME"),
         }
         self.options_sort = {
@@ -117,6 +115,7 @@ class Controller:
             "O": (self.open_applicant_pdf, "OPEN CV"),
             "n": (self.switch_applicant, "NEXT"),
             "p": (self.switch_applicant, "PREVIOUS"),
+            "W": (self.save,"SAVE SHORTLIST"),
             "q": (self.show_applicants_table, "APPLICANTS"),
         }
 
@@ -130,6 +129,10 @@ class Controller:
             exitmsg="EXITING",
         )
         print()
+
+    def save(self, k=None):
+        save_shortlist(self.path, self.shortlist)
+        print("SHORTLIST SAVED")
 
     def quit(self, k=None):
         # if we've activated quit
@@ -353,18 +356,20 @@ class Controller:
     def export_applicants_excel(self, k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        filename = input("SAVE AS(FILENAME):")
+        filename = input("SAVE AS (FILENAME):")
         if str(filename) == "":
             timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
             filename= Path(f"{self.path}_{timestamp}.xlsx")
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
             print(f"EXPORTED: {os.path.abspath(filename)}")
+
         elif pathvalidate.is_valid_filename(filename=filename, platform="windows"):
             filename = Path(f"{filename}.xlsx")
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
             print(f"EXPORTED: {os.path.abspath(filename)}")
+
         else:
-            print("INVALID FILENAME!")
+            print("ERROR: INVALID FILENAME!")
         print()
 
     def rank_selected_applicants(self, k=None):
@@ -415,9 +420,6 @@ class Controller:
 
             if k == "?":
                 self.print_options(self.options)
-            if k == "W":
-                save_shortlist(self.path, self.shortlist)
-                print("SHORTLIST SAVED")
             else:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
