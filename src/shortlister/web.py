@@ -15,7 +15,7 @@ from shortlister.view import BANNER
 ORIGIN = "http://localhost:8000"
 ROUTE_PDFJS = "pdfjs"
 ROUTE_CVS = "cvs"
-ABS_PATH_PDFJS = "../pdfjs/"
+REL_PATH_PDFJS = "assets/pdfjs/"
 PDFJS_VIEWER_URL = f"{ORIGIN}/{ROUTE_PDFJS}/web/viewer.html"
 CVS_URL = f"{ORIGIN}/{ROUTE_CVS}"
 
@@ -50,6 +50,7 @@ def start_httpd(path_to_pdfs: Path):
     route pdf.js and applicant CVs to different paths."""
     def serve_forever():
         app = Flask(__name__)
+        absolute_path_to_pdfs = path_to_pdfs.resolve()
 
         @app.route("/")
         def index():
@@ -57,11 +58,11 @@ def start_httpd(path_to_pdfs: Path):
 
         @app.route(f"/{ROUTE_PDFJS}/<path:path>")
         def pdfjs(path):
-            return send_from_directory(ABS_PATH_PDFJS, path)
+            return send_from_directory(REL_PATH_PDFJS, path)
 
         @app.route(f"/{ROUTE_CVS}/<file_name>")
         def get_pdf(file_name):
-            return send_file(f"{path_to_pdfs / file_name}", mimetype="application/pdf")
+            return send_file(f"{absolute_path_to_pdfs / file_name}", mimetype="application/pdf")
 
         app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
 
