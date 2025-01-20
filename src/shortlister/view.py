@@ -24,6 +24,7 @@ class View:
         print(f"PATH: {role}")
         print(f"APPLICANTS: {num_applicants}")
         print("? FOR HELP")
+        print("W TO SAVE SHORTLIST")
         print()
 
     def view_role(self, role: Role):

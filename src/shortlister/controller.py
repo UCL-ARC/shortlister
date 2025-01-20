@@ -415,6 +415,9 @@ class Controller:
 
             if k == "?":
                 self.print_options(self.options)
+            if k == "W":
+                save_shortlist(self.path, self.shortlist)
+                print("Shortlist saved")
             else:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
