@@ -353,18 +353,18 @@ class Controller:
     def export_applicants_excel(self, k=None):
         """Export selected applicants to Excel spreadsheet"""
 
-        filename = input("Save as (filename):")
+        filename = input("SAVE AS(FILENAME):")
         if str(filename) == "":
             timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
             filename= Path(f"{self.path}_{timestamp}.xlsx")
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
-            print(f"Exported: {os.path.abspath(filename)}")
+            print(f"EXPORTED: {os.path.abspath(filename)}")
         elif pathvalidate.is_valid_filename(filename=filename, platform="windows"):
             filename = Path(f"{filename}.xlsx")
             export_excel(filename, self.ctx.applicants, self.shortlist.role.criteria)
-            print(f"Exported: {os.path.abspath(filename)}")
+            print(f"EXPORTED: {os.path.abspath(filename)}")
         else:
-            print("Invalid filename!")
+            print("INVALID FILENAME!")
         print()
 
     def rank_selected_applicants(self, k=None):
@@ -417,7 +417,7 @@ class Controller:
                 self.print_options(self.options)
             if k == "W":
                 save_shortlist(self.path, self.shortlist)
-                print("Shortlist saved")
+                print("SHORTLIST SAVED")
             else:
                 # get and execute the action for this keypress
                 action = self.options.get(k)
