@@ -2,10 +2,10 @@ import argparse
 from pathlib import Path
 
 from shortlister.controller import Controller
-from shortlister.web import start_httpd, setup_webview
 
 try:
     import webview
+    from shortlister.web import start_httpd, setup_webview
 except ImportError:
     webview = None
 
@@ -20,7 +20,7 @@ parser.add_argument("-w", "--webview", action="store_true")
 cli_args = parser.parse_args()
 
 
-def run_controller(wv_window: webview.Window=None):
+def run_controller(wv_window=None):
     if cli_args.rolepath.is_dir():
         if wv_window is not None:
             start_httpd(cli_args.rolepath)
@@ -33,9 +33,9 @@ def run_controller(wv_window: webview.Window=None):
     if wv_window is not None:
         wv_window.destroy()
 
-
-if cli_args.webview and webview is not None:
-    window = setup_webview()
-    webview.start(run_controller, args=[window])
-else:
-    run_controller(None)
+def run():
+    if cli_args.webview and webview is not None:
+        window = setup_webview()
+        webview.start(run_controller, args=[window])
+    else:
+        run_controller(None)

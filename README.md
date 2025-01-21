@@ -4,10 +4,10 @@ Light-weight program that assists with shortlisting candidates in a management s
 
 ## Quick start
 
-Run the following script from command line:
+Run the following script from terminal:
 
 ```bash
-python shortlister/main.py <role_directory>
+shortlist <role_directory>
 # <role_directory> : the path to your folder containing both:
 # 1.criteria(.csv file) - see test_role folder for formatting examples
 # 2.candidate CVs(.pdf files)
@@ -15,7 +15,7 @@ python shortlister/main.py <role_directory>
 Optional arguments avaliable which offers additional functionalities:
 
 ```bash
-python shortlister/main.py <role_directory> -w
+shortlist <role_directory> -w
 # deploys webview for pdf files
 ```
 
