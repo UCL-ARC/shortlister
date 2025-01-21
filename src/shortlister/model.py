@@ -26,7 +26,7 @@ class Criterion:
         return self.name
 
 
-@dataclass(eq=False)
+@dataclass(frozen=True)
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
@@ -47,6 +47,9 @@ class Applicant:
 
     def __hash__(self):
         return hash(self.cv)
+    
+    def __eq__(self, other):
+        return hash(self) == hash(other)
 
 
 @dataclass
