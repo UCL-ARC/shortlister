@@ -26,11 +26,11 @@ class Criterion:
         return self.name
 
 
-@dataclass(frozen=True)
+@dataclass
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
-    name: str = field(compare=True)
+    name: str
     cv: Path
     email: str
     phone: str
