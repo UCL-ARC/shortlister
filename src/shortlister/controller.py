@@ -108,6 +108,7 @@ class Controller:
             "s": (self.sort, "SCORE ASCENDING"),
             "d": (self.sort, "SCORE DESCENDING"),
             "c": (self.sort, "COMPARISON"),
+            "q":(self.sort,"QUIT SORT")
         }
         self.options_applicant_detail = {
             "e": (self.score_applicant_step_1, "SCORE"),
@@ -320,6 +321,9 @@ class Controller:
             result.reverse()
             self.ctx.applicants = result
             print()
+
+        elif k == "q":
+            self.option = self.options_applicant_table
 
         self.show_applicants_table()
 
