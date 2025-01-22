@@ -13,13 +13,7 @@ def comparison(list_to_rank, result: Dict = None):
     print("TOURNAMENT COMPARISON")
     print()
 
-    # start with an empty dict if we don't have existing results
-    if result is None:
-        result = {}
-
-    # Queue is a list of pairs that have not been compared yet
-    queue = get_pair(list_to_rank, result)
-
+    queue = get_pair(list_to_rank,result)
     # Loop while there are still pairs to be compared in the queue
     while len(queue) > 0:
         # Remove the first pair in the queue and start the comparison
@@ -42,7 +36,7 @@ def comparison(list_to_rank, result: Dict = None):
         if choice == "q":
             print("EXITING TOURNAMENT COMPARISON")
             print()
-            return
+            return result
         # if undo last choice
         elif choice == "u":
             # take the key and requeue the pair
@@ -109,11 +103,10 @@ def save_rank(match_result, file: Path):
 
 
 def get_existing_result(path: Path):
-    # Checks if there is existing result data
+    """Checks if there is existing result data, or create a empty dict when there is no past results"""
     if path.exists():
         with open(path, "rb") as pickle_file:
             result = pickle.load(pickle_file)
-    # If not, start a fresh comparison record
     else:
         result = {}
     return result

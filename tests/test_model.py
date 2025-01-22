@@ -9,7 +9,7 @@ SCORES_VALUES = {
     "Excellent": 40,
 }
 SCORES = list(SCORES_VALUES.keys())
-path = Path("test_role")
+path = Path("test-role_0001")
 pickle_file_name = Path("shortlist.pickle")
 csv_file = Path("criteria.csv")
 
@@ -52,7 +52,7 @@ def test_load_role():
     ]
 
     result = model.load_role(path, model.load_criteria(path / csv_file))
-    expected = model.Role(job_title="test_role", job_id="0001", criteria=criteria)
+    expected = model.Role(job_title="test-role", job_id="0001", criteria=criteria)
 
     assert result == expected
 
@@ -117,7 +117,7 @@ def test_save_load():
 
 def test_load_applicant_from_pdf():
     applicant: model.Applicant = model.load_applicants_from_pdf(
-        Path("test_role/Emma_Jones_16743_Candidate_Pack.pdf")
+        Path("test-role_0001/Emma_Jones_16743_Candidate_Pack.pdf")
     )
     assert applicant.name == "Emma Jones"
     assert applicant.email == "emmaj@outlook.com"

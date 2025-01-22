@@ -26,11 +26,11 @@ class Criterion:
         return self.name
 
 
-@dataclass(eq=False)
+@dataclass
 class Applicant:
     """A property of Shortlist - contained within the attribute applicants(list of Applicant objects)."""
 
-    name: str = field(compare=True)
+    name: str
     cv: Path
     email: str
     phone: str
@@ -47,6 +47,9 @@ class Applicant:
 
     def __hash__(self):
         return hash(self.cv)
+    
+    def __eq__(self, other):
+        return hash(self) == hash(other)
 
 
 @dataclass
@@ -118,7 +121,8 @@ def load_shortlist(path: Path) -> (Shortlist, str):
 
 def load_role(path, criteria):
     """Generates role object instance."""
-    role = Role(str(path), "0001", criteria)
+    name, id = str(path).rsplit("_",1)
+    role = Role(job_title=name, job_id=id, criteria=criteria)
     return role
 
 

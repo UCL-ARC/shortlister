@@ -108,6 +108,7 @@ class Controller:
             "s": (self.sort, "SCORE ASCENDING"),
             "d": (self.sort, "SCORE DESCENDING"),
             "c": (self.sort, "COMPARISON"),
+            "q":(self.sort,"QUIT SORT")
         }
         self.options_applicant_detail = {
             "e": (self.score_applicant_step_1, "SCORE"),
@@ -321,6 +322,9 @@ class Controller:
             self.ctx.applicants = result
             print()
 
+        elif k == "q":
+            self.option = self.options_applicant_table
+
         self.show_applicants_table()
 
     def filter_applicants(self, k=None):
@@ -373,13 +377,14 @@ class Controller:
         print()
 
     def rank_selected_applicants(self, k=None):
-        result = tournament.get_existing_result(
-            Path(tournament.COMPARISON_RESULT_FILE_NAME)
-        )
-        result = tournament.comparison(self.ctx.applicants, result)
 
+        ranked_pickle_path =  self.path/Path(tournament.COMPARISON_RESULT_FILE_NAME)
+        result = tournament.get_existing_result(ranked_pickle_path)
+        new_result = tournament.comparison(self.ctx.applicants, result)
+
+        tournament.save_rank(new_result,ranked_pickle_path)
         # Condition to avoid exception (caused by empty result when quitting comparison with "q")
-        if result:
+        if not tournament.get_pair(self.ctx.applicants,new_result):
             ranked_list = tournament.rank(self.ctx.applicants, result)
             print("RESULT:", [applicant.name for applicant in ranked_list])
         print()
