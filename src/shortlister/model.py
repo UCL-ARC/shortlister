@@ -262,7 +262,14 @@ def extract_info_from_text(lines: List[str]):
 
     # removes header/footer and other irrelevant info
     applicant_info = lines[1:-5]
-    right_to_work = lines[-5:-1]
+    
+    right_to_work_text = "Do you have the unrestricted right to work in the UK?"
+    
+    try:
+        right_to_work_index = lines.index(right_to_work_text)
+        right_to_work = lines[right_to_work_index:(right_to_work_index + 4)]
+    except ValueError:
+        right_to_work = []
 
     # filter out the field name and retain only the info to applicant
     for label in labels:
@@ -279,8 +286,8 @@ def extract_info_from_text(lines: List[str]):
     # finds where the question is and checks the next index which contains the answer to the question
     applicant_right_to_work = None
     visa_req_text = None
-    if "Do you have the unrestricted right to work in the UK?" in right_to_work:
-        i = right_to_work.index("Do you have the unrestricted right to work in the UK?")
+    if right_to_work_text in right_to_work:
+        i = right_to_work.index(right_to_work_text)
         if right_to_work[i + 1] == "No":
             j = right_to_work.index(
                 "If no, please give details of your VISA requirements"
