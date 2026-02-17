@@ -1,10 +1,22 @@
 # Shortlister
 
-Light-weight program that assists with shortlisting candidates in a management setting.  
+Lightweight program for shortlisting candidates.
+
+## Installation
+
+```bash
+pip install "git+https://github.com/UCL-ARC/shortlister"
+```
+
+If you want to use the PDF window feature, you will need to install the following dependencies:
+
+```bash
+pip install pywebview flask
+```
 
 ## Quick start
 
-Run the following script from terminal:
+Run the following command in your terminal:
 
 ```bash
 shortlist <role_directory>
@@ -29,6 +41,7 @@ shortlist <role_directory> -w
 - Alphabetical
 - Score (Ascending/Descending)
 - Interactive comparison sort
+
 #### Filtering
 - allow users to enter their own expressions
 - up/down arrow keys for filtering templates 
@@ -37,12 +50,16 @@ shortlist <role_directory> -w
 #### Mark applicant
 - select a criterion and give an appropiate score
 - create notes on selected applicant
+
 #### Ranking
 - Quickly compare a list of applicant
+ 
 #### Export excel spreadsheet
 - Export the applicant table to an Excel spreadsheet 
+ 
 #### PDF Webview
 - Open pdfs automatically in webview if viewing details for a specific applicant 
+
 #### REPL:
 - Open a Python REPL within the terminal
 - Developer mode (full control to the program)
